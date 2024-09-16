@@ -1,0 +1,165 @@
+﻿@{
+ViewBag.Title = "Calendario de Eventos";
+Layout = "_SecondaryLayout";
+}
+
+<section id="calendar" class="wrapper style1 fullscreen fade-up">
+    <div class="inner">
+        <h2>Calendario de Eventos</h2>
+        <p>Consulta los eventos y actividades programadas.</p>
+
+        <div class="calendar-wrapper">
+            <div class="calendar-header">
+                <button id="prevMonth" class="button small">Anterior</button>
+                <h3 id="calendarMonth"></h3>
+                <button id="nextMonth" class="button small">Siguiente</button>
+            </div>
+            <table class="calendar-table">
+                <thead>
+                <tr>
+                    <th>Domingo</th>
+                    <th>Lunes</th>
+                    <th>Martes</th>
+                    <th>Miércoles</th>
+                    <th>Jueves</th>
+                    <th>Viernes</th>
+                    <th>Sábado</th>
+                </tr>
+                </thead>
+                <tbody id="calendarBody">
+                <!-- Días del mes se generarán dinámicamente aquí -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<style>
+    .calendar-wrapper {
+        margin-top: 20px;
+    }
+
+    .calendar-header {
+        text-align: center;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .calendar-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .calendar-table th,
+    .calendar-table td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid #ddd;
+        height: 100px;
+        vertical-align: top;
+    }
+
+    .calendar-table thead th {
+        background-color: #333;
+        color: white;
+    }
+
+    .calendar-table td.today {
+        background-color: rgb(240, 174, 75);
+        font-weight: bold;
+    }
+
+    .calendar-table td.past {
+        background-color: #e0e0e0;
+        color: #a0a0a0;
+    }
+
+    .event {
+        background-color: rgb(60, 110, 40);
+        color: white;
+        padding: 2px 5px;
+        border-radius: 3px;
+        display: inline-block;
+        margin-top: 5px;
+    }
+
+    .button.small {
+        background-color: rgb(60, 110, 40);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .button.small:hover {
+        background-color: rgb(60, 110, 40);
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let today = new Date();
+        let currentMonth = today.getMonth();
+        let currentYear = today.getFullYear();
+
+        const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+        function renderCalendar(month, year) {
+            let firstDay = (new Date(year, month)).getDay();
+            let daysInMonth = 32 - new Date(year, month, 32).getDate();
+
+            let tbl = document.getElementById("calendarBody"); // Body of the calendar
+            tbl.innerHTML = "";
+
+            document.getElementById("calendarMonth").innerHTML = monthNames[month] + " " + year;
+
+            let date = 1;
+            for (let i = 0; i < 6; i++) {
+                let row = document.createElement("tr");
+
+                for (let j = 0; j < 7; j++) {
+                    if (i === 0 && j < firstDay) {
+                        let cell = document.createElement("td");
+                        let cellText = document.createTextNode("");
+                        cell.appendChild(cellText);
+                        row.appendChild(cell);
+                    } else if (date > daysInMonth) {
+                        break;
+                    } else {
+                        let cell = document.createElement("td");
+                        let cellText = document.createTextNode(date);
+                        if (date === today.getDate() && year === today.getFullYear() && month === today.getMonth()) {
+                            cell.classList.add("today");
+                        }
+                        cell.appendChild(cellText);
+                        row.appendChild(cell);
+                        date++;
+                    }
+                }
+
+                tbl.appendChild(row);
+            }
+        }
+
+        function nextMonth() {
+            currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
+            currentMonth = (currentMonth + 1) % 12;
+            renderCalendar(currentMonth, currentYear);
+        }
+
+        function previousMonth() {
+            currentYear = (currentMonth === 0) ? currentYear - 1 : currentYear;
+            currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
+            renderCalendar(currentMonth, currentYear);
+        }
+
+        document.getElementById("nextMonth").addEventListener("click", nextMonth);
+        document.getElementById("prevMonth").addEventListener("click", previousMonth);
+
+        renderCalendar(currentMonth, currentYear);
+    });
+</script>

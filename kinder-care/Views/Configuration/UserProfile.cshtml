@@ -1,0 +1,86 @@
+﻿@{
+ViewBag.Title = "Perfil de Usuario";
+Layout = "_SecondaryLayout";
+}
+
+<section id="userProfile" class="wrapper style1 fullscreen fade-up">
+    <div class="inner">
+        <h2>Perfil de Usuario</h2>
+        <p>Consulta y actualiza tu información de perfil.</p>
+
+        <form method="post" action="@Url.Action("SaveProfile", "Configuration")" enctype="multipart/form-data">
+            <div class="row gtr-uniform">
+                <div class="col-6 col-12-small">
+                    <div class="profile-picture-wrapper">
+                        <img src="~/images/default-profile.png" alt="Imagen de Perfil" id="profileImage" class="profile-picture" />
+                        <div class="profile-picture-actions">
+                            <label for="profileImageUpload" class="button small">Cambiar Imagen</label>
+                            <input type="file" name="profileImageUpload" id="profileImageUpload" accept="image/*" style="display:none;" />
+                            <button type="button" class="button small alt" id="removeImage">Eliminar Imagen</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-12-small">
+                    <label for="userName">Nombre Completo</label>
+                    <input type="text" name="userName" id="userName" value="Juan Perez" placeholder="Nombre Completo" />
+                </div>
+                <div class="col-6 col-12-xsmall">
+                    <label for="userEmail">Correo Electrónico</label>
+                    <input type="email" name="userEmail" id="userEmail" value="juan.perez@example.com" placeholder="Correo Electrónico" />
+                </div>
+                <div class="col-6 col-12-xsmall">
+                    <label for="userPhone">Teléfono</label>
+                    <input type="text" name="userPhone" id="userPhone" value="+506 8888 8888" placeholder="Número de Teléfono" />
+                </div>
+                <div class="col-6 col-12-xsmall">
+                    <label for="userPassword">Nueva Contraseña</label>
+                    <input type="password" name="userPassword" id="userPassword" placeholder="Nueva Contraseña" />
+                </div>
+                <div class="col-12">
+                    <ul class="actions">
+                        <li><input type="submit" value="Actualizar Perfil" class="primary" /></li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<style>
+    .profile-picture-wrapper {
+        text-align: center;
+    }
+
+    .profile-picture {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ddd;
+        margin-bottom: 10px;
+    }
+
+    .profile-picture-actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    #profileImageUpload {
+        display: none;
+    }
+</style>
+
+<script>
+    document.getElementById("profileImageUpload").addEventListener("change", function() {
+        const [file] = this.files;
+        if (file) {
+            document.getElementById("profileImage").src = URL.createObjectURL(file);
+        }
+    });
+
+    document.getElementById("removeImage").addEventListener("click", function() {
+        document.getElementById("profileImage").src = "~/images/default-profile.png";
+        document.getElementById("profileImageUpload").value = null;
+    });
+</script>

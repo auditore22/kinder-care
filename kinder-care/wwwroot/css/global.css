@@ -1,0 +1,12 @@
+﻿:root {
+    --color-bg-primary: rgb(60, 110, 40);
+    --color-bg-secondary: rgb(140, 170, 70);
+    --color-bg-tertiary: rgb(240, 174, 75);
+    --color-bg-quaternary: rgb(80, 140, 50);
+    --color-accent-yellow: rgb(227, 203, 64);
+    --color-text-primary: rgb(255, 255, 255);
+    --color-text-secondary: rgba(255, 255, 255, 0.65);
+    --color-text-form: rgba(255, 255, 255, 0.75);
+    --font-body: 'Poppins', sans-serif;
+    --font-title: 'Quicksand', sans-serif;
+}

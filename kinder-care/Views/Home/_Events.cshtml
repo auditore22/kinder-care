@@ -1,0 +1,22 @@
+﻿<section id="events" class="wrapper style2 fullscreen fade-up">
+    <div class="inner">
+        <h2>Calendario de Eventos</h2>
+        <p>Consulta los eventos y actividades programadas para esta semana.</p>
+        <div class="row">
+            <div class="col-8 col-12-medium">
+                <div class="calendar-view" id="weeklyCalendar">
+                </div>
+            </div>
+            <div class="col-4 col-12-medium">
+                <ul class="actions">
+                    <li><a href="@Url.Action("Calendar", "Events")"  class="button scrolly">Ver más</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row" id="featuresEventsContent">
+        </div>
+    </div>
+</section>
+
+<script src="~/js/home/partials/events.js"></script>
+<link rel="stylesheet" href="~/css/home/partials/events.css">

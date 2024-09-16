@@ -1,0 +1,35 @@
+﻿#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgb(60, 110, 40);
+}
+
+#header a.nav-link {
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+nav {
+    flex-grow: 1;
+}
+
+#dynamicNav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#dynamicNav li {
+    margin: 0 10px;
+}
+
+#dynamicNav li a.nav-link {
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+}

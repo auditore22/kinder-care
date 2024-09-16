@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Home";
+    Layout = "_MainLayout";
+}
+
+<!-- _Dashboard -->
+@await Html.PartialAsync("_Dashboard")
+
+<!-- _Users -->
+@await Html.PartialAsync("_Users")
+
+<!-- _Enrollment -->
+@await Html.PartialAsync("_Enrollment")
+
+<!-- _Payments -->
+@await Html.PartialAsync("_Payments")
+
+<!-- _Events -->
+@await Html.PartialAsync("_Events")
+
+<!-- _Reports -->
+@await Html.PartialAsync("_Reports")
+
+<!-- _Configuration -->
+@await Html.PartialAsync("_Configuration")

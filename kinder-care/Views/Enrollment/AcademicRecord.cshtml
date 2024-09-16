@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Registro Académico";
+    Layout = "_SecondaryLayout";
+}
+
+<section id="academicRecord" class="wrapper style1 fullscreen fade-up">
+    <div class="inner">
+        <h2>Registro Académico</h2>
+        <p>Administra y revisa el registro académico de los estudiantes, incluyendo sus calificaciones, materias y reportes de progreso.</p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asignatura</th>
+                        <th>Profesor</th>
+                        <th>Calificación</th>
+                        <th>Comentarios</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Matemáticas</td>
+                        <td>Maria Rodriguez</td>
+                        <td>95%</td>
+                        <td>Excelente desempeño, continúa así.</td>
+                        <td>
+                            <ul class="actions">
+                                <li><a href="#" class="button small">Editar Calificación</a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Historia</td>
+                        <td>Juan Perez</td>
+                        <td>88%</td>
+                        <td>Buen progreso, pero necesita participar más en clase.</td>
+                        <td>
+                            <ul class="actions">
+                                <li><a href="#" class="button small">Editar Calificación</a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <ul class="actions">
+            <li><a href="#" class="button primary">Agregar Nueva Asignatura</a></li>
+        </ul>
+    </div>
+</section>

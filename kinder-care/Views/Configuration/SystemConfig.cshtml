@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "Configuración del Sistema";
+    Layout = "_SecondaryLayout";
+}
+
+<section id="systemConfig" class="wrapper style1 fullscreen fade-up">
+    <div class="inner">
+        <h2>Configuración del Sistema</h2>
+        <p>Configura los ajustes generales del sistema, incluyendo la información de la aplicación, roles de usuario, y otros parámetros esenciales.</p>
+
+        <form method="post" action="@Url.Action("SaveConfig", "Configuration")">
+            <div class="row gtr-uniform">
+                <div class="col-6 col-12-xsmall">
+                    <label for="systemName">Nombre del Sistema</label>
+                    <input type="text" name="systemName" id="systemName" value="KinderCare System" placeholder="Nombre del Sistema" />
+                </div>
+                <div class="col-6 col-12-xsmall">
+                    <label for="systemVersion">Versión del Sistema</label>
+                    <input type="text" name="systemVersion" id="systemVersion" value="v1.0.0" placeholder="Versión del Sistema" />
+                </div>
+                <div class="col-6 col-12-xsmall">
+                    <label for="adminEmail">Correo Electrónico del Administrador</label>
+                    <input type="email" name="adminEmail" id="adminEmail" value="admin@kinderCareSystem.com" placeholder="Correo Electrónico del Administrador" />
+                </div>
+                <div class="col-6 col-12-xsmall">
+                    <label for="supportEmail">Correo Electrónico de Soporte</label>
+                    <input type="email" name="supportEmail" id="supportEmail" value="support@kinderCareSystem.com" placeholder="Correo Electrónico de Soporte" />
+                </div>
+
+                <div class="col-12">
+                    <label for="userRoles">Roles de Usuario Predeterminados</label>
+                    <select name="userRoles" id="userRoles">
+                        <option value="1">Administrador</option>
+                        <option value="2">Usuario Estándar</option>
+                        <option value="3">Invitado</option>
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label for="timezone">Zona Horaria</label>
+                    <select name="timezone" id="timezone">
+                        <option value="UTC-5">UTC-5 (Central Time)</option>
+                        <option value="UTC-6">UTC-6 (Mountain Time)</option>
+                        <option value="UTC-7">UTC-7 (Pacific Time)</option>
+                        <option value="UTC-0">UTC-0 (Greenwich Mean Time)</option>
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label for="language">Idioma del Sistema</label>
+                    <select name="language" id="language">
+                        <option value="es">Español</option>
+                        <option value="en">Inglés</option>
+                        <option value="fr">Francés</option>
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <ul class="actions">
+                        <li><input type="submit" value="Guardar Configuración" class="primary" /></li>
+                        <li><input type="reset" value="Restablecer" /></li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
