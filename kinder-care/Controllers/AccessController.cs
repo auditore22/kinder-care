@@ -61,7 +61,7 @@ namespace kinder_care.Controllers
         public async Task<IActionResult> Login(UsuarioVM usuario)
         {
             var usuarioRecibido = await _context.Usuarios
-                .Include(u => u.IdRolNavigation) // Asegúrate de incluir la navegación del rol
+                .Include(u => u.IdRolNavigation)
                 .FirstOrDefaultAsync(u => u.Nombre == usuario.Nombre);
 
             if (usuarioRecibido == null || !(usuarioRecibido.Activo ?? false))
@@ -89,7 +89,7 @@ namespace kinder_care.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, usuarioRecibido.Id.ToString()),
                 new Claim(ClaimTypes.Name, usuarioRecibido.Nombre),
-                new Claim(ClaimTypes.Role, usuarioRecibido.IdRolNavigation.Nombre) // Ahora seguro que no es null
+                new Claim(ClaimTypes.Role, usuarioRecibido.IdRolNavigation.Nombre)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
