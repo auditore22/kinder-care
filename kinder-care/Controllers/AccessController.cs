@@ -66,7 +66,7 @@ namespace kinder_care.Controllers
 
             if (usuarioRecibido == null || !(usuarioRecibido.Activo ?? false))
             {
-                ViewData["Mensaje"] = "Error al encontrar el usuario o el usuario está inactivo";
+                ViewData["Mensaje"] = "Usuario no encontrado o inactivo";
                 return View();
             }
 
