@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using kinder_care.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace kinder_care.Controllers;
 
+[Authorize]
 public class EventsController(ILogger<EventsController> logger) : Controller
 {
     private readonly ILogger<EventsController> _logger = logger;
