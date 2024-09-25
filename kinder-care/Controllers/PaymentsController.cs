@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using kinder_care.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace kinder_care.Controllers;
 
+[Authorize]
 public class PaymentsController(ILogger<PaymentsController> logger) : Controller
 {
     private readonly ILogger<PaymentsController> _logger = logger;

@@ -1,0 +1,78 @@
+﻿@model kinder_care.Models.Usuario
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>Access</title>
+</head>
+
+<body class="bg-dark">
+    <div class="bg-dark py-3 py-md-5">
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+                    <div class="bg-white p-4 p-md-5 rounded shadow-sm">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-5 text-center">
+                                    <h3>Registro</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Resumen de validación -->
+                        <form class="text-center" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="row gy-3 gy-md-4 overflow-hidden">
+                                <div class="col-12">
+                                    <label for="username" class="form-label">Nombre de usuario</label>
+                                    <input type="text" class="form-control" placeholder="Username123.." required asp-for="Nombre">
+                                    <!-- Mensaje de validación para el campo Username -->
+                                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                                </div>
+                                <div class="col-12">
+                                    <label for="password" class="form-label">Contraseña</label>
+                                    <input type="password" class="form-control" placeholder="***..." required asp-for="ContrasenaHash">
+                                    <!-- Mensaje de validación para el campo Password -->
+                                    <span asp-validation-for="ContrasenaHash" class="text-danger"></span>
+                                </div>
+                                @if (ViewData["Mensaje"] != null)
+                                {
+                                    <span class="text-danger">
+                                        @ViewData["Mensaje"]
+                                    </span>
+                                }
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button class="btn btn-lg btn-primary" type="submit">Registrarme</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-12">
+                                <hr class="mt-5 mb-4 border-secondary-subtle">
+                                <a class="text-center link-secondary text-decoration-none" asp-action="Login" asp-controller="Access">Ingresar con una cuenta</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incluir los scripts de validación de ASP.NET Core -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
