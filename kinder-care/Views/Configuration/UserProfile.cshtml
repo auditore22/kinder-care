@@ -8,6 +8,20 @@ Layout = "_SecondaryLayout";
         <h2>Perfil de Usuario</h2>
         <p>Consulta y actualiza tu información de perfil.</p>
 
+        <!-- Mostrar mensajes de error o éxito -->
+        @if (TempData["ErrorMessage"] != null)
+        {
+        <div class="alert alert-danger">
+            <span>@TempData["ErrorMessage"]</span>
+        </div>
+        }
+        @if (TempData["SuccessMessage"] != null)
+        {
+        <div class="alert alert-success">
+            <span>@TempData["SuccessMessage"]</span>
+        </div>
+        }
+
         <form method="post" action="@Url.Action("SaveProfile", "Configuration")" enctype="multipart/form-data">
             <div class="row gtr-uniform">
                 <div class="col-6 col-12-small">
@@ -40,6 +54,7 @@ Layout = "_SecondaryLayout";
 
                 <!-- Campos ocultos para cambiar contraseña -->
                 <div id="passwordFields" style="display: none;">
+                    <!-- Contraseña Actual -->
                     <div class="col-6 col-12-xsmall">
                         <label for="currentPassword">Contraseña Actual</label>
                         <div class="input-group password-wrapper">
@@ -48,7 +63,13 @@ Layout = "_SecondaryLayout";
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
+                        @if (ViewData.ModelState["CurrentPassword"] != null && ViewData.ModelState["CurrentPassword"].Errors.Count > 0)
+                        {
+                        <span class="text-danger">@ViewData.ModelState["CurrentPassword"].Errors[0].ErrorMessage</span>
+                        }
                     </div>
+
+                    <!-- Nueva Contraseña -->
                     <div class="col-6 col-12-xsmall">
                         <label for="newPassword">Nueva Contraseña</label>
                         <div class="input-group password-wrapper">
@@ -57,7 +78,13 @@ Layout = "_SecondaryLayout";
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
+                        @if (ViewData.ModelState["NewPassword"] != null && ViewData.ModelState["NewPassword"].Errors.Count > 0)
+                        {
+                        <span class="text-danger">@ViewData.ModelState["NewPassword"].Errors[0].ErrorMessage</span>
+                        }
                     </div>
+
+                    <!-- Confirmar Nueva Contraseña -->
                     <div class="col-6 col-12-xsmall">
                         <label for="confirmPassword">Confirmar Nueva Contraseña</label>
                         <div class="input-group password-wrapper">
@@ -66,6 +93,10 @@ Layout = "_SecondaryLayout";
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
+                        @if (ViewData.ModelState["ConfirmPassword"] != null && ViewData.ModelState["ConfirmPassword"].Errors.Count > 0)
+                        {
+                        <span class="text-danger">@ViewData.ModelState["ConfirmPassword"].Errors[0].ErrorMessage</span>
+                        }
                     </div>
                 </div>
 
@@ -117,17 +148,38 @@ Layout = "_SecondaryLayout";
     .input-group .btn {
         background-color: transparent;
         border: none;
-        margin-left: 10px; /* Ajustar el botón para que se coloque dentro del campo de texto */
-        font-size: 10px; /* Hacer el botón más pequeño */
+        margin-left: 10px;
+        font-size: 10px;
         padding: 5px;
     }
 
     .input-group .btn i {
-        font-size: 16px; /* Tamaño más pequeño del icono */
+        font-size: 16px;
     }
 
     .input-group .form-control:focus {
         z-index: 2;
+    }
+
+    .text-danger {
+        color: red;
+        font-size: 12px;
+    }
+
+    .alert {
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
     }
 </style>
 
@@ -168,3 +220,8 @@ Layout = "_SecondaryLayout";
         document.getElementById("profileImageUpload").value = null;
     });
 </script>
+
+<!-- Asegúrate de incluir las referencias a los scripts de validación -->
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+

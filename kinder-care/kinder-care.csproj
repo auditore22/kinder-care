@@ -90,4 +90,12 @@
       <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-solid-900.woff2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Remove="Models\ViewModels\ChangePasswordViewModel.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Models\ViewModels\ChangePasswordViewModel.cshtml.cs" />
+    </ItemGroup>
+
 </Project>
