@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using kinder_care.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace kinder_care.Controllers;
 
+[Authorize]
 public class ConfigurationController(ILogger<ConfigurationController> logger) : Controller
 {
     private readonly ILogger<ConfigurationController> _logger = logger;

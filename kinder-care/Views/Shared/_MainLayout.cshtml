@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims;
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
@@ -31,7 +33,7 @@
                 <li id="navEvents"><a href="#events"><i class="fas fa-calendar-alt nav-icon"></i> <span>Eventos y Actividades</span></a></li>
                 <li id="navReports"><a href="#reports"><i class="fas fa-chart-line nav-icon"></i> <span>Reportes</span></a></li>
                 <li id="navConfig"><a href="#configuration"><i class="fas fa-cogs nav-icon"></i> <span>Configuración</span></a></li>
-                <li id="navLogout"><a href="@Url.Action("Index", "Login")"><i class="fas fa-sign-out-alt nav-icon"></i> <span>Cerrar Sesión</span></a></li>
+                <li id="navLogout"><a href="@Url.Action("LogOut", "Access")"><i class="fas fa-sign-out-alt nav-icon"></i> <span>Cerrar Sesión</span></a></li>
             </ul>
         </nav>
     </div>
@@ -47,6 +49,8 @@
     <div class="inner">
         <ul class="menu">
             <li>&copy; KinderCare - 2024</li>
+            <li>@User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault()</li>
+            <li>@User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault()</li>
         </ul>
     </div>
 </footer>
