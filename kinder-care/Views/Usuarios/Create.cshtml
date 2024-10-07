@@ -7,7 +7,7 @@
 
 <section id="manageRoles" class="wrapper style1 fullscreen fade-up">
     <div class="inner">
-        <h2>Gestión de Roles</h2>
+        <h2>Gestión de Usuarios</h2>
         <p>Administra los roles de los usuarios en el sistema, asignando o removiendo permisos según sea necesario.</p>
 
         <form asp-action="Create">
@@ -56,7 +56,7 @@
             </div>
 
             <button class="btn btn-primary" type="submit">Crear</button>
-            <hr/>
+            <hr />
             <div>
                 <a asp-action="Index" asp-controller="Usuarios" class="button primary">Regresar</a>
             </div>
@@ -71,7 +71,3 @@
         </form>
     </div>
 </section>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

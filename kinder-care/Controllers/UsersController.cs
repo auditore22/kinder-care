@@ -19,7 +19,7 @@ public class UsersController(ILogger<UsersController> logger) : Controller
     public ActionResult ManageProfiles()
     {
         ViewBag.CurrentSection = "ManageProfiles";
-        return View();
+        return RedirectToAction("Index", "Docentes"); //Redirigir al controller de Usuarios
     }
 
     public ActionResult ManageRecords()

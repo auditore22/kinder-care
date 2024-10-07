@@ -23,12 +23,14 @@ namespace kinder_care.Controllers
             _passwordHasher = new PasswordHasher<Usuarios>();
         }
 
+        //======================================================[VISTA INDEX]==========================================================================================
         public async Task<IActionResult> Index()
         {
             var kinderCareContext = _context.Usuarios.Include(u => u.IdRolNavigation);
             return View(await kinderCareContext.ToListAsync());
         }
 
+        //======================================================[VISTA DERAILS]==========================================================================================
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,6 +49,7 @@ namespace kinder_care.Controllers
             return View(usuarios);
         }
 
+        //======================================================[VISTA CREATE]==========================================================================================
         public IActionResult Create()
         {
             ViewData["IdRol"] = new SelectList(_context.Roles, "IdRol", "Nombre");
@@ -73,6 +76,7 @@ namespace kinder_care.Controllers
 
         }
 
+        //======================================================[VISTA EDIT]==========================================================================================
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -140,7 +144,7 @@ namespace kinder_care.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Usuarios/Delete/5
+        //======================================================[VISTA DELETE]==========================================================================================
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -169,20 +173,21 @@ namespace kinder_care.Controllers
             if (usuarios != null)
             {
                 // Elimina los docentes relacionados
-                var docentes = await _context.Docentes.Where(d => d.IdUsuario == id).ToListAsync(); //Esto es cuando el Id es 2
+                var docentes = await _context.Docentes.Where(d => d.IdUsuario == id).ToListAsync(); //Esto es que busca usuarios relacionados a docentes
                 if (docentes.Any())
                 {
-                    _context.Docentes.RemoveRange(docentes); //Esto es para eliminarlos tanto de docentes que de usuarios
+                    _context.Docentes.RemoveRange(docentes); //Esto es para eliminar los docentes para luego eliminar los usuarios
                 }
 
-                // Luego, elimina el usuario
-                _context.Usuarios.Remove(usuarios);
+
+                _context.Usuarios.Remove(usuarios); //Eliminamos el usuario
                 await _context.SaveChangesAsync();
             }
 
             return RedirectToAction(nameof(Index));
         }
 
+        //======================================================[PROBAR QUE UN USUARIO EXISTE]==========================================================================================
         private bool UsuariosExists(int id)
         {
             return _context.Usuarios.Any(e => e.IdUsuario == id);
