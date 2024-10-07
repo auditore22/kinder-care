@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace kinder_care.Model;
+namespace kinder_care.Models;
 
 public partial class Pagos
 {

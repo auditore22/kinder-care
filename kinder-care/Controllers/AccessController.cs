@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using kinder_care.Model;
+using kinder_care.Models;
 
 namespace kinder_care.Controllers
 {
@@ -21,8 +21,7 @@ namespace kinder_care.Controllers
             _context = context;
             _passwordHasher = new PasswordHasher<Usuarios>();
         }
-
-        /*
+        
         [HttpGet]
         public IActionResult Register()
         {
@@ -48,7 +47,6 @@ namespace kinder_care.Controllers
                 return View();
             }
         }
-        */
 
         [HttpGet]
         public IActionResult Login()

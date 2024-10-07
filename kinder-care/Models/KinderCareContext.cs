@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace kinder_care.Model;
+namespace kinder_care.Models;
 
 public partial class KinderCareContext : DbContext
 {
