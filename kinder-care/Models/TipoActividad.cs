@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace kinder_care.Models;
+namespace kinder_care.Model;
 
 public partial class TipoActividad
 {
-    public int Id { get; set; }
+    public int IdTipoActividad { get; set; }
 
     public string NombreTipoActividad { get; set; } = null!;
 
     public bool? Activo { get; set; }
 
-    public virtual ICollection<Actividade> Actividades { get; set; } = new List<Actividade>();
+    public virtual ICollection<Actividades> Actividades { get; set; } = new List<Actividades>();
 }

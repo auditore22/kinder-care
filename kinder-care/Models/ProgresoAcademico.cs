@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace kinder_care.Models;
+namespace kinder_care.Model;
 
 public partial class ProgresoAcademico
 {
-    public int Id { get; set; }
+    public int IdProgresoAcademico { get; set; }
 
     public int IdNino { get; set; }
 
@@ -19,5 +19,5 @@ public partial class ProgresoAcademico
 
     public DateTime? UltimaActualizacion { get; set; }
 
-    public virtual Nino IdNinoNavigation { get; set; } = null!;
+    public virtual Ninos IdNinoNavigation { get; set; } = null!;
 }

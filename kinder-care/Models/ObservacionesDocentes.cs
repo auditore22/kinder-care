@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace kinder_care.Models;
+namespace kinder_care.Model;
 
-public partial class ObservacionesDocente
+public partial class ObservacionesDocentes
 {
-    public int Id { get; set; }
+    public int IdObservacionDocente { get; set; }
 
     public int IdNino { get; set; }
 
@@ -17,7 +17,7 @@ public partial class ObservacionesDocente
 
     public DateOnly Fecha { get; set; }
 
-    public virtual Docente IdDocenteNavigation { get; set; } = null!;
+    public virtual Docentes IdDocenteNavigation { get; set; } = null!;
 
-    public virtual Nino IdNinoNavigation { get; set; } = null!;
+    public virtual Ninos IdNinoNavigation { get; set; } = null!;
 }

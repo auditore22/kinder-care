@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace kinder_care.Models;
+namespace kinder_care.Model;
 
-public partial class TipoPago
+public partial class TipoPagos
 {
-    public int Id { get; set; }
+    public int IdTipoPago { get; set; }
 
     public string NombreTipoPago { get; set; } = null!;
 
@@ -13,5 +13,5 @@ public partial class TipoPago
 
     public bool? Activo { get; set; }
 
-    public virtual ICollection<Pago> Pagos { get; set; } = new List<Pago>();
+    public virtual ICollection<Pagos> Pagos { get; set; } = new List<Pagos>();
 }

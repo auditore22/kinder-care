@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace kinder_care.Models;
+namespace kinder_care.Model;
 
-public partial class Medicamento
+public partial class Medicamentos
 {
-    public int Id { get; set; }
+    public int IdMedicamento { get; set; }
 
     public string NombreMedicamento { get; set; } = null!;
 
@@ -13,5 +13,5 @@ public partial class Medicamento
 
     public bool? Activo { get; set; }
 
-    public virtual ICollection<Nino> IdNinos { get; set; } = new List<Nino>();
+    public virtual ICollection<Ninos> IdNino { get; set; } = new List<Ninos>();
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using kinder_care.Model;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using kinder_care.Models;
 using Microsoft.EntityFrameworkCore;
 

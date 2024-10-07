@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace kinder_care.Models;
+namespace kinder_care.Model;
 
 public partial class RelNinoActividad
 {
@@ -11,7 +11,7 @@ public partial class RelNinoActividad
 
     public string Asistencia { get; set; } = null!;
 
-    public virtual Actividade IdActividadNavigation { get; set; } = null!;
+    public virtual Actividades IdActividadNavigation { get; set; } = null!;
 
-    public virtual Nino IdNinoNavigation { get; set; } = null!;
+    public virtual Ninos IdNinoNavigation { get; set; } = null!;
 }

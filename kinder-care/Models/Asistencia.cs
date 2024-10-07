@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace kinder_care.Models;
+namespace kinder_care.Model;
 
-public partial class Asistencium
+public partial class Asistencia
 {
-    public int Id { get; set; }
+    public int IdAsistencia { get; set; }
 
     public int IdNino { get; set; }
 
@@ -17,5 +17,5 @@ public partial class Asistencium
 
     public string? Estado { get; set; }
 
-    public virtual Nino IdNinoNavigation { get; set; } = null!;
+    public virtual Ninos IdNinoNavigation { get; set; } = null!;
 }

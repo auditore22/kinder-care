@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace kinder_care.Models;
+namespace kinder_care.Model;
 
-public partial class Actividade
+public partial class Actividades
 {
-    public int Id { get; set; }
+    public int IdActividad { get; set; }
 
     public int IdTipoActividad { get; set; }
 
@@ -17,5 +17,5 @@ public partial class Actividade
 
     public virtual TipoActividad IdTipoActividadNavigation { get; set; } = null!;
 
-    public virtual ICollection<RelNinoActividad> RelNinoActividads { get; set; } = new List<RelNinoActividad>();
+    public virtual ICollection<RelNinoActividad> RelNinoActividad { get; set; } = new List<RelNinoActividad>();
 }

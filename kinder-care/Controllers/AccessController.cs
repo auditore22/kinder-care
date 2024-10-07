@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using kinder_care.Model;
 
 namespace kinder_care.Controllers
 {
@@ -13,14 +14,15 @@ namespace kinder_care.Controllers
     {
 
         private readonly KinderCareContext _context;
-        private readonly PasswordHasher<Usuario> _passwordHasher;
-
+        private readonly PasswordHasher<Usuarios> _passwordHasher;
+        
         public AccessController(KinderCareContext context)
         {
             _context = context;
-            _passwordHasher = new PasswordHasher<Usuario>();
+            _passwordHasher = new PasswordHasher<Usuarios>();
         }
 
+        /*
         [HttpGet]
         public IActionResult Register()
         {
@@ -28,7 +30,7 @@ namespace kinder_care.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(Usuario usuario)
+        public async Task<IActionResult> Register(Usuarios usuario)
         {
             usuario.ContrasenaHash = _passwordHasher.HashPassword(usuario, usuario.ContrasenaHash);
             usuario.IdRol = 1;
@@ -36,7 +38,7 @@ namespace kinder_care.Controllers
             await _context.Usuarios.AddAsync(usuario);
             await _context.SaveChangesAsync();
 
-            if (usuario.Id != 0)
+            if (usuario.IdUsuario != 0)
             {
                 return RedirectToAction("Login", "Access");
             }
@@ -46,6 +48,7 @@ namespace kinder_care.Controllers
                 return View();
             }
         }
+        */
 
         [HttpGet]
         public IActionResult Login()
@@ -87,7 +90,7 @@ namespace kinder_care.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, usuarioRecibido.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, usuarioRecibido.IdUsuario.ToString()),
                 new Claim(ClaimTypes.Name, usuarioRecibido.Nombre),
                 new Claim(ClaimTypes.Role, usuarioRecibido.IdRolNavigation.Nombre)
             };

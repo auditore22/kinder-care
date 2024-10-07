@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace kinder_care.Models;
+namespace kinder_care.Model;
 
-public partial class ContactosEmergencium
+public partial class ContactosEmergencia
 {
-    public int Id { get; set; }
+    public int IdContactoEmergencia { get; set; }
 
     public string NombreContacto { get; set; } = null!;
 
     public string? Relacion { get; set; }
 
-    public string? Telefono { get; set; }
+    public int? Telefono { get; set; }
 
     public string? Direccion { get; set; }
 
     public bool? Activo { get; set; }
 
-    public virtual ICollection<Nino> IdNinos { get; set; } = new List<Nino>();
+    public virtual ICollection<Ninos> IdNino { get; set; } = new List<Ninos>();
 }
