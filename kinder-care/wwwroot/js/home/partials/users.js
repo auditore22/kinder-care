@@ -10,7 +10,7 @@
                             <h2>Gestión de Roles</h2>
                             <p>Accede a las herramientas de gestión de roles para administrar los permisos dentro del sistema.</p>
                             <ul class="actions">
-                                <li><a href="/Users/ManageRoles" class="button">
+                                <li><a href="/Usuarios/Index" class="button">
                                 <i class="fa-solid fa-users-gear large-icon"></i>Gestionar Roles</a></li>
                             </ul>
                         </div>

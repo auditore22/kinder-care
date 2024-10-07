@@ -13,7 +13,7 @@ public class UsersController(ILogger<UsersController> logger) : Controller
     public ActionResult ManageRoles()
     {
         ViewBag.CurrentSection = "ManageRoles";
-        return View();
+        return RedirectToAction("Index", "Usuarios"); //Redirigir al controller de Usuarios
     }
 
     public ActionResult ManageProfiles()

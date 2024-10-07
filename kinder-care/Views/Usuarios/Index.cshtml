@@ -1,0 +1,72 @@
+﻿@model IEnumerable<kinder_care.Models.Usuarios>
+
+@{
+    ViewBag.Title = "Gestión de Perfiles de Usuarios";
+    Layout = "_SecondaryLayout";
+}
+
+<section id="manageRoles" class="wrapper style1 fullscreen fade-up">
+    <div class="inner">
+        <h2>Gestión de Roles</h2>
+        <p>Administra los roles de los usuarios en el sistema, asignando o removiendo permisos según sea necesario.</p>
+
+        <!-- Cuadro de Búsqueda -->
+        <div class="row">
+            <div class="col-12">
+                <input type="text" id="searchInput" placeholder="Buscar por Nombre, Email, Teléfono, Materia o Grupo..." onkeyup="filterTable()">
+            </div>
+        </div>
+        <hr>
+        <ul class="actions">
+            <li><a asp-action="Create" asp-controller="Usuarios" class="button primary">Registrar Nuevo Usuario</a></li>
+        </ul>
+        <hr>
+        <div class="table-wrapper">
+            <table id="profilesTable">
+                <thead>
+                    <tr>
+                        <th>Cedula</th>
+                        <th>Nombre Usuario</th>
+                        <th>Contraseña</th>
+                        <th>Numero Telefono</th>
+                        <th>Direccion</th>
+                        <th>Correo</th>
+                        <th>Fecha de Creacion</th>
+                        <th>Ultima Actualizacion</th>
+                        <th>Estado</th>
+                        <th>Rol</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model) 
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Cedula)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ContrasenaHash)</td>
+                            <td>@Html.DisplayFor(modelItem => item.NumTelefono)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CorreoElectronico)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FechaCreacion)</td>
+                            <td>@Html.DisplayFor(modelItem => item.UltimaActualizacion)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Activo)</td>
+                            <td>@Html.DisplayFor(modelItem => item.IdRolNavigation.IdRol)</td>
+                            <td>
+                                <button class="btn btn-primary" type="submit">
+                                    <a asp-action="Edit" asp-route-id="@item.IdUsuario">Edit</a>
+                                </button>
+                                <button class="btn btn-primary" type="submit">
+                                    <a asp-action="Details" asp-route-id="@item.IdUsuario">Details</a>
+                                </button>
+                                <button class="btn btn-primary" type="submit">
+                                    <a asp-action="Delete" asp-route-id="@item.IdUsuario">Delete</a>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

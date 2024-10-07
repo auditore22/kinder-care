@@ -1,6 +1,5 @@
 ﻿using kinder_care.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using kinder_care.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
