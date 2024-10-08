@@ -45,10 +45,7 @@
             </table>
         </div>
         <div>
-            <form asp-action="Edit">
-                <input type="hidden" asp-for="IdDocente" />
-                <input type="submit" value="Edit" class="btn btn-danger" />
-            </form>
+            <a asp-action="Edit" asp-route-id="@Model.IdDocente" class="button primary">Edit</a>
             <hr />
             <a asp-action="Index" asp-controller="Docentes" class="button primary">Regresar</a>
         </div>
