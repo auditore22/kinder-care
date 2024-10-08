@@ -21,7 +21,7 @@ public class ConfigurationController : Controller
     }
 
     // Método para obtener el usuario actual
-    private Usuario ObtenerUsuarioActual()
+    private Usuarios ObtenerUsuarioActual()
     {
         // Verificamos si el usuario está autenticado
         if (User.Identity != null && User.Identity.IsAuthenticated)
@@ -37,7 +37,7 @@ public class ConfigurationController : Controller
 
                 // Simulación de obtención del usuario desde la base de datos.
                 // En un caso real, este valor sería obtenido mediante un servicio o DbContext.
-                var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == userId);
+                var usuario = _context.Usuarios.FirstOrDefault(u => u.IdUsuario == userId);
 
                 return usuario ?? throw new Exception("Usuario no encontrado");
             }
@@ -79,7 +79,7 @@ public class ConfigurationController : Controller
         var usuario = ObtenerUsuarioActual();
 
         // Verificación de la contraseña actual
-        var passwordHasher = new PasswordHasher<Usuario>();
+        var passwordHasher = new PasswordHasher<Usuarios>();
         var passwordVerificationResult = passwordHasher.VerifyHashedPassword(usuario, usuario.ContrasenaHash, model.CurrentPassword);
 
         if (passwordVerificationResult == PasswordVerificationResult.Failed)
