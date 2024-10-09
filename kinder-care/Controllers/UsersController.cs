@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using kinder_care.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace kinder_care.Controllers;
 
+[Authorize]
 public class UsersController(ILogger<UsersController> logger) : Controller
 {
     private readonly ILogger<UsersController> _logger = logger;
@@ -11,13 +13,13 @@ public class UsersController(ILogger<UsersController> logger) : Controller
     public ActionResult ManageRoles()
     {
         ViewBag.CurrentSection = "ManageRoles";
-        return View();
+        return RedirectToAction("Index", "Usuarios"); //Redirigir al controller de Usuarios
     }
 
     public ActionResult ManageProfiles()
     {
         ViewBag.CurrentSection = "ManageProfiles";
-        return View();
+        return RedirectToAction("Index", "Docentes"); //Redirigir al controller de Usuarios
     }
 
     public ActionResult ManageRecords()

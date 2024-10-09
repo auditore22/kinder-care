@@ -1,0 +1,53 @@
+﻿@model kinder_care.Models.Docentes
+
+@{
+    ViewBag.Title = "Detalles de Perfiles de Docentes";
+    Layout = "_SecondaryLayout";
+}
+<section id="manageRoles" class="wrapper style1 fullscreen fade-up">
+    <div class="inner">
+        <h1>Detalles del Docente</h1>
+
+        <div class="table-wrapper">
+            <table id="profilesTable">
+                <thead>
+                    <tr>
+                        <th>Cedula</th>
+                        <th>Nombre Usuario</th>
+                        <th>Contraseña</th>
+                        <th>Numero Telefono</th>
+                        <th>Direccion</th>
+                        <th>Correo</th>
+                        <th>Grupo Asignado</th>
+                        <th>Fecha Nacimiento</th>
+                        <th>Fecha de Creacion</th>
+                        <th>Ultima Actualizacion</th>
+                        <th>Estado</th>
+                        <th>Rol</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Html.DisplayFor(model => model.IdUsuarioNavigation.Cedula)</td>
+                        <td>@Html.DisplayFor(model => model.IdUsuarioNavigation.Nombre)</td>
+                        <td>@Html.DisplayFor(model => model.IdUsuarioNavigation.ContrasenaHash)</td>
+                        <td>@Html.DisplayFor(model => model.IdUsuarioNavigation.NumTelefono)</td>
+                        <td>@Html.DisplayFor(model => model.IdUsuarioNavigation.Direccion)</td>
+                        <td>@Html.DisplayFor(model => model.IdUsuarioNavigation.CorreoElectronico)</td>
+                        <td>@Html.DisplayFor(model => model.GrupoAsignado)</td>
+                        <td>@Html.DisplayFor(model => model.FechaNacimiento)</td>
+                        <td>@Html.DisplayFor(model => model.FechaCreacion)</td>
+                        <td>@Html.DisplayFor(model => model.UltimaActualizacion)</td>
+                        <td>@Html.DisplayFor(model => model.Activo)</td>
+                        <td>@Html.DisplayFor(model => model.IdUsuarioNavigation.IdRol)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.IdDocente" class="button primary">Edit</a>
+            <hr />
+            <a asp-action="Index" asp-controller="Docentes" class="button primary">Regresar</a>
+        </div>
+    </div>
+</section>

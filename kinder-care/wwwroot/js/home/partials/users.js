@@ -7,11 +7,11 @@
                 <section>
                     <div class="content">
                         <div class="inner">
-                            <h2>Gestión de Roles</h2>
-                            <p>Accede a las herramientas de gestión de roles para administrar los permisos dentro del sistema.</p>
+                            <h2>Gestión de Usuarios</h2>
+                            <p>Accede a las herramientas de gestión de usuarios para administrar los permisos dentro del sistema.</p>
                             <ul class="actions">
-                                <li><a href="/Users/ManageRoles" class="button">
-                                <i class="fa-solid fa-users-gear large-icon"></i>Gestionar Roles</a></li>
+                                <li><a href="/Usuarios/Index" class="button">
+                                <i class="fa-solid fa-users-gear large-icon"></i>Gestionar Usuarios</a></li>
                             </ul>
                         </div>
                     </div>
@@ -22,7 +22,7 @@
                             <h2>Perfiles de Docentes</h2>
                             <p>Administra la información de los perfiles de los docentes, incluyendo datos personales y roles asignados.</p>
                             <ul class="actions">
-                                <li><a href="/Users/ManageProfiles" class="button">
+                                <li><a href="/Docentes/Index" class="button">
                                 <i class="fa-solid fa-chalkboard-user large-icon"></i>Gestionar Perfiles de Docentes</a></li>
                             </ul>
                         </div>

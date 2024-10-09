@@ -1,17 +1,25 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.Identity.Web;
-using Microsoft.Identity.Web.UI;
+﻿using kinder_care.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAdB2C"));
 builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages()
-    .AddMicrosoftIdentityUI();
+
+// Configure DbContext with SQL Server
+builder.Services.AddDbContext<KinderCareContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("KinderCareConnection")));
+
+//Configurar la autenticacion
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+{
+    // Diciendole que la ruta de login es:
+    options.LoginPath = "/Access/Login";
+
+    // Ac� podemos indicarle el tiempo que pued durar una sesion de usuario:
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+});
 
 var app = builder.Build();
 
@@ -28,11 +36,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+//Indicarle que use la autenticacion:
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Login}/{action=Index}/{id?}");
-app.MapRazorPages();
+    pattern: "{controller=Access}/{action=Login}/{id?}");
 
 app.Run();
