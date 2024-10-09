@@ -35,6 +35,8 @@
                                 <div class="col-12">
                                     <label asp-for="Cedula" class="form-label"></label>
                                     <input type="text" class="form-control" placeholder="101110111.." required asp-for="Cedula">
+                                    <!-- Mensaje de validación para el campo Cedula -->
+                                    <span asp-validation-for="Cedula" class="text-danger"></span>
                                 </div>
                                 <div class="col-12">
                                     <label asp-for="CorreoElectronico" class="form-label"></label>
