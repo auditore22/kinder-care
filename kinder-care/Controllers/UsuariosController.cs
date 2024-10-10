@@ -26,7 +26,19 @@ namespace kinder_care.Controllers
         //======================================================[VISTA INDEX]==========================================================================================
         public async Task<IActionResult> Index()
         {
-            var kinderCareContext = _context.Usuarios.Include(u => u.IdRolNavigation);
+            var kinderCareContext = _context.Usuarios
+                .Include(u => u.IdRolNavigation)
+                .Select(u => new Usuarios
+                {
+                    IdUsuario = u.IdUsuario,
+                    Nombre = u.Nombre,
+                    Cedula = u.Cedula,
+                    CorreoElectronico = u.CorreoElectronico,
+                    NumTelefono = u.NumTelefono,
+                    Direccion = u.Direccion,
+                    TokenRecovery = u.TokenRecovery ?? string.Empty // Usa un valor predeterminado si es null
+                });
+
             return View(await kinderCareContext.ToListAsync());
         }
 
@@ -60,6 +72,7 @@ namespace kinder_care.Controllers
         public async Task<IActionResult> Create(Usuarios usuarios)
         {
             usuarios.ContrasenaHash = _passwordHasher.HashPassword(usuarios, usuarios.ContrasenaHash);
+            usuarios.TokenRecovery = usuarios.TokenRecovery ?? Guid.NewGuid().ToString(); // Generar un token si es null
 
             await _context.Usuarios.AddAsync(usuarios);
             await _context.SaveChangesAsync();
@@ -73,7 +86,6 @@ namespace kinder_care.Controllers
                 ViewData["Mensaje"] = "No se pudo crear el usuario";
                 return View(usuarios);
             }
-
         }
 
         //======================================================[VISTA EDIT]==========================================================================================
