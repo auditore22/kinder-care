@@ -27,6 +27,7 @@ CREATE TABLE usuarios
     fecha_creacion       DATETIME DEFAULT GETDATE(),
     ultima_actualizacion DATETIME DEFAULT GETDATE(),
     activo               BIT      DEFAULT 1,
+    TokenRecovery        VARCHAR(100) DEFAULT '0',
     CONSTRAINT fk_usuarios_rol FOREIGN KEY (id_rol) REFERENCES roles (id_Rol)
 );
 GO
@@ -42,7 +43,7 @@ BEGIN
 END;
 GO
 
---------------------------------- Tabla de Ni駉s ---------------------------------
+--------------------------------- Tabla de Ni帽os ---------------------------------
 CREATE TABLE ninos
 (
     id_Nino                   INT PRIMARY KEY IDENTITY (1,1),
@@ -68,7 +69,7 @@ BEGIN
 END;
 GO
 
---------------------------------- Tabla de Relaci髇 Padre(Usuario)-Ni駉 ---------------------------------
+--------------------------------- Tabla de Relaci贸n Padre(Usuario)-Ni帽o ---------------------------------
 CREATE TABLE rel_padres_ninos
 (
     id_padre INT         NOT NULL,
@@ -136,11 +137,11 @@ BEGIN
         INSERT (id_usuario, fecha_nacimiento, grupo_asignado, fecha_creacion, ultima_actualizacion)
         VALUES (source.id_usuario, NULL, NULL, GETDATE(), GETDATE())
     WHEN MATCHED THEN
-        UPDATE SET ultima_actualizacion = GETDATE(); -- Actualiza la fecha de 鷏tima actualizaci髇 si ya existe
+        UPDATE SET ultima_actualizacion = GETDATE(); -- Actualiza la fecha de 煤ltima actualizaci贸n si ya existe
 END;
 GO
 
---------------------------------- Tabla de Progreso Acad閙ico ---------------------------------
+--------------------------------- Tabla de Progreso Acad茅mico ---------------------------------
 CREATE TABLE progreso_academico
 (
     id_Progreso_Academico    INT PRIMARY KEY IDENTITY (1,1),
@@ -259,7 +260,7 @@ BEGIN
 END;
 GO
 
---------------------------------- Relaci髇 Docente-Ni駉-Materia ---------------------------------
+--------------------------------- Relaci贸n Docente-Ni帽o-Materia ---------------------------------
 CREATE TABLE rel_docente_nino_materia
 (
     id_docente INT          NOT NULL,
@@ -283,7 +284,7 @@ CREATE TABLE contactos_emergencia
 );
 GO
 
---------------------------------- Relaci髇 Ni駉-Contacto de Emergencia ---------------------------------
+--------------------------------- Relaci贸n Ni帽o-Contacto de Emergencia ---------------------------------
 CREATE TABLE rel_nino_contacto_emergencia
 (
     id_nino     INT NOT NULL,
@@ -303,7 +304,7 @@ CREATE TABLE alergias
 );
 GO
 
---------------------------------- Tabla de Condiciones M閐icas ---------------------------------
+--------------------------------- Tabla de Condiciones M茅dicas ---------------------------------
 CREATE TABLE condiciones_medicas
 (
     id_Condicion_medica               INT PRIMARY KEY IDENTITY (1,1),
@@ -322,7 +323,7 @@ CREATE TABLE medicamentos
 );
 GO
 
---------------------------------- Relaci髇 Ni駉-Alergias ---------------------------------
+--------------------------------- Relaci贸n Ni帽o-Alergias ---------------------------------
 CREATE TABLE rel_nino_alergia
 (
     id_nino    INT NOT NULL,
@@ -333,7 +334,7 @@ CREATE TABLE rel_nino_alergia
 );
 GO
 
---------------------------------- Relaci髇 Ni駉-Condiciones M閐icas ---------------------------------
+--------------------------------- Relaci贸n Ni帽o-Condiciones M茅dicas ---------------------------------
 CREATE TABLE rel_nino_condicion
 (
     id_nino      INT NOT NULL,
@@ -344,7 +345,7 @@ CREATE TABLE rel_nino_condicion
 );
 GO
 
---------------------------------- Relaci髇 Ni駉-Medicamentos ---------------------------------
+--------------------------------- Relaci贸n Ni帽o-Medicamentos ---------------------------------
 CREATE TABLE rel_nino_medicamento
 (
     id_nino        INT NOT NULL,
@@ -375,7 +376,7 @@ CREATE TABLE actividades
 );
 GO
 
---------------------------------- Relaci髇 Ni駉-Actividades ---------------------------------
+--------------------------------- Relaci贸n Ni帽o-Actividades ---------------------------------
 CREATE TABLE rel_nino_actividad
 (
     id_nino      INT                                                                NOT NULL,
