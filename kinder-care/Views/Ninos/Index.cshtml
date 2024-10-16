@@ -1,0 +1,50 @@
+@model IEnumerable<kinder_care.Models.Ninos>
+
+@{
+    ViewData["Title"] = "Listado de Niños";
+    Layout = "_SecondaryLayout";
+}
+
+<section id="studentProfile" class="wrapper style1 fullscreen fade-up">
+    <div class="inner">
+        <h2>Perfil de Estudiantes</h2>
+        <p>Consulta y edita la información del perfil de los estudiantes, incluyendo sus datos personales, registros médicos y académicos.</p>
+
+        <div style="height: 15px;"></div>
+        <h2>Listado de Niños</h2>
+        <div style="height: 10px;"></div>
+        
+        <div class="container">
+            <div class="row">
+                @foreach (var nino in Model) // Mostrar todos los niños
+                {
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <!-- Imagen del niño o imagen por defecto -->
+                            <img class="card-img-top" src="default-child.jpg" alt="Niño">
+
+                            <div class="card-body">
+
+                                <h5 class="card-title">@nino.NombreNino</h5>
+                                
+                                <p class="card-text">Fecha de nacimiento: @nino.FechaNacimiento.ToString("dd/MM/yyyy")</p>
+                                
+                                <p class="card-text">Dirección: @nino.Direccion</p>
+                                
+                                @if (!string.IsNullOrEmpty(nino.Poliza))
+                                {
+                                    <p class="card-text">Póliza: @nino.Poliza</p>
+                                }
+
+                                <div class="actions">
+                                    <a asp-action="Details" asp-route-id="@nino.IdNino" class="button primary">Detalles</a>
+                                    <a asp-action="Edit" asp-route-id="@nino.IdNino" class="button alt">Editar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

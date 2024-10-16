@@ -98,4 +98,8 @@
       <Compile Remove="Models\ViewModels\ChangePasswordViewModel.cshtml.cs" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Views\Padres\" />
+    </ItemGroup>
+
 </Project>
