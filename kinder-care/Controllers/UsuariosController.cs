@@ -36,13 +36,16 @@ namespace kinder_care.Controllers
                     CorreoElectronico = u.CorreoElectronico,
                     NumTelefono = u.NumTelefono,
                     Direccion = u.Direccion,
+                    FechaCreacion = u.FechaCreacion,
+                    UltimaActualizacion = u.UltimaActualizacion,
+                    IdRol = u.IdRolNavigation.IdRol,
                     TokenRecovery = u.TokenRecovery ?? string.Empty // Usa un valor predeterminado si es null
                 });
 
             return View(await kinderCareContext.ToListAsync());
         }
 
-        //======================================================[VISTA DERAILS]==========================================================================================
+        //======================================================[VISTA DETAILS]==========================================================================================
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -71,6 +74,7 @@ namespace kinder_care.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Usuarios usuarios)
         {
+
             usuarios.ContrasenaHash = _passwordHasher.HashPassword(usuarios, usuarios.ContrasenaHash);
             usuarios.TokenRecovery = usuarios.TokenRecovery ?? Guid.NewGuid().ToString(); // Generar un token si es null
 
@@ -108,7 +112,7 @@ namespace kinder_care.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Usuarios usuarios, string? ActualizarContraseña)
+        public async Task<IActionResult> Edit(int id, Usuarios usuarios)
         {
             if (usuarios == null)
             {
@@ -133,10 +137,10 @@ namespace kinder_care.Controllers
                 usuarioGuardado.UltimaActualizacion = DateTime.Now;
                 usuarioGuardado.Activo = usuarioGuardado.Activo;
 
-                // funcion para convertir la contraseña actualizada en encryptada por el hasher
-                if (!string.IsNullOrEmpty(ActualizarContraseña))
+                // Convertir la nueva contraseña en Hash
+                if (!string.IsNullOrEmpty(usuarios.ContrasenaHash))
                 {
-                    usuarioGuardado.ContrasenaHash = _passwordHasher.HashPassword(usuarioGuardado, ActualizarContraseña);
+                    usuarioGuardado.ContrasenaHash = _passwordHasher.HashPassword(usuarioGuardado, usuarios.ContrasenaHash);
                 }
 
                 _context.Update(usuarioGuardado);
