@@ -423,21 +423,6 @@ public partial class KinderCareContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("ultima_actualizacion");
-
-            entity.HasOne(d => d.IdNinoNavigation).WithMany(p => p.Pagos)
-                .HasForeignKey(d => d.IdNino)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_pagos_nino");
-
-            entity.HasOne(d => d.IdPadreNavigation).WithMany(p => p.Pagos)
-                .HasForeignKey(d => d.IdPadre)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_pagos_padre");
-
-            entity.HasOne(d => d.IdTipoPagoNavigation).WithMany(p => p.Pagos)
-                .HasForeignKey(d => d.IdTipoPago)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_pagos_tipo");
         });
 
         modelBuilder.Entity<ProgresoAcademico>(entity =>
