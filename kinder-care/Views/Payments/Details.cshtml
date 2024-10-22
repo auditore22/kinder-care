@@ -1,0 +1,59 @@
+﻿@model kinder_care.Models.Pagos
+
+@{
+    ViewBag.Title = "Detalles del Pago";
+    Layout = "_SecondaryLayout";
+}
+
+<section id="paymentDetails" class="wrapper style1 fullscreen fade-up">
+    <div class="inner">
+        <h2>Detalles del Pago</h2>
+
+        <div class="table-wrapper">
+            <table class="alt">
+                <tbody>
+                    <tr>
+                        <th>Fecha de Pago</th>
+                        <td>@Model.FechaPago.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                    <tr>
+                        <th>Nombre del Estudiante</th>
+                        <td>@Model.Nino?.NombreNino</td>
+                    </tr>
+                    <tr>
+                        <th>Nombre del Padre</th>
+                        <td>@Model.Padre?.Nombre</td>
+                    </tr>
+                    <tr>
+                        <th>Tipo de Pago</th>
+                        <td>@Model.TipoPago?.NombreTipoPago</td>
+                    </tr>
+                    <tr>
+                        <th>Método de Pago</th>
+                        <td>@Model.MetodoPago</td>
+                    </tr>
+                    <tr>
+                        <th>Referencia de Factura</th>
+                        <td>@Model.ReferenciaFactura</td>
+                    </tr>
+                    <tr>
+                        <th>Monto</th>
+                        <td>$@Model.Monto</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha de Creación</th>
+                        <td>@Model.FechaCreacion?.ToString("dd/MM/yyyy HH:mm")</td>
+                    </tr>
+                    <tr>
+                        <th>Última Actualización</th>
+                        <td>@Model.UltimaActualizacion?.ToString("dd/MM/yyyy HH:mm")</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <ul class="actions">
+            <li><a href="@Url.Action("ManagePayments", "Payments")" class="button primary">Volver</a></li>
+        </ul>
+    </div>
+</section>

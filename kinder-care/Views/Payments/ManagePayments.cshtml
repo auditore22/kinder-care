@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<kinder_care.Models.Pagos>
+
+@{
     ViewBag.Title = "Gestión de Pagos";
     Layout = "_SecondaryLayout";
 }
@@ -8,52 +10,155 @@
         <h2>Gestión de Pagos</h2>
         <p>Administra y revisa los pagos realizados por los padres, incluyendo las fechas, montos, y estado de los pagos.</p>
 
+        <!-- Buscador de pagos -->
+        <form asp-action="PaymentsSearch" method="get" class="mb-4">
+            <div class="row gtr-uniform">
+                <div class="col-8 col-12-small">
+                    <input type="text" name="searchQuery" class="form-control" placeholder="Buscar por nombre del padre..." value="@ViewBag.SearchQuery" />
+                </div>
+                <div class="col-4 col-12-small text-center">
+                    <button type="submit" class="btn-search">
+                        <i class="fas fa-search"></i> <!-- Ícono de la lupa -->
+                    </button>
+                </div>
+            </div>
+        </form>
+
         <div class="table-wrapper">
-            <table>
+            <table class="table table-striped">
                 <thead>
-                    <tr>
-                        <th>Fecha de Pago</th>
-                        <th>Nombre del Estudiante</th>
-                        <th>Nombre del Padre</th>
-                        <th>Monto</th>
-                        <th>Estado del Pago</th>
-                        <th>Acciones</th>
-                    </tr>
+                <tr>
+                    <th>Fecha de Pago</th>
+                    <th>Nombre del Estudiante</th>
+                    <th>Nombre del Padre</th>
+                    <th>Monto</th>
+                    <th>Tipo de Pago</th>
+                    <th>Acciones</th>
+                </tr>
                 </thead>
                 <tbody>
+                @if (Model.Any())
+                {
+                    @foreach (var pago in Model)
+                    {
+                        <tr>
+                            <td>@pago.FechaPago.ToString("dd/MM/yyyy")</td>
+                            <td>@pago.Nino?.NombreNino</td>
+                            <td>@pago.Padre?.Nombre</td>
+                            <td>$@pago.Monto</td>
+                            <td>@pago.TipoPago?.NombreTipoPago</td>
+                            <td>
+                                <ul class="actions">
+                                    <li>
+                                        <a href="@Url.Action("Details", "Payments", new { id = pago.IdPago })" class="btn btn-info btn-sm">Ver Detalles</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Edit", "Payments", new { id = pago.IdPago })" class="btn btn-warning btn-sm">Editar</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Delete", "Payments", new { id = pago.IdPago })" class="btn btn-danger btn-sm">Eliminar</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
                     <tr>
-                        <td>05/10/2024</td>
-                        <td>Carlos Hernandez</td>
-                        <td>Maria Lopez</td>
-                        <td>$150</td>
-                        <td>Completado</td>
-                        <td>
-                            <ul class="actions">
-                                <li><a href="#" class="button small">Ver Detalles</a></li>
-                                <li><a href="#" class="button small alt">Editar Pago</a></li>
-                            </ul>
-                        </td>
+                        <td colspan="6" class="text-center">No se han registrado pagos.</td>
                     </tr>
-                    <tr>
-                        <td>15/09/2024</td>
-                        <td>Lucia Gómez</td>
-                        <td>Juan Gómez</td>
-                        <td>$150</td>
-                        <td>Pendiente</td>
-                        <td>
-                            <ul class="actions">
-                                <li><a href="#" class="button small">Ver Detalles</a></li>
-                                <li><a href="#" class="button small alt">Recordar Pago</a></li>
-                            </ul>
-                        </td>
-                    </tr>
+                }
                 </tbody>
             </table>
         </div>
-
-        <ul class="actions">
-            <li><a href="@Url.Action("CreatePayment", "Payments")" class="button primary">Registrar Nuevo Pago</a></li>
-        </ul>
-
+            <ul class="actions">
+                <li><a href="@Url.Action("CreatePayment", "Payments")" class="button primary">Registrar Nuevo Pago</a></li>
+            </ul>
     </div>
 </section>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-jgzv7ai7A0WZq3XZ+dZb4iPhftdtyHJUZsP/nVYf2l2eZ0Qk+0xgBgzHP7t1xvEOVxuKN4mi/XBtxz4FlioHg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+    /* Aumentar el tamaño de los botones redondeados */
+    .btn {
+        padding: 14px 28px; /* Aumentar el padding */
+        font-size: 18px; /* Aumentar el tamaño de la fuente */
+        border-radius: 50px;
+        border: none;
+        text-decoration: none !important;
+        color: white;
+    }
+
+    /* Mantener los colores personalizados */
+    .btn-info {
+        background-color: #17a2b8;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+    }
+
+    /* Efecto hover para todos los botones */
+    .btn:hover {
+        opacity: 0.8;
+    }
+
+    .rounded-pill {
+        border-radius: 50px !important;
+    }
+
+    /* Espaciado entre los botones de acciones */
+    .actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .btn-primary:hover {
+        opacity: 0.8;
+    }
+
+    .btn-search {
+        background: none; /* Sin fondo */
+        border: none; /* Sin borde */
+        font-size: 24px; /* Tamaño del ícono más grande */
+        padding: 8px; /* Espaciado interno más grande */
+        width: 50px; /* Ancho del botón más grande */
+        height: 50px; /* Altura del botón más grande */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%; /* Forma redonda */
+        cursor: pointer;
+        margin-top: -4px; /* Alineación vertical */
+        transition: background 0.3s; /* Efecto de transición */
+    }
+
+    .btn-search:hover {
+        background: rgba(0, 0, 0, 0.1); /* Efecto hover */
+    }
+
+    /* Asegura la alineación vertical del campo de búsqueda y el botón */
+    .gtr-uniform {
+        display: flex;
+        align-items: center;
+    }
+
+    input[type="text"] {
+        height: 50px; /* Alinea la altura con el botón */
+    }
+    
+</style>

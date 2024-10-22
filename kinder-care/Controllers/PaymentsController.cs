@@ -17,6 +17,37 @@ public class PaymentsController : Controller
         _context = context;
     }
 
+    public IActionResult FinanceDetails()
+    {
+        ViewBag.CurrentSection = "FinanceDetails";
+        return View();
+    }
+
+    // GET: PaymentsSearch
+    [HttpGet]
+    public async Task<IActionResult> PaymentsSearch(string searchQuery)
+    {
+        ViewBag.SearchQuery = searchQuery; // Para mostrar el valor de búsqueda en el input
+
+        // Filtrar pagos por nombre del padre y ordenarlos por fecha más reciente
+        var pagos = string.IsNullOrWhiteSpace(searchQuery)
+            ? await _context.Pagos
+                .Include(p => p.Nino)
+                .Include(p => p.Padre)
+                .Include(p => p.TipoPago)
+                .OrderByDescending(p => p.FechaPago) // Ordena por fecha de pago descendente
+                .ToListAsync()
+            : await _context.Pagos
+                .Include(p => p.Nino)
+                .Include(p => p.Padre)
+                .Include(p => p.TipoPago)
+                .Where(p => p.Padre != null && p.Padre.Nombre.Contains(searchQuery))
+                .OrderByDescending(p => p.FechaPago) // Ordena por fecha de pago descendente
+                .ToListAsync();
+
+        return View("ManagePayments", pagos);
+    }
+    
     // Mostrar la lista de pagos
     public async Task<IActionResult> ManagePayments()
     {
@@ -42,8 +73,16 @@ public class PaymentsController : Controller
                 "NombreCompleto"); // Asegúrate de que "NombreCompleto" sea la propiedad correcta
         ViewBag.TiposPago = new SelectList(tiposPago, "IdTipoPago", "NombreTipoPago");
 
-        return View();
+        var pagos = await _context.Pagos
+            .Include(p => p.Nino)
+            .Include(p => p.Padre)
+            .Include(p => p.TipoPago)
+            .OrderByDescending(p => p.FechaPago) // Ordena por fecha de pago descendente
+            .ToListAsync();
+
+        return View(pagos);
     }
+
     [HttpGet]
     public async Task<IActionResult> CreatePayment()
     {
@@ -115,7 +154,149 @@ public class PaymentsController : Controller
         return View(model);
     }
 
+    // Método para ver los detalles del pago
+    public async Task<IActionResult> Details(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var pago = await _context.Pagos
+            .Include(p => p.Nino)
+            .Include(p => p.Padre)
+            .Include(p => p.TipoPago)
+            .FirstOrDefaultAsync(p => p.IdPago == id);
+
+        if (pago == null) return NotFound();
+
+        return View(pago);
+    }
+
+    // GET: Payments
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        // Buscar el pago por ID
+        var pago = await _context.Pagos
+            .Include(p => p.Nino) // Incluir la relación con el niño
+            .Include(p => p.Padre) // Incluir la relación con el padre
+            .Include(p => p.TipoPago) // Incluir la relación con el tipo de pago
+            .FirstOrDefaultAsync(p => p.IdPago == id);
+
+        if (pago == null)
+        {
+            ViewBag.ErrorMessage = "No se encontró el pago para editar.";
+            return RedirectToAction("ManagePayments");
+        }
+
+        // Mapear el pago al PaymentViewModel
+        var model = new PaymentViewModel
+        {
+            IdPago = pago.IdPago,
+            IdNino = pago.IdNino,
+            IdPadre = pago.IdPadre,
+            IdTipoPago = pago.IdTipoPago,
+            FechaPago = pago.FechaPago,
+            Monto = pago.Monto,
+            MetodoPago = pago.MetodoPago,
+            ReferenciaFactura = pago.ReferenciaFactura
+        };
+
+        // Pasar los datos de los campos informativos a la vista
+        ViewBag.Nino = pago.Nino?.NombreNino ?? "N/A";
+        ViewBag.Padre = pago.Padre?.Nombre ?? "N/A";
+        ViewBag.TipoPago = pago.TipoPago?.NombreTipoPago ?? "N/A";
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(PaymentViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            // Buscar el pago por ID
+            var pago = await _context.Pagos.FindAsync(model.IdPago);
+            if (pago == null)
+            {
+                ViewBag.ErrorMessage = "No se encontró el pago para actualizar.";
+                return RedirectToAction("ManagePayments");
+            }
+
+            // Actualizar solo los campos editables
+            pago.FechaPago = model.FechaPago;
+            pago.Monto = model.Monto;
+            pago.MetodoPago = model.MetodoPago;
+            pago.ReferenciaFactura = model.ReferenciaFactura;
+            pago.UltimaActualizacion = DateTime.Now;
+
+            try
+            {
+                _context.Update(pago);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("ManagePayments");
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine($"Error al actualizar el pago: {ex.Message}");
+                ViewBag.ErrorMessage = "Error al actualizar el pago. Intenta de nuevo.";
+                return View(model);
+            }
+        }
+
+        ViewBag.ErrorMessage = "Hay errores en el formulario.";
+        return View(model);
+    }
 
 
+    // Método para eliminar el pago
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
 
+        var pago = await _context.Pagos
+            .Include(p => p.Nino)
+            .Include(p => p.Padre)
+            .Include(p => p.TipoPago)
+            .FirstOrDefaultAsync(m => m.IdPago == id);
+
+        if (pago == null)
+        {
+            return NotFound();
+        }
+
+        return View(pago);
+    }
+
+    // Confirmar la eliminación del pago
+    [HttpPost, ActionName("DeleteConfirmed")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var pago = await _context.Pagos.FindAsync(id);
+
+        if (pago == null)
+        {
+            ViewBag.ErrorMessage = "El pago no se encontró o ya fue eliminado.";
+            return RedirectToAction("ManagePayments");
+        }
+
+        try
+        {
+            _context.Pagos.Remove(pago);
+            await _context.SaveChangesAsync();
+
+            // Redirige a la vista de gestión de pagos después de la eliminación exitosa
+            return RedirectToAction("ManagePayments");
+        }
+        catch (Exception ex)
+        {
+            // Capturar cualquier error en la eliminación
+            Console.WriteLine($"Error al eliminar el pago: {ex.Message}");
+            ViewBag.ErrorMessage = "Hubo un error al intentar eliminar el pago. Por favor, inténtalo de nuevo.";
+            return RedirectToAction("ManagePayments");
+        }
+    }
 }
