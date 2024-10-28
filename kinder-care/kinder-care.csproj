@@ -9,6 +9,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Views\Padres\**" />
+      <Content Remove="Views\Padres\**" />
+      <EmbeddedResource Remove="Views\Padres\**" />
+      <None Remove="Views\Padres\**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" NoWarn="NU1605" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.8" NoWarn="NU1605" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
@@ -96,10 +103,6 @@
 
     <ItemGroup>
       <Compile Remove="Models\ViewModels\ChangePasswordViewModel.cshtml.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Views\Padres\" />
     </ItemGroup>
 
 </Project>
