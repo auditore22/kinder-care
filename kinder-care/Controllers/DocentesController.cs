@@ -29,7 +29,7 @@ namespace kinder_care.Controllers
             return View(await kinderCareContext.ToListAsync());
         }
 
-        //======================================================[VISTA DERAILS]==========================================================================================
+        //======================================================[VISTA DETAILS]==========================================================================================
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -148,9 +148,13 @@ namespace kinder_care.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var docentes = await _context.Docentes.FindAsync(id);
+            var docentes = await _context.Docentes
+                .Include(d => d.IdUsuarioNavigation)
+                .FirstOrDefaultAsync(d => d.IdDocente == id);
+
             if (docentes != null)
             {
+                docentes.IdUsuarioNavigation.IdRol = 3; //Si se elimina un docente, el id del usuario relacionado se volvera un rol de padre
                 _context.Docentes.Remove(docentes);
             }
 

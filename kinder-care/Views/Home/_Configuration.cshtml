@@ -1,10 +1,36 @@
-﻿<section id="configuration" class="wrapper style1 fullscreen fade-up">
+﻿@using System.Security.Claims;
+
+@{
+var RoleName = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
+}
+
+<section id="configuration" class="wrapper style1 fullscreen fade-up">
     <div class="inner">
+        
+        @if (RoleName == "Administrador")
+        {
+            <div class="col-6 col-12-small">
+                <section>
+                    <ul class="actions">
+                        <li><a href="/Configuration/SystemConfig" class="button scrolly"><i class="fa-solid fa-cog large-icon"></i>Configuración del Sistema</a></li>
+                    </ul>
+                    <p>Accede a las configuraciones avanzadas del sistema.</p>
+                </section>
+            </div>
+        }
+
         <h2>Configuración</h2>
         <p>Aquí puedes configurar las opciones del sistema y administrar tu perfil.</p>
         <div class="row" id="configurationOptionsContent">
+            <div class="col-6 col-12-small">
+                <section>
+                    <ul class="actions">
+                        <li><a href="/Configuration/UserProfile" class="button scrolly"><i class="fa-solid fa-user-cog large-icon"></i>Perfil de Usuario</a></li>
+                        <li><a asp-action="Index" asp-controller="Usuarios" class="button scrolly"><i class="fa-solid fa-user-cog large-icon"></i>Perfil de Usuario 2</a></li>
+                    </ul>
+                    <p>Gestiona y actualiza la información de tu perfil.</p>
+                </section>
+            </div>
         </div>
     </div>
 </section>
-
-<script src="~/js/home/partials/configuration.js"></script>

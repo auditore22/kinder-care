@@ -7,6 +7,7 @@
 
 <section id="manageRoles" class="wrapper style1 fullscreen fade-up">
     <div class="inner">
+        
         <h2>Gestión de Roles</h2>
         <p>Administra los roles de los usuarios en el sistema, asignando o removiendo permisos según sea necesario.</p>
 
@@ -18,6 +19,7 @@
         </div>
         <hr>
         <ul class="actions">
+            <li><a asp-action="Index" asp-controller="Home" class="button primary">Regresar</a></li>
             <li><a asp-action="Create" asp-controller="Usuarios" class="button primary">Registrar Nuevo Usuario</a></li>
         </ul>
         <hr>
@@ -51,7 +53,7 @@
                             <td>@Html.DisplayFor(modelItem => item.FechaCreacion)</td>
                             <td>@Html.DisplayFor(modelItem => item.UltimaActualizacion)</td>
                             <td>@Html.DisplayFor(modelItem => item.Activo)</td>
-                            <td>@Html.DisplayFor(modelItem => item.IdRolNavigation.IdRol)</td>
+                            <td>@Html.DisplayFor(modelItem => item.IdRol)</td>
                             <td>
                                 <button class="btn btn-primary" type="submit">
                                     <a asp-action="Edit" asp-route-id="@item.IdUsuario">Edit</a>

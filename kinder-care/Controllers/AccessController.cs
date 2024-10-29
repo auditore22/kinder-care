@@ -32,7 +32,9 @@ namespace kinder_care.Controllers
         {
             // Hashear la contraseña del usuario
             usuario.ContrasenaHash = _passwordHasher.HashPassword(usuario, usuario.ContrasenaHash);
-            usuario.IdRol = 1;
+            // usuario.IdRol = 1;
+            usuario.IdRol = 2;
+            // usuario.IdRol = 3;
 
             // Generar un token aleatorio para TokenRecovery
             usuario.TokenRecovery = Guid.NewGuid().ToString() + "-" + new Random().Next(100000, 999999).ToString();
@@ -108,7 +110,8 @@ namespace kinder_care.Controllers
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity), properties);
-
+            
+            TempData["RoleId"] = usuarioRecibido.IdRol; // Almacenar el ID del rol en TempData para pasarlo al js
             return RedirectToAction("Index", "Home");
         }
 

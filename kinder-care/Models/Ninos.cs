@@ -21,7 +21,7 @@ public partial class Ninos
 
     public DateTime? UltimaActualizacion { get; set; }
 
-    public bool? Activo { get; set; }
+    public bool Activo { get; set; }
 
     public virtual ICollection<Asistencia> Asistencia { get; set; } = new List<Asistencia>();
 

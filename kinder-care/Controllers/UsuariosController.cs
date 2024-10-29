@@ -26,11 +26,26 @@ namespace kinder_care.Controllers
         //======================================================[VISTA INDEX]==========================================================================================
         public async Task<IActionResult> Index()
         {
-            var kinderCareContext = _context.Usuarios.Include(u => u.IdRolNavigation);
+            var kinderCareContext = _context.Usuarios
+                .Include(u => u.IdRolNavigation)
+                .Select(u => new Usuarios
+                {
+                    IdUsuario = u.IdUsuario,
+                    Nombre = u.Nombre,
+                    Cedula = u.Cedula,
+                    CorreoElectronico = u.CorreoElectronico,
+                    NumTelefono = u.NumTelefono,
+                    Direccion = u.Direccion,
+                    FechaCreacion = u.FechaCreacion,
+                    UltimaActualizacion = u.UltimaActualizacion,
+                    IdRol = u.IdRolNavigation.IdRol,
+                    TokenRecovery = u.TokenRecovery ?? string.Empty // Usa un valor predeterminado si es null
+                });
+
             return View(await kinderCareContext.ToListAsync());
         }
 
-        //======================================================[VISTA DERAILS]==========================================================================================
+        //======================================================[VISTA DETAILS]==========================================================================================
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -59,7 +74,9 @@ namespace kinder_care.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Usuarios usuarios)
         {
+
             usuarios.ContrasenaHash = _passwordHasher.HashPassword(usuarios, usuarios.ContrasenaHash);
+            usuarios.TokenRecovery = usuarios.TokenRecovery ?? Guid.NewGuid().ToString(); // Generar un token si es null
 
             await _context.Usuarios.AddAsync(usuarios);
             await _context.SaveChangesAsync();
@@ -73,7 +90,6 @@ namespace kinder_care.Controllers
                 ViewData["Mensaje"] = "No se pudo crear el usuario";
                 return View(usuarios);
             }
-
         }
 
         //======================================================[VISTA EDIT]==========================================================================================
@@ -96,7 +112,7 @@ namespace kinder_care.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Usuarios usuarios, string? ActualizarContraseña)
+        public async Task<IActionResult> Edit(int id, Usuarios usuarios)
         {
             if (usuarios == null)
             {
@@ -121,10 +137,10 @@ namespace kinder_care.Controllers
                 usuarioGuardado.UltimaActualizacion = DateTime.Now;
                 usuarioGuardado.Activo = usuarioGuardado.Activo;
 
-                // funcion para convertir la contraseña actualizada en encryptada por el hasher
-                if (!string.IsNullOrEmpty(ActualizarContraseña))
+                // Convertir la nueva contraseña en Hash
+                if (!string.IsNullOrEmpty(usuarios.ContrasenaHash))
                 {
-                    usuarioGuardado.ContrasenaHash = _passwordHasher.HashPassword(usuarioGuardado, ActualizarContraseña);
+                    usuarioGuardado.ContrasenaHash = _passwordHasher.HashPassword(usuarioGuardado, usuarios.ContrasenaHash);
                 }
 
                 _context.Update(usuarioGuardado);
