@@ -1,7 +1,49 @@
-﻿@{
+﻿@model IEnumerable<ExpedienteCompletoNino>
+@{
     ViewBag.Title = "Gestión de Expedientes de Niños";
     Layout = "_SecondaryLayout";
 }
+
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+        padding-top: 60px;
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 600px;
+        border-radius: 8px;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
 
 <section id="manageRecords" class="wrapper style1 fullscreen fade-up">
     <div class="inner">
@@ -18,62 +60,135 @@
         <div class="table-wrapper">
             <table id="recordsTable">
                 <thead>
-                    <tr>
-                        <th>Nombre Completo</th>
-                        <th>Fecha de Nacimiento</th>
-                        <th>Grupo Asignado</th>
-                        <th>Información Médica</th>
-                        <th>Acciones</th>
-                    </tr>
+                <tr>
+                    <th>Nombre Completo</th>
+                    <th>Cédula</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Dirección</th>
+                    <th>Póliza</th>
+                    <th>Alergias</th>
+                    <th>Condiciones Médicas</th>
+                    <th>Medicamentos</th>
+                    <th>Dosis</th>
+                    <th>Contactos de Emergencia</th>
+                    <th>Teléfono de Contacto</th>
+                    <th>Relación de Contacto</th>
+                    <th>Acciones</th>
+                </tr>
                 </thead>
                 <tbody>
+                @foreach (var item in Model)
+                {
                     <tr>
-                        <td>Carlos Hernandez</td>
-                        <td>15/03/2015</td>
-                        <td>Grupo 3</td>
-                        <td>Alergia a la lactosa</td>
+                        <td>@item.NombreNino</td>
+                        <td>@item.Cedula</td>
+                        <td>@item.FechaNacimiento.ToString("dd/MM/yyyy")</td>
+                        <td>@item.Direccion</td>
+                        <td>@item.Poliza</td>
+                        <td>@item.NombreAlergia</td>
+                        <td>@item.NombreCondicion</td>
+                        <td>@item.NombreMedicamento</td>
+                        <td>@item.Dosis</td>
+                        <td>@item.NombreContacto</td>
+                        <td>@item.TelefonoContacto</td>
+                        <td>@item.RelacionContacto</td>
                         <td>
                             <ul class="actions">
-                                <li><a href="#" class="button small">Ver Detalles</a></li>
-                                <li><a href="#" class="button small alt">Editar Expediente</a></li>
+                                <li>
+                                    <a href="#" class="button small alt" onclick="openEditModal('@item.IdNino', '@item.NombreNino', '@item.Direccion', '@item.Poliza')">Editar Expediente</a>
+                                </li>
                             </ul>
                         </td>
                     </tr>
-                    <tr>
-                        <td>Ana Maria Lopez</td>
-                        <td>25/07/2016</td>
-                        <td>Grupo 2</td>
-                        <td>Sin alergias</td>
-                        <td>
-                            <ul class="actions">
-                                <li><a href="#" class="button small">Ver Detalles</a></li>
-                                <li><a href="#" class="button small alt">Editar Expediente</a></li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Juan Carlos Perez</td>
-                        <td>10/10/2017</td>
-                        <td>Grupo 1</td>
-                        <td>Asma</td>
-                        <td>
-                            <ul class="actions">
-                                <li><a href="#" class="button small">Ver Detalles</a></li>
-                                <li><a href="#" class="button small alt">Editar Expediente</a></li>
-                            </ul>
-                        </td>
-                    </tr>
+                }
                 </tbody>
             </table>
         </div>
 
         <ul class="actions">
-            <li><a href="#" class="button primary">Añadir Nuevo Expediente</a></li>
+            <li>
+                <a href="#" class="button primary">Añadir Nuevo Expediente</a>
+            </li>
         </ul>
     </div>
 </section>
 
+<!-- Popup Modal de Edición -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Editar Expediente</h2>
+        <form id="editForm">
+            <input type="hidden" id="editIdNino" name="id_nino">
+            <div class="row">
+                <div class="col-12">
+                    <label for="editNombre">Nombre:</label>
+                    <input type="text" id="editNombre" name="nombre_nino">
+                </div>
+                <div class="col-12">
+                    <label for="editDireccion">Dirección:</label>
+                    <input type="text" id="editDireccion" name="direccion">
+                </div>
+                <div class="col-12">
+                    <label for="editPoliza">Póliza:</label>
+                    <input type="text" id="editPoliza" name="poliza">
+                </div>
+
+                <!-- Información Médica -->
+                <h3>Información Médica</h3>
+                <div class="col-12">
+                    <label for="editAlergia">ID Alergia:</label>
+                    <input type="number" id="editAlergia" name="id_alergia" placeholder="Opcional">
+                </div>
+                <div class="col-12">
+                    <label for="editCondicion">ID Condición:</label>
+                    <input type="number" id="editCondicion" name="id_condicion" placeholder="Opcional">
+                </div>
+                <div class="col-12">
+                    <label for="editMedicamento">ID Medicamento:</label>
+                    <input type="number" id="editMedicamento" name="id_medicamento" placeholder="Opcional">
+                </div>
+
+                <!-- Contactos de Emergencia -->
+                <h3>Contactos de Emergencia</h3>
+                <div class="col-12">
+                    <label for="editNombreContacto">Nombre Contacto:</label>
+                    <input type="text" id="editNombreContacto" name="nombre_contacto" placeholder="Opcional">
+                </div>
+                <div class="col-12">
+                    <label for="editTelefono">Teléfono:</label>
+                    <input type="number" id="editTelefono" name="telefono" placeholder="Opcional">
+                </div>
+                <div class="col-12">
+                    <label for="editRelacion">Relación:</label>
+                    <input type="text" id="editRelacion" name="relacion" placeholder="Opcional">
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="button primary">Guardar Cambios</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 <script>
+    // Abrir modal con los datos de edición
+    function openEditModal(id, nombre, direccion, poliza) {
+        document.getElementById('editIdNino').value = id;
+        document.getElementById('editNombre').value = nombre;
+        document.getElementById('editDireccion').value = direccion;
+        document.getElementById('editPoliza').value = poliza;
+        document.getElementById('editModal').style.display = 'block';
+    }
+
+    // Cerrar el modal
+    function closeModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+
+    // Filtro para la tabla
     function filterTable() {
         var input, filter, table, tr, td, i, j, txtValue;
         input = document.getElementById("searchInput");
@@ -95,4 +210,80 @@
             }
         }
     }
+    
+
+
+        // Manejo del formulario de edición (Enviar datos al backend)
+    document.getElementById('editForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var idNino = document.getElementById('editIdNino').value;
+        var nombre = document.getElementById('editNombre').value;
+        var direccion = document.getElementById('editDireccion').value;
+        var poliza = document.getElementById('editPoliza').value;
+
+        // Información Médica
+        var idAlergia = document.getElementById('editAlergia').value || null;
+        var idCondicion = document.getElementById('editCondicion').value || null;
+        var idMedicamento = document.getElementById('editMedicamento').value || null;
+
+        // Contactos de Emergencia
+        var nombreContacto = document.getElementById('editNombreContacto').value || null;
+        var telefono = document.getElementById('editTelefono').value || null;
+        var relacion = document.getElementById('editRelacion').value || null;
+
+        // Realizar llamada AJAX para actualizar los datos en el servidor
+        Promise.all([
+            // Llamada para actualizar los datos básicos del niño
+            fetch('/Users/ActualizarExpedienteNino', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id_nino: idNino,
+                    nombre_nino: nombre,
+                    direccion: direccion,
+                    poliza: poliza
+                })
+            }),
+
+            // Llamada para gestionar la información médica del niño (si hay algún valor)
+            fetch('/Users/GestionarInformacionMedica', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id_nino: idNino,
+                    id_alergia: idAlergia,
+                    id_condicion: idCondicion,
+                    id_medicamento: idMedicamento,
+                    accion: 'AGREGAR'
+                })
+            }),
+
+            // Llamada para gestionar los contactos de emergencia del niño (si hay algún valor)
+            fetch('/Users/GestionarContactosEmergencia', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id_nino: idNino,
+                    nombre_contacto: nombreContacto,
+                    telefono: telefono,
+                    relacion: relacion,
+                    accion: 'AGREGAR'
+                })
+            })
+        ]).then(responses => {
+            if (responses[0].ok && responses[1].ok && responses[2].ok) {
+                alert('Expediente actualizado correctamente');
+                closeModal();
+                location.reload(); // Opcional: recargar la página o actualizar la fila de la tabla
+            } else {
+                alert('Hubo un error al actualizar el expediente');
+            }
+        });
+    });
 </script>
