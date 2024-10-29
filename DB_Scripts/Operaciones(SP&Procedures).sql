@@ -1,9 +1,9 @@
 -------------------------------------------- SPs --------------------------------------------
--- SP para la creaci髇 de usuarios (Listo)
+-- SP para la creaci贸n de usuarios (Listo)
 CREATE PROCEDURE GestionarUsuario @IdUsuario INT = NULL,
                                   @Cedula VARCHAR(20),
                                   @Nombre VARCHAR(100),
-                                  @Contrasena VARCHAR(100), -- Contrase馻 ya hasheada
+                                  @Contrasena VARCHAR(100), -- Contrase帽a ya hasheada
                                   @Num_Telefono INT,
                                   @Direccion VARCHAR(256),
                                   @CorreoElectronico VARCHAR(100),
@@ -20,7 +20,7 @@ BEGIN
                     RAISERROR ('El nombre de usuario ya existe.', 16, 1);
                 END
 
-            -- Inserci髇 de nuevo usuario
+            -- Inserci贸n de nuevo usuario
             INSERT INTO usuarios (cedula, nombre, contrasena_hash, num_Telefono, direccion, correo_electronico, id_rol,
                                   fecha_creacion, ultima_actualizacion)
             VALUES (@Cedula, @Nombre, @Contrasena, @Num_Telefono, @Direccion, @CorreoElectronico, @IdRol, GETDATE(),
@@ -28,7 +28,7 @@ BEGIN
         END
     ELSE
         BEGIN
-            -- Actualizaci髇 de usuario existente
+            -- Actualizaci贸n de usuario existente
             UPDATE usuarios
             SET cedula               = @Cedula,
                 nombre               = @Nombre,
@@ -43,7 +43,7 @@ BEGIN
 END;
 GO
 
--- SP para actualizar datos de ni駉s (Listo)
+-- SP para actualizar datos de ni帽os (Listo)
 CREATE PROCEDURE GestionarNino @IdNino INT = NULL,
                                @Cedula VARCHAR(20),
                                @NombreNino VARCHAR(100),
@@ -56,14 +56,14 @@ BEGIN
 
     IF @IdNino IS NULL
         BEGIN
-            -- Inserci髇 de nuevo ni駉
+            -- Inserci贸n de nuevo ni帽o
             INSERT INTO ninos (Cedula, nombre_nino, fecha_nacimiento, direccion, poliza, fecha_creacion,
                                ultima_actualizacion)
             VALUES (@Cedula, @NombreNino, @FechaNacimiento, @Direccion, @Poliza, GETDATE(), GETDATE());
         END
     ELSE
         BEGIN
-            -- Actualizaci髇 de ni駉 existente
+            -- Actualizaci贸n de ni帽o existente
             UPDATE ninos
             SET Cedula               = @Cedula,
                 nombre_nino          = @NombreNino,
@@ -76,7 +76,7 @@ BEGIN
 END;
 GO
 
--- SP para la actualizaci髇 de perfil de docentes (Listo)
+-- SP para la actualizaci贸n de perfil de docentes (Listo)
 CREATE PROCEDURE GestionarDocente @IdDocente INT = NULL,
                                   @IdUsuario INT,
                                   @FechaNacimiento DATE,
@@ -85,13 +85,13 @@ AS
 BEGIN
     IF @IdDocente IS NULL
         BEGIN
-            -- Inserci髇 de nuevo docente
+            -- Inserci贸n de nuevo docente
             INSERT INTO docentes (id_usuario, fecha_nacimiento, grupo_asignado, fecha_creacion, ultima_actualizacion)
             VALUES (@IdUsuario, @FechaNacimiento, @GrupoAsignado, GETDATE(), GETDATE());
         END
     ELSE
         BEGIN
-            -- Actualizaci髇 de docente existente
+            -- Actualizaci贸n de docente existente
             UPDATE docentes
             SET fecha_nacimiento     = @FechaNacimiento,
                 grupo_asignado       = @GrupoAsignado,
@@ -139,7 +139,7 @@ BEGIN
 END;
 GO
 
--- SP para registrar asistencia de ni駉s (Listo)
+-- SP para registrar asistencia de ni帽os (Listo)
 CREATE PROCEDURE RegistrarAsistencia @IdNino INT,
                                      @Fecha DATE,
                                      @HoraEntrada TIME,
@@ -149,14 +149,14 @@ AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM asistencia WHERE id_nino = @IdNino AND fecha = @Fecha)
         BEGIN
-            -- Inserci髇 de asistencia si no existe para esa fecha
+            -- Inserci贸n de asistencia si no existe para esa fecha
             INSERT INTO asistencia (id_nino, fecha, hora_entrada, hora_salida, estado)
             VALUES (@IdNino, @Fecha, @HoraEntrada, @HoraSalida, @Estado);
         END;
 END;
 GO
 
--- SP para la gesti髇 de actividades (Listo)
+-- SP para la gesti贸n de actividades (Listo)
 CREATE PROCEDURE RegistrarActividad @IdTipoActividad INT,
                                     @Fecha DATE,
                                     @Lugar VARCHAR(100),
@@ -172,10 +172,10 @@ BEGIN
     INSERT INTO actividades (id_tipo_actividad, fecha, lugar, activo)
     VALUES (@IdTipoActividad, @Fecha, @Lugar, 1);
 
-    -- Obtener el ID de la actividad reci閚 insertada
+    -- Obtener el ID de la actividad reci茅n insertada
     SET @IdActividad = SCOPE_IDENTITY();
 
-    -- Relacionar la actividad con el ni駉
+    -- Relacionar la actividad con el ni帽o
     INSERT INTO rel_nino_actividad (id_nino, id_actividad, asistencia)
     VALUES (@IdNino, @IdActividad, @Asistencia);
 
@@ -183,37 +183,6 @@ BEGIN
 END;
 GO
 
--- SP para gestionar contactos de emergencia de los ni駉s (Listo)
-CREATE PROCEDURE GestionarContactoEmergencia @IdContacto INT = NULL,
-                                             @NombreContacto VARCHAR(100),
-                                             @Relacion VARCHAR(50),
-                                             @Telefono VARCHAR(15),
-                                             @Direccion VARCHAR(255),
-                                             @IdNino INT
-AS
-BEGIN
-    IF @IdContacto IS NULL
-        BEGIN
-            INSERT INTO contactos_emergencia (nombre_contacto, relacion, telefono, direccion, activo)
-            VALUES (@NombreContacto, @Relacion, @Telefono, @Direccion, 1);
-
-            -- Relacionar con el ni駉
-            INSERT INTO rel_nino_contacto_emergencia (id_nino, id_contacto)
-            VALUES (@IdNino, SCOPE_IDENTITY());
-        END
-    ELSE
-        BEGIN
-            -- Actualizar contacto de emergencia existente
-            UPDATE contactos_emergencia
-            SET nombre_contacto = @NombreContacto,
-                relacion        = @Relacion,
-                telefono        = @Telefono,
-                direccion       = @Direccion,
-                activo          = 1
-            WHERE id_Contacto_Emergencia = @IdContacto;
-        END;
-END;
-GO
 
 CREATE PROCEDURE GestionarInformacionMedicaNino @id_nino INT,
                                                 @id_alergia INT = NULL,
@@ -308,7 +277,7 @@ BEGIN
                 END
             ELSE
                 BEGIN
-                    RAISERROR ('Acci髇 no v醠ida o par醡etros incompletos.', 16, 1);
+                    RAISERROR ('Acci贸n no v谩lida o par谩metros incompletos.', 16, 1);
                 END
 END;
 GO
