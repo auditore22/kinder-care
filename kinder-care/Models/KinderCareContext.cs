@@ -52,6 +52,8 @@ public partial class KinderCareContext : DbContext
     public virtual DbSet<TipoPagos> TipoPagos { get; set; }
 
     public virtual DbSet<Usuarios> Usuarios { get; set; }
+    
+    public DbSet<ExpedienteCompletoNino> VwExpedienteCompletoNino { get; set; }
 
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer("Server=(LocalDb)\\MSSQLLocalDB;Database=kinder_care;Trusted_Connection=True;");
 
@@ -639,6 +641,25 @@ public partial class KinderCareContext : DbContext
                 .HasForeignKey(d => d.IdRol)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_usuarios_rol");
+        });
+        
+        modelBuilder.Entity<ExpedienteCompletoNino>(entity =>
+        {
+            entity.HasNoKey();
+            entity.ToView("vw_ExpedienteCompletoNino");
+            entity.Property(e => e.IdNino).HasColumnName("id_Nino");
+            entity.Property(e => e.Cedula).HasColumnName("cedula");
+            entity.Property(e => e.NombreNino).HasColumnName("nombre_nino");
+            entity.Property(e => e.FechaNacimiento).HasColumnName("fecha_nacimiento");
+            entity.Property(e => e.Direccion).HasColumnName("direccion");
+            entity.Property(e => e.Poliza).HasColumnName("poliza");
+            entity.Property(e => e.NombreAlergia).HasColumnName("nombre_alergia");
+            entity.Property(e => e.NombreCondicion).HasColumnName("nombre_condicion");
+            entity.Property(e => e.NombreMedicamento).HasColumnName("nombre_medicamento");
+            entity.Property(e => e.Dosis).HasColumnName("dosis");
+            entity.Property(e => e.NombreContacto).HasColumnName("nombre_contacto");
+            entity.Property(e => e.TelefonoContacto).HasColumnName("telefono_contacto");
+            entity.Property(e => e.RelacionContacto).HasColumnName("relacion_contacto");
         });
 
         OnModelCreatingPartial(modelBuilder);
