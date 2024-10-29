@@ -8,25 +8,25 @@ GO
 --------------------------------- Tabla de Roles ---------------------------------
 CREATE TABLE roles
 (
-    id_Rol     INT PRIMARY KEY IDENTITY (1,1),
-    nombre VARCHAR(50) NOT NULL UNIQUE,
+    id_Rol INT PRIMARY KEY IDENTITY (1,1),
+    nombre VARCHAR(50) NOT NULL UNIQUE
 );
 GO
 
 --------------------------------- Tabla de Usuarios ---------------------------------
 CREATE TABLE usuarios
 (
-    id_Usuario                   INT PRIMARY KEY IDENTITY (1,1),
-	cedula				 VARCHAR(20)  NOT NULL,
+    id_Usuario           INT PRIMARY KEY IDENTITY (1,1),
+    cedula               VARCHAR(20)  NOT NULL,
     nombre               VARCHAR(100) NOT NULL,
     contrasena_hash      VARCHAR(100) NOT NULL,
-	num_Telefono         INT                  ,
-	direccion            TEXT         NOT NULL,
+    num_Telefono         INT,
+    direccion            VARCHAR(256) NOT NULL,
     correo_electronico   VARCHAR(100) NOT NULL,
     id_rol               INT          NOT NULL,
-    fecha_creacion       DATETIME DEFAULT GETDATE(),
-    ultima_actualizacion DATETIME DEFAULT GETDATE(),
-    activo               BIT      DEFAULT 1,
+    fecha_creacion       DATETIME     DEFAULT GETDATE(),
+    ultima_actualizacion DATETIME     DEFAULT GETDATE(),
+    activo               BIT          DEFAULT 1,
     TokenRecovery        VARCHAR(100) DEFAULT '0',
     CONSTRAINT fk_usuarios_rol FOREIGN KEY (id_rol) REFERENCES roles (id_Rol)
 );
@@ -46,11 +46,11 @@ GO
 --------------------------------- Tabla de Niños ---------------------------------
 CREATE TABLE ninos
 (
-    id_Nino                   INT PRIMARY KEY IDENTITY (1,1),
-	cedula				 VARCHAR(20)  NOT NULL,
+    id_Nino              INT PRIMARY KEY IDENTITY (1,1),
+    cedula               VARCHAR(20)  NOT NULL,
     nombre_nino          VARCHAR(100) NOT NULL,
     fecha_nacimiento     DATE         NOT NULL,
-    direccion            TEXT         NOT NULL,
+    direccion            VARCHAR(256) NOT NULL,
     poliza               VARCHAR(100),
     fecha_creacion       DATETIME DEFAULT GETDATE(),
     ultima_actualizacion DATETIME DEFAULT GETDATE(),
@@ -65,7 +65,7 @@ CREATE TRIGGER trg_update_audit_ninos
 BEGIN
     UPDATE ninos
     SET ultima_actualizacion = GETDATE()
-    WHERE id_Nino IN (SELECT id_Nino  FROM inserted);
+    WHERE id_Nino IN (SELECT id_Nino FROM inserted);
 END;
 GO
 
@@ -85,8 +85,8 @@ GO
 CREATE TABLE docentes
 (
     id_Docente           INT PRIMARY KEY IDENTITY (1,1),
-    id_usuario           INT          NOT NULL, -- referencia al usuario que es docente
-    fecha_nacimiento     DATE         ,
+    id_usuario           INT NOT NULL, -- referencia al usuario que es docente
+    fecha_nacimiento     DATE,
     grupo_asignado       VARCHAR(100),
     fecha_creacion       DATETIME DEFAULT GETDATE(),
     ultima_actualizacion DATETIME DEFAULT GETDATE(),
@@ -107,26 +107,27 @@ END;
 GO
 
 CREATE TRIGGER trg_insert_docente
-ON usuarios
-AFTER INSERT
-AS
+    ON usuarios
+    AFTER INSERT
+    AS
 BEGIN
     INSERT INTO docentes (id_usuario, fecha_creacion, ultima_actualizacion)
     SELECT id_Usuario, GETDATE(), GETDATE()
     FROM inserted
-    WHERE id_rol = 2;  -- Rol 2 corresponde a docentes
+    WHERE id_rol = 2; -- Rol 2 corresponde a docentes
 END;
 GO
 
 CREATE TRIGGER trg_update_Rol_Docente
-ON usuarios
-AFTER UPDATE
-AS
+    ON usuarios
+    AFTER UPDATE
+    AS
 BEGIN
     SET NOCOUNT ON;
 
     -- Eliminar el registro de docente si el rol del usuario se ha cambiado a algo diferente a docente
-    DELETE FROM docentes
+    DELETE
+    FROM docentes
     WHERE id_usuario IN (SELECT id_usuario FROM inserted WHERE id_rol <> 2);
 
     -- Insertar o actualizar el registro en docentes si el rol del usuario se ha cambiado a docente
@@ -144,13 +145,13 @@ GO
 --------------------------------- Tabla de Progreso Académico ---------------------------------
 CREATE TABLE progreso_academico
 (
-    id_Progreso_Academico    INT PRIMARY KEY IDENTITY (1,1),
-    id_nino              INT          NOT NULL,
-    area_academica       VARCHAR(100) NOT NULL,
-    nivel_progreso       VARCHAR(50),
-    descripcion          TEXT,
-    fecha_creacion       DATETIME DEFAULT GETDATE(),
-    ultima_actualizacion DATETIME DEFAULT GETDATE(),
+    id_Progreso_Academico INT PRIMARY KEY IDENTITY (1,1),
+    id_nino               INT          NOT NULL,
+    area_academica        VARCHAR(100) NOT NULL,
+    nivel_progreso        VARCHAR(50),
+    descripcion           VARCHAR(256),
+    fecha_creacion        DATETIME DEFAULT GETDATE(),
+    ultima_actualizacion  DATETIME DEFAULT GETDATE(),
     CONSTRAINT fk_progreso_nino FOREIGN KEY (id_nino) REFERENCES ninos (id_Nino)
 );
 GO
@@ -174,7 +175,7 @@ CREATE TABLE evaluaciones
     asignatura           VARCHAR(100) NOT NULL,
     puntaje              DECIMAL(5, 2) CHECK (puntaje BETWEEN 0 AND 100),
     fecha                DATE         NOT NULL,
-    comentarios          TEXT,
+    comentarios          VARCHAR(256),
     fecha_creacion       DATETIME DEFAULT GETDATE(),
     ultima_actualizacion DATETIME DEFAULT GETDATE(),
     CONSTRAINT fk_evaluaciones_nino FOREIGN KEY (id_nino) REFERENCES ninos (id_Nino)
@@ -195,12 +196,12 @@ GO
 --------------------------------- Tabla de Observaciones de Docentes ---------------------------------
 CREATE TABLE observaciones_docentes
 (
-    id_Observacion_Docente          INT PRIMARY KEY IDENTITY (1,1),
-    id_nino     INT         NOT NULL,
-    id_docente  INT         NOT NULL,
-    tipo        VARCHAR(50) NOT NULL,
-    descripcion TEXT,
-    fecha       DATE        NOT NULL,
+    id_Observacion_Docente INT PRIMARY KEY IDENTITY (1,1),
+    id_nino                INT         NOT NULL,
+    id_docente             INT         NOT NULL,
+    tipo                   VARCHAR(50) NOT NULL,
+    descripcion            VARCHAR(256),
+    fecha                  DATE        NOT NULL,
     CONSTRAINT fk_observacion_nino FOREIGN KEY (id_nino) REFERENCES ninos (id_Nino),
     CONSTRAINT fk_observacion_docente FOREIGN KEY (id_docente) REFERENCES docentes (id_Docente)
 );
@@ -209,12 +210,12 @@ GO
 --------------------------------- Tabla de Asistencia ---------------------------------
 CREATE TABLE asistencia
 (
-    id_Asistencia           INT PRIMARY KEY IDENTITY (1,1),
-    id_nino      INT  NOT NULL,
-    fecha        DATE NOT NULL,
-    hora_entrada TIME,
-    hora_salida  TIME,
-    estado       VARCHAR(20) CHECK (estado IN ('Presente', 'Ausente', 'Tarde')),
+    id_Asistencia INT PRIMARY KEY IDENTITY (1,1),
+    id_nino       INT  NOT NULL,
+    fecha         DATE NOT NULL,
+    hora_entrada  TIME,
+    hora_salida   TIME,
+    estado        VARCHAR(20) CHECK (estado IN ('Presente', 'Ausente', 'Tarde')),
     CONSTRAINT fk_asistencia_nino FOREIGN KEY (id_nino) REFERENCES ninos (id_Nino)
 );
 GO
@@ -223,7 +224,7 @@ GO
 --------------------------------- Tablas de Pagos ---------------------------------
 CREATE TABLE tipo_pagos
 (
-    id_tipo_pago               INT PRIMARY KEY IDENTITY (1,1),
+    id_tipo_pago     INT PRIMARY KEY IDENTITY (1,1),
     nombre_tipo_pago VARCHAR(50) NOT NULL UNIQUE,
     descripcion      VARCHAR(255),
     activo           BIT DEFAULT 1
@@ -233,7 +234,7 @@ GO
 
 CREATE TABLE pagos
 (
-    id_Pago                   INT PRIMARY KEY IDENTITY (1,1),
+    id_Pago              INT PRIMARY KEY IDENTITY (1,1),
     id_nino              INT            NOT NULL,
     id_padre             INT            NOT NULL,
     id_tipo_pago         INT            NOT NULL,
@@ -275,12 +276,12 @@ GO
 --------------------------------- Tabla de Contactos de Emergencia ---------------------------------
 CREATE TABLE contactos_emergencia
 (
-    id_Contacto_Emergencia              INT PRIMARY KEY IDENTITY (1,1),
-    nombre_contacto VARCHAR(100) NOT NULL,
-    relacion        VARCHAR(50),
-    telefono        INT,
-    direccion       VARCHAR(255),
-    activo          BIT DEFAULT 1
+    id_Contacto_Emergencia INT PRIMARY KEY IDENTITY (1,1),
+    nombre_contacto        VARCHAR(100) NOT NULL,
+    relacion               VARCHAR(50),
+    telefono               INT,
+    direccion              VARCHAR(255),
+    activo                 BIT DEFAULT 1
 );
 GO
 
@@ -298,7 +299,7 @@ GO
 --------------------------------- Tabla de Alergias ---------------------------------
 CREATE TABLE alergias
 (
-    id_Alergia             INT PRIMARY KEY IDENTITY (1,1),
+    id_Alergia     INT PRIMARY KEY IDENTITY (1,1),
     nombre_alergia VARCHAR(100) NOT NULL,
     activo         BIT DEFAULT 1
 );
@@ -307,16 +308,16 @@ GO
 --------------------------------- Tabla de Condiciones Médicas ---------------------------------
 CREATE TABLE condiciones_medicas
 (
-    id_Condicion_medica               INT PRIMARY KEY IDENTITY (1,1),
-    nombre_condicion VARCHAR(100) NOT NULL,
-    activo           BIT DEFAULT 1
+    id_Condicion_medica INT PRIMARY KEY IDENTITY (1,1),
+    nombre_condicion    VARCHAR(100) NOT NULL,
+    activo              BIT DEFAULT 1
 );
 GO
 
 --------------------------------- Tabla de Medicamentos ---------------------------------
 CREATE TABLE medicamentos
 (
-    id_Medicamento                 INT PRIMARY KEY IDENTITY (1,1),
+    id_Medicamento     INT PRIMARY KEY IDENTITY (1,1),
     nombre_medicamento VARCHAR(100) NOT NULL,
     dosis              VARCHAR(50)  NOT NULL,
     activo             BIT DEFAULT 1
@@ -359,7 +360,7 @@ GO
 --------------------------------- Tablas de Actividades ---------------------------------
 CREATE TABLE tipo_actividad
 (
-    id_Tipo_Actividad                    INT PRIMARY KEY IDENTITY (1,1),
+    id_Tipo_Actividad     INT PRIMARY KEY IDENTITY (1,1),
     nombre_tipo_actividad VARCHAR(50) NOT NULL UNIQUE,
     activo                BIT DEFAULT 1
 );
@@ -367,7 +368,7 @@ GO
 
 CREATE TABLE actividades
 (
-    id_Actividad                INT PRIMARY KEY IDENTITY (1,1),
+    id_Actividad      INT PRIMARY KEY IDENTITY (1,1),
     id_tipo_actividad INT  NOT NULL,
     fecha             DATE NOT NULL,
     lugar             VARCHAR(100),
