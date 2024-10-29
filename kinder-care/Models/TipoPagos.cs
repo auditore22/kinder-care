@@ -11,7 +11,7 @@ public partial class TipoPagos
 
     public string? Descripcion { get; set; }
 
-    public bool? Activo { get; set; }
+    public bool Activo { get; set; }
 
     public virtual ICollection<Pagos> Pagos { get; set; } = new List<Pagos>();
 }
