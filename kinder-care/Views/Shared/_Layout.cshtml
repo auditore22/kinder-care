@@ -1,0 +1,68 @@
+﻿@* Dashboard Index - Converted to Razor .cshtml *@
+@{
+Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<!--==================== Preloader ====================-->
+<div class="preloader">
+    <div class="loader"></div>
+</div>
+
+<!--==================== Sidebar ====================-->
+<aside class="sidebar">
+    <button type="button" class="sidebar-close-btn"></button>
+    <a href="@Url.Action("Index", "Dashboard")" class="sidebar__logo">
+        <img src="~/assets/images/logo/logo.png" alt="Logo">
+    </a>
+    <div class="sidebar-menu-wrapper">
+        <ul class="sidebar-menu">
+            @* Sidebar Menu Items *@
+            @Html.Partial("_SidebarMenu")
+        </ul>
+    </div>
+</aside>
+
+<!--==================== Main Content ====================-->
+<div class="dashboard-main-wrapper">
+    <div class="top-navbar">
+        @* Navbar Content *@
+        @Html.Partial("_TopNavbar")
+    </div>
+    <div class="dashboard-body">
+        <div class="row gy-4">
+            <div class="col-lg-9">
+                <!-- Widgets Start -->
+                @Html.Partial("_DashboardWidgets")
+                <!-- Widgets End -->
+
+                <!-- Study Statistics -->
+                @Html.Partial("_StudyStatistics")
+
+                <!-- Top Courses -->
+                @Html.Partial("_TopCourses")
+            </div>
+            <div class="col-lg-3">
+                <!-- Calendar Component -->
+                @Html.Partial("_Calendar")
+
+                <!-- Assignments -->
+                @Html.Partial("_Assignments")
+
+                <!-- Progress Bar -->
+                @Html.Partial("_ProgressBar")
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-footer">
+        <p class="text-gray-300">&copy; Copyright Edmate 2024, All Rights Reserved</p>
+    </div>
+</div>
+
+@section Scripts {
+<script src="~/wwwroot/js/dashboard.js"></script>
+<script>
+    // Dashboard-specific JS calls
+    createChart('complete-course', '#2FB2AB');
+    createLineChart('doubleLineChart', '#27CFA7');
+</script>
+}
