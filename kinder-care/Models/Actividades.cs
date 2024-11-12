@@ -12,6 +12,8 @@ public partial class Actividades
     public DateOnly Fecha { get; set; }
 
     public string? Lugar { get; set; }
+    
+    public string? Descripcion { get; set; } // Nueva propiedad Descripcion
 
     public bool? Activo { get; set; }
 

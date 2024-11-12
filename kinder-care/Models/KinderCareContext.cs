@@ -75,6 +75,12 @@ public partial class KinderCareContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("lugar");
+            
+            // Nueva propiedad Descripcion
+            entity.Property(e => e.Descripcion)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("descripcion");
 
             entity.HasOne(d => d.IdTipoActividadNavigation).WithMany(p => p.Actividades)
                 .HasForeignKey(d => d.IdTipoActividad)
