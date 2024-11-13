@@ -1,0 +1,491 @@
+@model Ninos
+
+<!-- Breadcrumb Start -->
+<div class="breadcrumb mb-24">
+    <ul class="flex-align gap-4">
+        <li>
+            <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Home</a>
+        </li>
+        <li>
+            <span class="text-gray-500 fw-normal d-flex">
+                <i class="ph ph-caret-right"></i>
+            </span>
+        </li>
+        <li>
+            <span class="text-main-600 fw-normal text-15">Setting</span>
+        </li>
+    </ul>
+</div>
+<!-- Breadcrumb End -->
+
+<div class="card overflow-hidden">
+    <div class="card-body p-0">
+        <div class="cover-img position-relative">
+            <label for="coverImageUpload" class="btn border-gray-200 text-gray-200 fw-normal hover-bg-gray-400 rounded-pill py-4 px-14 position-absolute inset-block-start-0 inset-inline-end-0 mt-24 me-24">Edit Cover</label>
+            <div class="avatar-upload">
+                <input type="file" id="coverImageUpload" accept=".png, .jpg, .jpeg">
+                <div class="avatar-preview">
+                    <div id="coverImagePreview" style="background: rgb(219,162,0); background: linear-gradient(180deg, rgba(219,162,0,0.5041666324733018) 0%, rgba(219,162,0,0) 70%);">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="setting-profile px-24">
+            <div class="flex-between">
+                <div class="d-flex align-items-end flex-wrap mb-32 gap-24">
+                    <img src="~/images/icons/baby_1_icon.png" alt="" class="w-120 h-120 rounded-circle border border-white">
+                    <div>
+                        <h4 class="mb-8">@Model.NombreNino</h4>
+                        <div class="setting-profile__infos flex-align flex-wrap gap-16">
+                            <div class="flex-align gap-6">
+                                <span class="text-gray-600 d-flex text-lg">
+                                    <i class="ph ph-swatches"></i>
+                                </span>
+                                <span class="text-gray-600 d-flex text-15">@Model.Cedula</span>
+                            </div>
+                            <div class="flex-align gap-6">
+                                <span class="text-gray-600 d-flex text-lg">
+                                    <i class="ph ph-map-pin"></i>
+                                </span>
+                                <span class="text-gray-600 d-flex text-15">@Model.Direccion</span>
+                            </div>
+                            <div class="flex-align gap-6">
+                                <span class="text-gray-600 d-flex text-lg">
+                                    <i class="ph ph-calendar-dots"></i>
+                                </span>
+                                <span class="text-gray-600 d-flex text-15">@Model.FechaNacimiento.ToString("dd/MM/yyyy")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav common-tab style-two nav-pills mb-0" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab" aria-controls="pills-details" aria-selected="true">Detalles</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-edit-tab" data-bs-toggle="pill" data-bs-target="#pills-edit" type="button" role="tab" aria-controls="pills-edit" aria-selected="false">Editar</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-Edit_Contacto_Emergencia-tab" data-bs-toggle="pill" data-bs-target="#pills-Edit_Contacto_Emergencia" type="button" role="tab" aria-controls="pills-Edit_Contacto_Emergencia" aria-selected="false">Contactos de Emergencia</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-Edit_Info_Medica-tab" data-bs-toggle="pill" data-bs-target="#pills-Edit_Info_Medica" type="button" role="tab" aria-controls="pills-Edit_Info_Medica" aria-selected="false">Informacion Medica</button>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<div class="tab-content" id="pills-tabContent">
+<!-- My Details Tab start -->
+<div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab" tabindex="0">
+    <div class="card mt-24">
+        <div class="card-header border-bottom">
+            <h4 class="mb-4">Detalles</h4>
+        </div>
+        <div class="card-body">
+            <div class="row gy-4">
+
+                <!-- Contactos de Emergencia -->
+                <h6 class="mb-8">Contactos de Emergencia:</h6>
+                @if (Model.RelNinoContactoEmergencia.Any())
+                {
+                    <ul class="list-unstyled">
+                        @foreach (var contacto in Model.RelNinoContactoEmergencia)
+                        {
+                            <li>
+                                <strong>@contacto.ContactoEmergencia.NombreContacto</strong> (Relación: @contacto.ContactoEmergencia.Relacion, Tel: @contacto.ContactoEmergencia.Telefono)
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-gray-600">No se han registrado contactos de emergencia.</p>
+                }
+
+                <!-- Información Médica -->
+                <h6 class="mb-8">Información Médica:</h6>
+                <p>
+                    <strong>Póliza:</strong>
+                </p>
+                <p>@Model.Poliza</p>
+
+                <p>
+                    <strong>Alergias:</strong>
+                </p>
+                @if (Model.RelNinoAlergia.Any())
+                {
+                    <ul class="list-unstyled">
+                        @foreach (var alergia in Model.RelNinoAlergia)
+                        {
+                            <li>@alergia.Alergia.NombreAlergia</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-gray-600">No tiene alergias registradas.</p>
+                }
+
+                <p>
+                    <strong>Medicamentos:</strong>
+                </p>
+                @if (Model.RelNinoMedicamento.Any())
+                {
+                    <ul class="list-unstyled">
+                        @foreach (var medicamento in Model.RelNinoMedicamento)
+                        {
+                            <li>@medicamento.Medicamento.NombreMedicamento - Dosis: @medicamento.Medicamento.Dosis</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-gray-600">No tiene medicamentos registrados.</p>
+                }
+
+                <p>
+                    <strong>Condiciones Médicas:</strong>
+                </p>
+                @if (Model.RelNinoCondicion.Any())
+                {
+                    <ul class="list-unstyled">
+                        @foreach (var condicion in Model.RelNinoCondicion)
+                        {
+                            <li>@condicion.Condicion.NombreCondicion</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-gray-600">No tiene condiciones médicas registradas.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!-- My Details Tab End -->
+
+<!-- Editar Tab Start -->
+<div class="tab-pane fade" id="pills-edit" role="tabpanel" aria-labelledby="pills-edit-tab" tabindex="0">
+    <div class="card mt-24">
+        <div class="card-header border-bottom">
+            <h4 class="mb-4">Editar</h4>
+            <p class="text-gray-600 text-15">Por favor ingresa los datos que deseas cambiar</p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <form method="post" asp-action="Edit" asp-route-id="@Model.IdNino">
+                        <div class="row gy-4">
+
+                            <!-- Campo de texto para el nombre del niño -->
+                            <div class="col-sm-6 col-xs-6">
+                                <label asp-for="NombreNino" class="form-label mb-8 h6">Nombre</label>
+                                <input asp-for="NombreNino" type="text" class="form-control py-11" placeholder="Nombre del Niño">
+                            </div>
+
+                            <!-- Campo de texto para la dirección -->
+                            <div class="col-sm-6 col-xs-6">
+                                <label asp-for="Direccion" class="form-label mb-8 h6">Dirección</label>
+                                <input asp-for="Direccion" type="text" class="form-control py-11" placeholder="Dirección">
+                            </div>
+
+                            <!-- Campo de texto para la póliza -->
+                            <div class="col-sm-6 col-xs-6">
+                                <label asp-for="Poliza" class="form-label mb-8 h6">Póliza</label>
+                                <input asp-for="Poliza" type="text" class="form-control py-11" placeholder="Póliza">
+                            </div>
+
+                            <!-- Botones de acción -->
+                            <div class="col-12">
+                                <div class="flex-align justify-content-end gap-8">
+                                    <a asp-action="Details" asp-route-id="@Model.IdNino" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancelar</a>
+                                    <button type="submit" class="btn btn-main rounded-pill py-9">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit Tab End -->
+
+@*<!-- Edit_Contacto_Emergencia Tab Start -->
+<div class="tab-pane fade" id="pills-Edit_Contacto_Emergencia" role="tabpanel" aria-labelledby="pills-Edit_Contacto_Emergencia-tab" tabindex="0">
+    <div class="card mt-24">
+        <div class="card-header border-bottom">
+            <h4 class="mb-4">Password Settings</h4>
+            <p class="text-gray-600 text-15">Please fill full details about yourself</p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <form action="#">
+                        <div class="row gy-4">
+                            <div class="col-12">
+                                <label for="current-password" class="form-label mb-8 h6">Current Password</label>
+                                <div class="position-relative">
+                                    <input type="password" class="form-control py-11" id="current-password" placeholder="Enter Current Password">
+                                    <span class="toggle-password position-absolute top-50 inset-inline-end-0 me-16 translate-middle-y ph ph-eye-slash" id="#current-password"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="new-password" class="form-label mb-8 h6">New Password</label>
+                                <div class="position-relative">
+                                    <input type="password" class="form-control py-11" id="new-password" placeholder="Enter New Password">
+                                    <span class="toggle-password position-absolute top-50 inset-inline-end-0 me-16 translate-middle-y ph ph-eye-slash" id="#new-password"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="confirm-password" class="form-label mb-8 h6">Confirm Password</label>
+                                <div class="position-relative">
+                                    <input type="password" class="form-control py-11" id="confirm-password" placeholder="Enter Confirm Password">
+                                    <span class="toggle-password position-absolute top-50 inset-inline-end-0 me-16 translate-middle-y ph ph-eye-slash" id="#confirm-password"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label mb-8 h6">Password Requirements:</label>
+                                <ul class="list-inside">
+                                    <li class="text-gray-600 mb-4">At least one lowercase character</li>
+                                    <li class="text-gray-600 mb-4">Minimum 8 characters long - the more, the better</li>
+                                    <li class="text-gray-300 mb-4">At least one number, symbol, or whitespace character</li>
+                                </ul>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label mb-8 h6">Two-Step Verification</label>
+                                <ul>
+                                    <li class="text-gray-600 mb-4 fw-semibold">Two-factor authentication is not enabled yet.</li>
+                                    <li class="text-gray-600 mb-4 fw-medium">Two-factor authentication adds a layer of security to your account by requiring more than just a password to log in. Learn more.</li>
+                                </ul>
+                                <button type="submit" class="btn btn-main rounded-pill py-9 mt-24">Enable two-factor authentication</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-12">
+                    <div class="flex-align justify-content-end gap-8">
+                        <button type="reset" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancel</button>
+                        <button type="submit" class="btn btn-main rounded-pill py-9">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit_Contacto_Emergencia Tab End -->*@
+
+    <!-- Edit_Contacto_Emergencia Tab Start -->
+    <div class="tab-pane fade" id="pills-Edit_Contacto_Emergencia" role="tabpanel" aria-labelledby="pills-Edit_Contacto_Emergencia-tab" tabindex="0">
+        <div class="card mt-24">
+            <div class="card-header border-bottom">
+                <h4 class="mb-4">Editar Información de Contactos de Emergencia</h4>
+                <p class="text-gray-600 text-15">Complete la información requerida sobre los contactos de emergencia del niño.</p>
+            </div>
+            <div class="card-body">
+                <div class="row gy-4">
+                    <div class="col-md-6">
+                        <form asp-action="Edit_Contacto_Emergencia" method="post">
+                            <input hidden type="number" name="IdNino" id="IdNino" value="@Model.IdNino"/>
+
+                            <!-- Sección de Contactos Existentes -->
+                            <h4 class="mb-4">Contactos de Emergencia Existentes</h4>
+                            @if (ViewBag.ContactosEmergencia != null && ((List<kinder_care.Models.ContactosEmergencia>)ViewBag.ContactosEmergencia).Any())
+                            {
+                                foreach (var contacto in (List<kinder_care.Models.ContactosEmergencia>)ViewBag.ContactosEmergencia)
+                                {
+                                    <div class="form-group mb-16">
+                                        <input type="hidden" name="ContactosExistentes[@contacto.IdContactoEmergencia].IdContactoEmergencia" value="@contacto.IdContactoEmergencia"/>
+
+                                        <label for="nombre_@contacto.IdContactoEmergencia" class="form-label h6">Nombre</label>
+                                        <input type="text" class="form-control py-11" id="nombre_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].NombreContacto" value="@contacto.NombreContacto"/>
+
+                                        <label for="relacion_@contacto.IdContactoEmergencia" class="form-label h6 mt-2">Relación</label>
+                                        <input type="text" class="form-control py-11" id="relacion_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].Relacion" value="@contacto.Relacion"/>
+
+                                        <label for="telefono_@contacto.IdContactoEmergencia" class="form-label h6 mt-2">Teléfono</label>
+                                        <input type="tel" class="form-control py-11" id="telefono_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].Telefono" value="@contacto.Telefono" pattern="\d{7,15}" title="Debe ser un número de 7 a 15 dígitos y sin espacios"/>
+
+                                        <label for="direccion_@contacto.IdContactoEmergencia" class="form-label h6 mt-2">Dirección</label>
+                                        <input type="text" class="form-control py-11" id="direccion_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].Direccion" value="@contacto.Direccion"/>
+
+                                        <!-- Botón para eliminar contacto -->
+                                        <button type="submit" class="btn btn-danger rounded-pill py-9 mt-3" name="EliminarContactoId" value="@contacto.IdContactoEmergencia">
+                                            Eliminar
+                                        </button>
+
+                                        <hr class="mt-4"/>
+                                    </div>
+                                }
+                                <!-- Botones de acción -->
+                                <div class="flex-align justify-content-end gap-8">
+                                    <button type="reset" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancelar</button>
+                                    <button type="submit" class="btn btn-main rounded-pill py-9">Guardar Cambios</button>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-gray-600">No hay contactos de emergencia registrados.</p>
+                            }
+                        </form>
+
+                        <form asp-action="Edit_Contacto_Emergencia_2" method="post">
+                            <input hidden type="number" name="IdNino" id="IdNino" value="@Model.IdNino"/>
+
+                            <!-- Sección para agregar un nuevo contacto -->
+                            <h4 class="mb-4 mt-5">Agregar Nuevo Contacto de Emergencia</h4>
+                            <div class="form-group mb-16">
+
+                                <label for="NewNombre" class="form-label h6">Nombre</label>
+                                <input type="text" class="form-control py-11" name="NewNombre" id="NewNombre" placeholder="Ingrese un nuevo Contacto"/>
+
+                                <label for="NewRelacion" class="form-label h6 mt-2">Relación</label>
+                                <input type="text" class="form-control py-11" name="NewRelacion" id="NewRelacion" placeholder="Ingrese la relación"/>
+
+                                <label for="NewTelefono" class="form-label h6 mt-2">Teléfono</label>
+                                <input type="tel" class="form-control py-11" name="NewTelefono" id="NewTelefono" placeholder="Ingrese el teléfono" pattern="\d{7,15}" title="Debe ser un número de 7 a 15 dígitos y sin espacios"/>
+
+                                <label for="NewDireccion" class="form-label h6 mt-2">Dirección</label>
+                                <input type="text" class="form-control py-11" name="NewDireccion" id="NewDireccion" placeholder="Ingrese la dirección"/>
+                            </div>
+
+                            <!-- Botones de acción -->
+                            <div class="flex-align justify-content-end gap-8">
+                                <button type="reset" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancelar</button>
+                                <button type="submit" class="btn btn-main rounded-pill py-9">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit_Contacto_Emergencia Tab End -->
+
+
+
+    <!-- Información Médica - Tab de Alergias, Medicamentos y Condiciones Médicas -->
+    <div class="tab-pane fade" id="pills-Edit_Info_Medica" role="tabpanel" aria-labelledby="pills-Edit_Info_Medica-tab" tabindex="0">
+        <div class="inner d-flex justify-content-center align-items-center">
+            <form asp-action="Edit_Info_Medica" asp-route-id="@Model.IdNino" method="post">
+                <!-- Sección de Alergias -->
+                <div class="card mt-24">
+                    <div class="card-header border-bottom">
+                        <h4 class="mb-4">Alergias</h4>
+                        <p class="text-gray-600 text-15">Seleccione las alergias que aplica al niño:</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="pt-24 pb-24 border-bottom border-gray-100">
+                            <div class="row gy-4">
+                                @foreach (var alergia in ViewBag.Alergias)
+                                {
+                                    <div class="col-sm-6 col-xs-6">
+                                        <div class="form-switch switch-primary d-flex align-items-center gap-8 mb-16">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="alergia_@alergia.IdAlergia"
+                                                   name="IdAlergia" value="@alergia.IdAlergia"
+                                                   @(Model.RelNinoAlergia.Any(ra => ra.IdAlergia == alergia.IdAlergia) ? "checked" : "")/>
+                                            <label class="form-check-label line-height-1 fw-medium text-secondary-light"
+                                                   for="alergia_@alergia.IdAlergia">
+                                                @alergia.NombreAlergia
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Campo de texto para una nueva alergia del niño -->
+                            <div class="col-sm-6 col-xs-6">
+                                <label class="form-label mb-8 h6">Escria una nueva Alergia, en caso de no encontarse la opcion</label>
+                                <input type="text" class="form-control py-11" placeholder="Ingrese una Alergia" name="NewAlergia" id="NewAlegia">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Medicamentos -->
+                <div class="card mt-24">
+                    <div class="card-header border-bottom">
+                        <h4 class="mb-4">Medicamentos</h4>
+                        <p class="text-gray-600 text-15">Seleccione los medicamentos y dosis correspondientes:</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="pt-24 pb-24 border-bottom border-gray-100">
+                            <div class="row gy-4">
+                                @foreach (var medicamento in ViewBag.Medicamentos)
+                                {
+                                    <div class="col-sm-6 col-xs-6">
+                                        <div class="form-switch switch-primary d-flex align-items-center gap-8 mb-16">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="medicamento_@medicamento.IdMedicamento"
+                                                   name="IdMedicamento" value="@medicamento.IdMedicamento"
+                                                   @(Model.RelNinoMedicamento.Any(rm => rm.IdMedicamento == medicamento.IdMedicamento) ? "checked" : "")/>
+                                            <label class="form-check-label line-height-1 fw-medium text-secondary-light"
+                                                   for="medicamento_@medicamento.IdMedicamento">
+                                                @medicamento.NombreMedicamento (Dosis: @medicamento.Dosis)
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Campo de texto para un nuevo Medicamento del niño -->
+                            <div class="col-sm-6 col-xs-6">
+                                <label class="form-label mb-8 h6">Escria un nuevo Medicamento, en caso de no encontarse la opcion</label>
+                                <input type="text" class="form-control py-11" placeholder="Ingrese un Medicamento" name="NewMedicamento" id="NewMedicamento">
+                                <input type="text" class="form-control py-11" placeholder="Ingrese la Dosis" name="Dosis" id="Dosis">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Condiciones Médicas -->
+                <div class="card mt-24">
+                    <div class="card-header border-bottom">
+                        <h4 class="mb-4">Condiciones Médicas</h4>
+                        <p class="text-gray-600 text-15">Seleccione las condiciones médicas aplicables:</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="pt-24 border-bottom border-gray-100">
+                            <div class="row gy-4">
+                                @foreach (var condicion in ViewBag.CondicionesMedicas)
+                                {
+                                    <div class="col-sm-6 col-xs-6">
+                                        <div class="form-switch switch-primary d-flex align-items-center gap-8 mb-16">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="condicion_@condicion.IdCondicionMedica"
+                                                   name="IdCondicion" value="@condicion.IdCondicionMedica"
+                                                   @(Model.RelNinoCondicion.Any(rc => rc.IdCondicion == condicion.IdCondicionMedica) ? "checked" : "")/>
+                                            <label class="form-check-label line-height-1 fw-medium text-secondary-light"
+                                                   for="condicion_@condicion.IdCondicionMedica">
+                                                @condicion.NombreCondicion
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <!-- Campo de texto para una nueva Condicion Medica del niño -->
+                            <div class="col-sm-6 col-xs-6">
+                                <label class="form-label mb-8 h6">Escria una nueva Condicion Medica, en caso de no encontarse la opcion</label>
+                                <input type="text" class="form-control py-11" placeholder="Ingrese la Condicion Medica" name="NewCondicion" id="NewCondicion">
+                            </div>
+                            <br/>
+                        </div>
+                    </div>
+                    
+                    <!-- Botones de acción -->
+                    <div class="card-footer">
+                        <div class="flex-align justify-content-end gap-8">
+                            <button type="reset" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancelar</button>
+                            <button type="submit" class="btn btn-main rounded-pill py-9">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

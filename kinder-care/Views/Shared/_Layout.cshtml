@@ -1,4 +1,6 @@
 ﻿@* Dashboard Index - Converted to Razor .cshtml *@
+
+@*
 @{
 Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
@@ -16,7 +18,7 @@ Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     </a>
     <div class="sidebar-menu-wrapper">
         <ul class="sidebar-menu">
-            @* Sidebar Menu Items *@
+            $1$ Sidebar Menu Items #1#
             @Html.Partial("_SidebarMenu")
         </ul>
     </div>
@@ -25,7 +27,7 @@ Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 <!--==================== Main Content ====================-->
 <div class="dashboard-main-wrapper">
     <div class="top-navbar">
-        @* Navbar Content *@
+        $1$ Navbar Content #1#
         @Html.Partial("_TopNavbar")
     </div>
     <div class="dashboard-body">
@@ -66,3 +68,4 @@ Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     createLineChart('doubleLineChart', '#27CFA7');
 </script>
 }
+*@

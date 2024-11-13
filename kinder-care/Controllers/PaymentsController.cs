@@ -87,7 +87,7 @@ public class PaymentsController : Controller
     public async Task<IActionResult> CreatePayment()
     {
         var ninos = await _context.Ninos
-            .Where(n => n.Activo)
+            .Where(n => n.Activo == true)
             .ToListAsync();
 
         var padres = await _context.Usuarios
@@ -138,7 +138,7 @@ public class PaymentsController : Controller
 
         // Cargar nuevamente las listas para la vista
         var ninos = await _context.Ninos
-            .Where(n => n.Activo)
+            .Where(n => n.Activo == true)
             .ToListAsync();
         var padres = await _context.Usuarios
             .Where(u => u.IdRol == 3)

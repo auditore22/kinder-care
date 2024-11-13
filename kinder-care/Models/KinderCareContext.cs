@@ -42,9 +42,15 @@ public partial class KinderCareContext : DbContext
     public virtual DbSet<RelDocenteNinoMateria> RelDocenteNinoMateria { get; set; }
 
     public virtual DbSet<RelNinoActividad> RelNinoActividad { get; set; }
-
     public virtual DbSet<RelPadresNinos> RelPadresNinos { get; set; }
 
+    public virtual DbSet<RelNinoAlergia> RelNinoAlergia { get; set; }
+
+    public virtual DbSet<RelNinoMedicamento> RelNinoMedicamento { get; set; }
+
+    public virtual DbSet<RelNinoCondicion> RelNinoCondicion { get; set; }
+
+    public virtual DbSet<RelNinoContactoEmergencia> RelNinoContactoEmergencia { get; set; }
     public virtual DbSet<Roles> Roles { get; set; }
 
     public virtual DbSet<TipoActividad> TipoActividad { get; set; }
@@ -286,82 +292,6 @@ public partial class KinderCareContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("ultima_actualizacion");
-
-            entity.HasMany(d => d.IdAlergia).WithMany(p => p.IdNino)
-                .UsingEntity<Dictionary<string, object>>(
-                    "RelNinoAlergia",
-                    r => r.HasOne<Alergias>().WithMany()
-                        .HasForeignKey("IdAlergia")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__rel_nino___id_al__73BA3083"),
-                    l => l.HasOne<Ninos>().WithMany()
-                        .HasForeignKey("IdNino")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__rel_nino___id_ni__72C60C4A"),
-                    j =>
-                    {
-                        j.HasKey("IdNino", "IdAlergia").HasName("PK__rel_nino__28DC7B489431B21C");
-                        j.ToTable("rel_nino_alergia");
-                        j.IndexerProperty<int>("IdNino").HasColumnName("id_nino");
-                        j.IndexerProperty<int>("IdAlergia").HasColumnName("id_alergia");
-                    });
-
-            entity.HasMany(d => d.IdCondicion).WithMany(p => p.IdNino)
-                .UsingEntity<Dictionary<string, object>>(
-                    "RelNinoCondicion",
-                    r => r.HasOne<CondicionesMedicas>().WithMany()
-                        .HasForeignKey("IdCondicion")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__rel_nino___id_co__778AC167"),
-                    l => l.HasOne<Ninos>().WithMany()
-                        .HasForeignKey("IdNino")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__rel_nino___id_ni__76969D2E"),
-                    j =>
-                    {
-                        j.HasKey("IdNino", "IdCondicion").HasName("PK__rel_nino__379B1EF6AFA62C58");
-                        j.ToTable("rel_nino_condicion");
-                        j.IndexerProperty<int>("IdNino").HasColumnName("id_nino");
-                        j.IndexerProperty<int>("IdCondicion").HasColumnName("id_condicion");
-                    });
-
-            entity.HasMany(d => d.IdContacto).WithMany(p => p.IdNino)
-                .UsingEntity<Dictionary<string, object>>(
-                    "RelNinoContactoEmergencia",
-                    r => r.HasOne<ContactosEmergencia>().WithMany()
-                        .HasForeignKey("IdContacto")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__rel_nino___id_co__6754599E"),
-                    l => l.HasOne<Ninos>().WithMany()
-                        .HasForeignKey("IdNino")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__rel_nino___id_ni__66603565"),
-                    j =>
-                    {
-                        j.HasKey("IdNino", "IdContacto").HasName("PK__rel_nino__BB908C9D7789E108");
-                        j.ToTable("rel_nino_contacto_emergencia");
-                        j.IndexerProperty<int>("IdNino").HasColumnName("id_nino");
-                        j.IndexerProperty<int>("IdContacto").HasColumnName("id_contacto");
-                    });
-
-            entity.HasMany(d => d.IdMedicamento).WithMany(p => p.IdNino)
-                .UsingEntity<Dictionary<string, object>>(
-                    "RelNinoMedicamento",
-                    r => r.HasOne<Medicamentos>().WithMany()
-                        .HasForeignKey("IdMedicamento")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__rel_nino___id_me__7B5B524B"),
-                    l => l.HasOne<Ninos>().WithMany()
-                        .HasForeignKey("IdNino")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__rel_nino___id_ni__7A672E12"),
-                    j =>
-                    {
-                        j.HasKey("IdNino", "IdMedicamento").HasName("PK__rel_nino__1951A5B584CD875D");
-                        j.ToTable("rel_nino_medicamento");
-                        j.IndexerProperty<int>("IdNino").HasColumnName("id_nino");
-                        j.IndexerProperty<int>("IdMedicamento").HasColumnName("id_medicamento");
-                    });
         });
 
         modelBuilder.Entity<ObservacionesDocentes>(entity =>
@@ -485,6 +415,112 @@ public partial class KinderCareContext : DbContext
                 .HasConstraintName("FK__rel_docen__id_ni__60A75C0F");
         });
 
+
+        // Relación Niño-Alergia
+        modelBuilder.Entity<RelNinoAlergia>(entity =>
+        {
+            entity.HasKey(e => new { e.IdNino, e.IdAlergia });
+
+            entity.ToTable(
+                "rel_nino_alergia"); // Asegúrate de que este nombre sea el correcto de la tabla en la base de datos
+            entity.Property(e => e.IdNino).HasColumnName("id_nino"); // Nombre de la columna correcta
+            entity.Property(e => e.IdAlergia).HasColumnName("id_alergia"); // Nombre de la columna correcta
+
+            entity.HasOne(d => d.Nino)
+                .WithMany(p => p.RelNinoAlergia)
+                .HasForeignKey(d => d.IdNino)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Alergia)
+                .WithMany(p => p.RelNinoAlergia)
+                .HasForeignKey(d => d.IdAlergia)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        // Relación Niño-Medicamento
+        modelBuilder.Entity<RelNinoMedicamento>(entity =>
+        {
+            entity.HasKey(e => new { e.IdNino, e.IdMedicamento });
+
+            entity.ToTable("rel_nino_medicamento"); // Asegúrate de usar el nombre correcto
+            entity.Property(e => e.IdNino).HasColumnName("id_nino"); // Nombre de la columna correcta
+            entity.Property(e => e.IdMedicamento).HasColumnName("id_medicamento"); // Nombre de la columna correcta
+
+            entity.HasOne(d => d.Nino)
+                .WithMany(p => p.RelNinoMedicamento)
+                .HasForeignKey(d => d.IdNino)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Medicamento)
+                .WithMany(p => p.RelNinoMedicamento)
+                .HasForeignKey(d => d.IdMedicamento)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        // Relación Niño-Condición Médica
+        modelBuilder.Entity<RelNinoCondicion>(entity =>
+        {
+            entity.HasKey(e => new { e.IdNino, e.IdCondicion });
+
+            entity.ToTable("rel_nino_condicion"); // Asegúrate de usar el nombre correcto
+            entity.Property(e => e.IdNino).HasColumnName("id_nino"); // Nombre de la columna correcta
+            entity.Property(e => e.IdCondicion).HasColumnName("id_condicion"); // Nombre de la columna correcta
+
+            entity.HasOne(d => d.Nino)
+                .WithMany(p => p.RelNinoCondicion)
+                .HasForeignKey(d => d.IdNino)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Condicion)
+                .WithMany(p => p.RelNinoCondicion)
+                .HasForeignKey(d => d.IdCondicion)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        // Relación Niño-Contacto de Emergencia
+        modelBuilder.Entity<RelNinoContactoEmergencia>(entity =>
+        {
+            entity.HasKey(e => new { e.IdNino, e.IdContacto });
+
+            entity.HasOne(d => d.Nino)
+                .WithMany(p => p.RelNinoContactoEmergencia)
+                .HasForeignKey(d => d.IdNino)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.ContactoEmergencia)
+                .WithMany(p => p.RelNinoContactoEmergencia)
+                .HasForeignKey(d => d.IdContacto)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.ToTable("rel_nino_contacto_emergencia");
+            entity.Property(e => e.IdNino).HasColumnName("id_nino");
+            entity.Property(e => e.IdContacto).HasColumnName("id_contacto");
+        });
+        
+        modelBuilder.Entity<RelDocenteNinoMateria>(entity =>
+        {
+            entity.HasKey(e => new { e.IdDocente, e.IdNino }).HasName("PK__rel_doce__42BD208A0B7446B8");
+
+            entity.ToTable("rel_docente_nino_materia");
+
+            entity.Property(e => e.IdDocente).HasColumnName("id_docente");
+            entity.Property(e => e.IdNino).HasColumnName("id_nino");
+            entity.Property(e => e.Materia)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("materia");
+
+            entity.HasOne(d => d.IdDocenteNavigation).WithMany(p => p.RelDocenteNinoMateria)
+                .HasForeignKey(d => d.IdDocente)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__rel_docen__id_do__5FB337D6");
+
+            entity.HasOne(d => d.IdNinoNavigation).WithMany(p => p.RelDocenteNinoMateria)
+                .HasForeignKey(d => d.IdNino)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__rel_docen__id_ni__60A75C0F");
+        });
+
         modelBuilder.Entity<RelNinoActividad>(entity =>
         {
             entity.HasKey(e => new { e.IdNino, e.IdActividad }).HasName("PK__rel_nino__06C41D3E23CF66C7");
@@ -524,12 +560,14 @@ public partial class KinderCareContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("relacion");
 
-            entity.HasOne(d => d.IdNinoNavigation).WithMany(p => p.RelPadresNinos)
+            entity.HasOne(d => d.IdNinoNavigation)
+                .WithMany(p => p.RelPadresNinos)
                 .HasForeignKey(d => d.IdNino)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_padres_ninos_nino");
 
-            entity.HasOne(d => d.IdPadreNavigation).WithMany(p => p.RelPadresNinos)
+            entity.HasOne(d => d.IdPadreNavigation)
+                .WithMany(p => p.RelPadresNinos)
                 .HasForeignKey(d => d.IdPadre)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_padres_ninos_padre");

@@ -13,5 +13,5 @@ public partial class Medicamentos
 
     public bool? Activo { get; set; }
 
-    public virtual ICollection<Ninos> IdNino { get; set; } = new List<Ninos>();
+    public virtual ICollection<RelNinoMedicamento> RelNinoMedicamento { get; set; } = new List<RelNinoMedicamento>();
 }

@@ -102,6 +102,7 @@ namespace kinder_care.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, usuarioRecibido.IdUsuario.ToString()),
                 new Claim(ClaimTypes.Name, usuarioRecibido.Nombre),
+                new Claim(ClaimTypes.Email, usuarioRecibido.CorreoElectronico),
                 new Claim(ClaimTypes.Role, usuarioRecibido.IdRolNavigation.Nombre)
             };
 
@@ -110,8 +111,7 @@ namespace kinder_care.Controllers
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity), properties);
-            
-            TempData["RoleId"] = usuarioRecibido.IdRol; // Almacenar el ID del rol en TempData para pasarlo al js
+
             return RedirectToAction("Index", "Home");
         }
 

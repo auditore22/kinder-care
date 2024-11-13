@@ -21,29 +21,30 @@ public partial class Ninos
 
     public DateTime? UltimaActualizacion { get; set; }
 
-    public bool Activo { get; set; }
+    public bool? Activo { get; set; }
 
     public virtual ICollection<Asistencia> Asistencia { get; set; } = new List<Asistencia>();
 
     public virtual ICollection<Evaluaciones> Evaluaciones { get; set; } = new List<Evaluaciones>();
 
-    public virtual ICollection<ObservacionesDocentes> ObservacionesDocentes { get; set; } = new List<ObservacionesDocentes>();
+    public virtual ICollection<ObservacionesDocentes> ObservacionesDocentes { get; set; } =
+        new List<ObservacionesDocentes>();
 
     public virtual ICollection<Pagos> Pagos { get; set; } = new List<Pagos>();
 
     public virtual ICollection<ProgresoAcademico> ProgresoAcademico { get; set; } = new List<ProgresoAcademico>();
 
-    public virtual ICollection<RelDocenteNinoMateria> RelDocenteNinoMateria { get; set; } = new List<RelDocenteNinoMateria>();
+    public virtual ICollection<RelDocenteNinoMateria> RelDocenteNinoMateria { get; set; } =
+        new List<RelDocenteNinoMateria>();
 
     public virtual ICollection<RelNinoActividad> RelNinoActividad { get; set; } = new List<RelNinoActividad>();
 
     public virtual ICollection<RelPadresNinos> RelPadresNinos { get; set; } = new List<RelPadresNinos>();
 
-    public virtual ICollection<Alergias> IdAlergia { get; set; } = new List<Alergias>();
+    public virtual ICollection<RelNinoAlergia> RelNinoAlergia { get; set; } = new List<RelNinoAlergia>();
+    public virtual ICollection<RelNinoMedicamento> RelNinoMedicamento { get; set; } = new List<RelNinoMedicamento>();
+    public virtual ICollection<RelNinoCondicion> RelNinoCondicion { get; set; } = new List<RelNinoCondicion>();
 
-    public virtual ICollection<CondicionesMedicas> IdCondicion { get; set; } = new List<CondicionesMedicas>();
-
-    public virtual ICollection<ContactosEmergencia> IdContacto { get; set; } = new List<ContactosEmergencia>();
-
-    public virtual ICollection<Medicamentos> IdMedicamento { get; set; } = new List<Medicamentos>();
+    public virtual ICollection<RelNinoContactoEmergencia> RelNinoContactoEmergencia { get; set; } =
+        new List<RelNinoContactoEmergencia>(); //
 }

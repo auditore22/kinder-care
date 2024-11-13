@@ -1,25 +1,158 @@
-﻿@{
-    ViewData["Title"] = "Home";
-    Layout = "_MainLayout";
-}
+﻿@using System.Security.Claims
 
-<!-- _Dashboard -->
-@await Html.PartialAsync("_Dashboard")
+<div class="row gy-4">
+    <div class="col-lg-9">
+        <!-- Grettings Box Start -->
+        <div class="grettings-box position-relative rounded-16 bg-main-600 overflow-hidden gap-16 flex-wrap z-1">
+            <img src="~/images/bg/grettings-pattern.png" alt="" class="position-absolute inset-block-start-0 inset-inline-start-0 z-n1 w-100 h-100 opacity-6">
+            <div class="row gy-4">
+                <div class="col-sm-7">
+                    <div class="grettings-box__content py-xl-4">
+                        <h2 class="text-white mb-0">Hello, @User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault() !</h2>
+                        <p class="text-15 fw-light mt-4 text-white">Let’s learning something today</p>
+                        <p class="text-lg fw-light mt-24 text-white">Set your study plan and growth with community</p>
+                    </div>
+                </div>
+                <div class="col-sm-5 d-sm-block d-none">
+                    <div class="text-center h-100 d-flex justify-content-center align-items-end ">
+                        <img src="https://html.themeholy.com/edmate/assets/images/thumbs/auth-img1.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Grettings Box End -->
 
-<!-- _Users -->
-@await Html.PartialAsync("_Users")
+        <!-- Hour Spent Card Start -->
+        <div class="card mt-24 overflow-hidden">
+            Content
+        </div>
+        <!-- Hour Spent Card End -->
 
-<!-- _Enrollment -->
-@await Html.PartialAsync("_Enrollment")
+        <!-- Table Start -->
+        <div class="card mt-24 overflow-hidden">
+            <div class="card-header">
+                Content
+            </div>
+            <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
 
-<!-- _Payments -->
-@await Html.PartialAsync("_Payments")
+                <!-- Table End -->
 
-<!-- _Events -->
-@await Html.PartialAsync("_Events")
+            </div>
+            <div class="col-lg-3">
 
-<!-- _Reports -->
-@await Html.PartialAsync("_Reports")
+                <!-- Calendar Start -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="calendar">
+                            <div class="calendar__header">
+                                <button type="button" class="calendar__arrow left">
+                                    <i class="ph ph-caret-left"></i>
+                                </button>
+                                <p class="display h6 mb-0">""</p>
+                                <button type="button" class="calendar__arrow right">
+                                    <i class="ph ph-caret-right"></i>
+                                </button>
+                            </div>
 
-<!-- _Configuration -->
-@await Html.PartialAsync("_Configuration")
+                            <div class="calendar__week week">
+                                <div class="calendar__week-text">Su</div>
+                                <div class="calendar__week-text">Mo</div>
+                                <div class="calendar__week-text">Tu</div>
+                                <div class="calendar__week-text">We</div>
+                                <div class="calendar__week-text">Th</div>
+                                <div class="calendar__week-text">Fr</div>
+                                <div class="calendar__week-text">Sa</div>
+                            </div>
+                            <div class="days"></div>
+                        </div>
+
+                        <!-- Events start -->
+                        <div class="">
+
+                        </div>
+                        <a href="event.html" class="btn btn-main w-100 mt-24">All Events</a>
+                    </div>
+                    <!-- Events End -->
+
+                </div>
+            </div>
+            <!-- Calendar End -->
+
+            <!-- Donut Chart Start -->
+            <div class="card mt-24">
+                <div class="card-header border-bottom border-gray-100 flex-between gap-8 flex-wrap">
+                    <h5 class="mb-0">Most Activity</h5>
+                    <div class="dropdown flex-shrink-0">
+                        Content
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="flex-center">
+                        <div id="activityDonutChart" class="w-auto d-inline-block"></div>
+                    </div>
+
+                    <div class="flex-between gap-8 flex-wrap mt-24">
+                        Content
+                    </div>
+                </div>
+            </div>
+            <!-- Donut Chart End -->
+
+            <!-- Community Groups card Start -->
+            <div class="card mt-24">
+                <div class="card-body">
+                    <div class="mb-20 flex-between flex-wrap gap-8">
+                        <h4 class="mb-0">Community Groups</h4>
+                        <a href="student-courses.html" class="w-28 h-28 flex-center bg-gray-50 rounded-circle text-gray-600 hover-bg-gray-100">
+                            <i class="ph ph-plus"></i>
+                        </a>
+                    </div>
+                    <div class="p-xl-4 py-16 px-12 flex-between gap-8 rounded-8 border border-gray-100 hover-border-gray-200 transition-1 mb-16">
+                        <div class="flex-align flex-wrap gap-8">
+                                <span class="text-main-600 bg-main-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                                    <i class="ph-fill ph-graduation-cap"></i>
+                                </span>
+                            <div>
+                                <h6 class="mb-0">Design Community, USA</h6>
+                                <span class="text-13 text-gray-500 fw-medium">125k Members</span>
+                            </div>
+                        </div>
+                        <a href="assignment.html" class="text-gray-900 hover-text-main-600">
+                            <i class="ph ph-caret-right"></i>
+                        </a>
+                    </div>
+                    <div class="p-xl-4 py-16 px-12 flex-between gap-8 rounded-8 border border-gray-100 hover-border-gray-200 transition-1 mb-16">
+                        <div class="flex-align flex-wrap gap-8">
+                                <span class="text-dribble-600 bg-dribble-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                                    <i class="ph ph-dribbble-logo"></i>
+                                </span>
+                            <div>
+                                <h6 class="mb-0">Dribbble Global Groups</h6>
+                                <span class="text-13 text-gray-500 fw-medium">28M Members</span>
+                            </div>
+                        </div>
+                        <a href="assignment.html" class="text-gray-900 hover-text-main-600">
+                            <i class="ph ph-caret-right"></i>
+                        </a>
+                    </div>
+                    <div class="p-xl-4 py-16 px-12 flex-between gap-8 rounded-8 border border-gray-100 hover-border-gray-200 transition-1">
+                        <div class="flex-align flex-wrap gap-8">
+                                <span class="text-purple-600 bg-purple-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                                    <i class="ph ph-chart-line-up"></i>
+                                </span>
+                            <div>
+                                <h6 class="mb-0">Marketing Support Group</h6>
+                                <span class="text-13 text-gray-500 fw-medium">125k Members</span>
+                            </div>
+                        </div>
+                        <a href="assignment.html" class="text-gray-900 hover-text-main-600">
+                            <i class="ph ph-caret-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Community Groups card End -->
+
+        </div>
+    </div>
+</div>
