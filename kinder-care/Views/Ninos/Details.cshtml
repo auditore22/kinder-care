@@ -68,7 +68,7 @@
                     <button class="nav-link" id="pills-edit-tab" data-bs-toggle="pill" data-bs-target="#pills-edit" type="button" role="tab" aria-controls="pills-edit" aria-selected="false">Editar</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-plan-tab" data-bs-toggle="pill" data-bs-target="#pills-plan" type="button" role="tab" aria-controls="pills-plan" aria-selected="false">Contactos de Emergencia</button>
+                    <button class="nav-link" id="pills-Edit_Contacto_Emergencia-tab" data-bs-toggle="pill" data-bs-target="#pills-Edit_Contacto_Emergencia" type="button" role="tab" aria-controls="pills-Edit_Contacto_Emergencia" aria-selected="false">Contactos de Emergencia</button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="pills-Edit_Info_Medica-tab" data-bs-toggle="pill" data-bs-target="#pills-Edit_Info_Medica" type="button" role="tab" aria-controls="pills-Edit_Info_Medica" aria-selected="false">Informacion Medica</button>
@@ -217,8 +217,8 @@
 </div>
 <!-- Edit Tab End -->
 
-<!-- Password Tab Start -->
-<div class="tab-pane fade" id="pills-password" role="tabpanel" aria-labelledby="pills-password-tab" tabindex="0">
+@*<!-- Edit_Contacto_Emergencia Tab Start -->
+<div class="tab-pane fade" id="pills-Edit_Contacto_Emergencia" role="tabpanel" aria-labelledby="pills-Edit_Contacto_Emergencia-tab" tabindex="0">
     <div class="card mt-24">
         <div class="card-header border-bottom">
             <h4 class="mb-4">Password Settings</h4>
@@ -279,9 +279,91 @@
         </div>
     </div>
 </div>
-<!-- Password Tab End -->
+<!-- Edit_Contacto_Emergencia Tab End -->*@
 
-    <!-- Información Médica - Tab de Alergias, Medicamentos y Condiciones Médicas -->
+    <!-- Edit_Contacto_Emergencia Tab Start -->
+    <div class="tab-pane fade" id="pills-Edit_Contacto_Emergencia" role="tabpanel" aria-labelledby="pills-Edit_Contacto_Emergencia-tab" tabindex="0">
+        <div class="card mt-24">
+            <div class="card-header border-bottom">
+                <h4 class="mb-4">Editar Información de Contactos de Emergencia</h4>
+                <p class="text-gray-600 text-15">Complete la información requerida sobre los contactos de emergencia del niño.</p>
+            </div>
+            <div class="card-body">
+                <div class="row gy-4">
+                    <div class="col-md-6">
+                        <form asp-action="Edit_Contacto_Emergencia" method="post">
+                            <input asp-for="IdNino" value="@Model.IdNino" />
+
+                            <!-- Sección de Contactos Existentes -->
+                            <h4 class="mb-4">Contactos de Emergencia Existentes</h4>
+                            @if (ViewBag.ContactosEmergencia != null && ((List<kinder_care.Models.ContactosEmergencia>)ViewBag.ContactosEmergencia).Any())
+                            {
+                                foreach (var contacto in (List<kinder_care.Models.ContactosEmergencia>)ViewBag.ContactosEmergencia)
+                                {
+                                    <div class="form-group mb-16">
+                                        <input type="hidden" name="ContactosExistentes[@contacto.IdContactoEmergencia].IdContactoEmergencia" value="@contacto.IdContactoEmergencia" />
+
+                                        <label for="nombre_@contacto.IdContactoEmergencia" class="form-label h6">Nombre</label>
+                                        <input type="text" class="form-control py-11" id="nombre_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].NombreContacto" value="@contacto.NombreContacto" />
+
+                                        <label for="relacion_@contacto.IdContactoEmergencia" class="form-label h6 mt-2">Relación</label>
+                                        <input type="text" class="form-control py-11" id="relacion_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].Relacion" value="@contacto.Relacion" />
+
+                                        <label for="telefono_@contacto.IdContactoEmergencia" class="form-label h6 mt-2">Teléfono</label>
+                                        <input type="tel" class="form-control py-11" id="telefono_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].Telefono" value="@contacto.Telefono" pattern="\d{7,15}" title="Debe ser un número de 7 a 15 dígitos y sin espacios" />
+
+                                        <label for="direccion_@contacto.IdContactoEmergencia" class="form-label h6 mt-2">Dirección</label>
+                                        <input type="text" class="form-control py-11" id="direccion_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].Direccion" value="@contacto.Direccion" />
+
+                                        <!-- Botón para eliminar contacto -->
+                                        <button type="submit" class="btn btn-danger rounded-pill py-9 mt-3" name="EliminarContactoId" value="@contacto.IdContactoEmergencia">
+                                            Eliminar
+                                        </button>
+
+                                        <hr class="mt-4" />
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-gray-600">No hay contactos de emergencia registrados.</p>
+                            }
+
+                            <!-- Sección para agregar un nuevo contacto -->
+                            <h4 class="mb-4 mt-5">Agregar Nuevo Contacto de Emergencia</h4>
+                            <div class="form-group mb-16">
+
+                                @*<input name="IdNinoNew" id="IdNinoNew" value="@Model.IdNino" />*@
+                                
+                                <label for="NewNombre" class="form-label h6">Nombre</label>
+                                <input type="text" class="form-control py-11" name="NewNombre" id="NewNombre" placeholder="Ingrese un nuevo Contacto"/>
+
+                                <label for="NewRelacion" class="form-label h6 mt-2">Relación</label>
+                                <input type="text" class="form-control py-11" name="NewRelacion" id="NewRelacion" placeholder="Ingrese la relación"/>
+
+                                <label for="NewTelefono" class="form-label h6 mt-2">Teléfono</label>
+                                <input type="tel" class="form-control py-11" name="NewTelefono" id="NewTelefono" placeholder="Ingrese el teléfono" pattern="\d{7,15}" title="Debe ser un número de 7 a 15 dígitos y sin espacios"/>
+
+                                <label for="NewDireccion" class="form-label h6 mt-2">Dirección</label>
+                                <input type="text" class="form-control py-11" name="NewDireccion" id="NewDireccion" placeholder="Ingrese la dirección"/>
+                            </div>
+
+                            <!-- Botones de acción -->
+                            <div class="flex-align justify-content-end gap-8">
+                                <button type="reset" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancelar</button>
+                                <button type="submit" class="btn btn-main rounded-pill py-9">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit_Contacto_Emergencia Tab End -->
+
+
+
+<!-- Información Médica - Tab de Alergias, Medicamentos y Condiciones Médicas -->
     <div class="tab-pane fade" id="pills-Edit_Info_Medica" role="tabpanel" aria-labelledby="pills-Edit_Info_Medica-tab" tabindex="0">
         <div class="inner d-flex justify-content-center align-items-center">
             <form asp-action="Edit_Info_Medica" asp-route-id="@Model.IdNino" method="post">

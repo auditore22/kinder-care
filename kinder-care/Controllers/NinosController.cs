@@ -47,42 +47,6 @@ public class NinosController : Controller
         return View();
     }
     
-    /*[HttpGet]
-    public async Task<IActionResult> Details(int? id)
-    {
-        if (id == null) return NotFound();
-
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-        // Verificar si el padre está asociado con este niño
-        var isAssociated = await _context.RelPadresNinos
-            .AnyAsync(r => r.IdPadre == userId && r.IdNino == id);
-
-        if (!isAssociated)
-        {
-            ViewBag.Mensaje = "No tienes acceso a esta información.";
-            return View();
-        }
-
-        // Traer la información completa del niño junto con todas las relaciones
-        var nino = await _context.Ninos
-            .Include(n => n.ProgresoAcademico) // Progreso académico
-            .Include(n => n.ObservacionesDocentes) // Observaciones de los docentes
-            .Include(n => n.RelNinoAlergia) // Alergias
-            .ThenInclude(ra => ra.Alergia)
-            .Include(n => n.RelNinoMedicamento) // Medicamentos
-            .ThenInclude(rm => rm.Medicamento)
-            .Include(n => n.RelNinoCondicion) // Condiciones médicas
-            .ThenInclude(rc => rc.Condicion)
-            .Include(n => n.RelNinoContactoEmergencia) // Contactos de emergencia
-            .ThenInclude(re => re.ContactoEmergencia)
-            .FirstOrDefaultAsync(n => n.IdNino == id);
-
-        if (nino == null) return NotFound();
-
-        return View(nino);
-    }*/
-    
     [HttpGet]
     public async Task<IActionResult> Details(int? id)
     {
@@ -169,30 +133,6 @@ public class NinosController : Controller
 
         return RedirectToAction("Index", "Ninos");
     }
-
-    /*[HttpGet]
-    public async Task<IActionResult> Edit_Info_Medica(int? id)
-    {
-        if (id == null) return NotFound();
-
-        var nino = await _context.Ninos
-            .Include(n => n.RelNinoAlergia)
-            .ThenInclude(ra => ra.Alergia)
-            .Include(n => n.RelNinoMedicamento)
-            .ThenInclude(rm => rm.Medicamento)
-            .Include(n => n.RelNinoCondicion)
-            .ThenInclude(rc => rc.Condicion)
-            .FirstOrDefaultAsync(n => n.IdNino == id);
-
-        if (nino == null) return NotFound();
-
-        // Pasar todas las opciones disponibles a la vista
-        ViewBag.Alergias = await _context.Alergias.ToListAsync();
-        ViewBag.Medicamentos = await _context.Medicamentos.ToListAsync();
-        ViewBag.CondicionesMedicas = await _context.CondicionesMedicas.ToListAsync();
-
-        return View(nino);
-    }*/
 
     [HttpPost]
     public async Task<IActionResult> Edit_Info_Medica(
@@ -319,7 +259,7 @@ public class NinosController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit_Contacto_Emergencia(int IdNino, int IdNinoNew,
+    public async Task<IActionResult> Edit_Contacto_Emergencia(int IdNino/*, int IdNinoNew*/,
         Dictionary<int, ContactosEmergencia> ContactosExistentes, string NewNombre, string NewRelacion, int NewTelefono,
         string NewDireccion, int? EliminarContactoId)
     {
@@ -345,7 +285,7 @@ public class NinosController : Controller
             !string.IsNullOrWhiteSpace(NewDireccion))
             await _context.Database.ExecuteSqlRawAsync(
                 "EXEC GestionarContactosEmergencia @id_nino = {0}, @nombre_contacto = {1}, @telefono = {2}, @relacion = {3}, @direccion = {4}, @id_contacto = {5}, @accion = {6}",
-                IdNinoNew, NewNombre, NewTelefono, NewRelacion,
+                IdNino, NewNombre, NewTelefono, NewRelacion,
                 NewDireccion, null, "AGREGAR");
 
         await _context.SaveChangesAsync();
