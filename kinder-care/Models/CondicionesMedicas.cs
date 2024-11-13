@@ -11,5 +11,5 @@ public partial class CondicionesMedicas
 
     public bool? Activo { get; set; }
 
-    public virtual ICollection<Ninos> IdNino { get; set; } = new List<Ninos>();
+    public virtual ICollection<RelNinoCondicion> RelNinoCondicion { get; set; } = new List<RelNinoCondicion>();
 }

@@ -11,5 +11,5 @@ public partial class Alergias
 
     public bool? Activo { get; set; }
 
-    public virtual ICollection<Ninos> IdNino { get; set; } = new List<Ninos>();
+    public virtual ICollection<RelNinoAlergia> RelNinoAlergia { get; set; } = new List<RelNinoAlergia>();
 }
