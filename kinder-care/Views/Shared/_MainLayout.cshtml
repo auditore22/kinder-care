@@ -1,5 +1,7 @@
 @using System.Security.Claims
-
+@{
+    var RoleName = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,14 +107,20 @@
                     </ul>
                     <!-- Submenu End -->
                 </li>
-                <li class="sidebar-menu__item">
-                    <a asp-action="Index" asp-controller="Ninos" class="sidebar-menu__link">
-                        <span class="icon">
-                            <i class="ph ph-users-three"></i>
-                        </span>
-                        <span class="text">Students</span>
-                    </a>
-                </li>
+                @{
+                    if (RoleName == "Padre")
+                    {
+                        <li class="sidebar-menu__item">
+                            <a asp-action="Index" asp-controller="Ninos" class="sidebar-menu__link">
+                                <span class="icon">
+                                    <i class="ph ph-users-three"></i>
+                                </span>
+                                <span class="text">Hijos</span>
+                            </a>
+                        </li>
+                    }
+                }
+                
                 <li class="sidebar-menu__item">
                     <a href="assignment.html" class="sidebar-menu__link">
                         <span class="icon">
