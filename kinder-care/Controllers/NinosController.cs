@@ -46,7 +46,7 @@ public class NinosController : Controller
         ViewBag.Mensaje = "No tienes acceso a esta información.";
         return View();
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> Details(int? id)
     {
@@ -84,7 +84,7 @@ public class NinosController : Controller
         ViewBag.Alergias = await _context.Alergias.ToListAsync();
         ViewBag.Medicamentos = await _context.Medicamentos.ToListAsync();
         ViewBag.CondicionesMedicas = await _context.CondicionesMedicas.ToListAsync();
-        
+
         // Obtener contactos de emergencia relacionados
         var contactosRelacionados = nino.RelNinoContactoEmergencia
             .Select(r => r.ContactoEmergencia)
@@ -106,11 +106,11 @@ public class NinosController : Controller
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null) return NotFound();
-    
+
         var nino = await _context.Ninos.FirstOrDefaultAsync(n => n.IdNino == id);
-    
+
         if (nino == null) return NotFound();
-    
+
         return View(nino);
     }
 
@@ -230,42 +230,14 @@ public class NinosController : Controller
         return RedirectToAction("Index", "Ninos");
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Edit_Contacto_Emergencia(int? id)
-    {
-        if (id == null) return NotFound();
-
-        var nino = await _context.Ninos
-            .Include(rce => rce.RelNinoContactoEmergencia)
-            .ThenInclude(rce => rce.ContactoEmergencia)
-            .FirstOrDefaultAsync(n => n.IdNino == id);
-
-        if (nino == null) return NotFound();
-
-        // Obtener contactos de emergencia relacionados
-        var contactosRelacionados = nino.RelNinoContactoEmergencia
-            .Select(r => r.ContactoEmergencia)
-            .ToList();
-
-        ViewBag.ContactosEmergencia = contactosRelacionados;
-
-        // Inicializa ContactosExistentes como un diccionario vacío si no hay contactos
-        if (!contactosRelacionados.Any())
-            ViewBag.ContactosExistentes = new Dictionary<int, ContactosEmergencia>();
-        else
-            ViewBag.ContactosExistentes = contactosRelacionados.ToDictionary(c => c.IdContactoEmergencia);
-
-        return View(nino);
-    }
-
     [HttpPost]
-    public async Task<IActionResult> Edit_Contacto_Emergencia(int IdNino/*, int IdNinoNew*/,
+    public async Task<IActionResult> Edit_Contacto_Emergencia(int IdNino,
         Dictionary<int, ContactosEmergencia> ContactosExistentes, string NewNombre, string NewRelacion, int NewTelefono,
         string NewDireccion, int? EliminarContactoId)
     {
         if (IdNino == 0) return NotFound();
 
-        // Lógica para eliminar el contacto si se ha pasado un ID en EliminarContactoId
+        // Eliminar contactos existentes
         if (EliminarContactoId.HasValue)
             await _context.Database.ExecuteSqlRawAsync(
                 "EXEC GestionarContactosEmergencia @id_nino = {0}, @id_contacto = {1}, @accion = {2}",
@@ -280,13 +252,21 @@ public class NinosController : Controller
                     IdNino, contacto.NombreContacto, contacto.Telefono, contacto.Relacion,
                     contacto.Direccion, contacto.IdContactoEmergencia, "ACTUALIZAR");
 
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Index", "Ninos");
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Edit_Contacto_Emergencia_2(int IdNino,
+        string NewNombre, string NewRelacion, int NewTelefono,
+        string NewDireccion, int? EliminarContactoId)
+    {
         // Agregar nuevo contacto si se ha ingresado información válida
         if (!string.IsNullOrWhiteSpace(NewNombre) && !string.IsNullOrWhiteSpace(NewRelacion) && NewTelefono != 0 &&
             !string.IsNullOrWhiteSpace(NewDireccion))
             await _context.Database.ExecuteSqlRawAsync(
                 "EXEC GestionarContactosEmergencia @id_nino = {0}, @nombre_contacto = {1}, @telefono = {2}, @relacion = {3}, @direccion = {4}, @id_contacto = {5}, @accion = {6}",
-                IdNino, NewNombre, NewTelefono, NewRelacion,
-                NewDireccion, null, "AGREGAR");
+                IdNino, NewNombre, NewTelefono, NewRelacion, NewDireccion, null, "AGREGAR");
 
         await _context.SaveChangesAsync();
         return RedirectToAction("Index", "Ninos");

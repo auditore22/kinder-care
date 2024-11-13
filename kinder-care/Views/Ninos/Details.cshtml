@@ -292,7 +292,7 @@
                 <div class="row gy-4">
                     <div class="col-md-6">
                         <form asp-action="Edit_Contacto_Emergencia" method="post">
-                            <input asp-for="IdNino" value="@Model.IdNino" />
+                            <input hidden type="number" name="IdNino" id="IdNino" value="@Model.IdNino"/>
 
                             <!-- Sección de Contactos Existentes -->
                             <h4 class="mb-4">Contactos de Emergencia Existentes</h4>
@@ -301,40 +301,47 @@
                                 foreach (var contacto in (List<kinder_care.Models.ContactosEmergencia>)ViewBag.ContactosEmergencia)
                                 {
                                     <div class="form-group mb-16">
-                                        <input type="hidden" name="ContactosExistentes[@contacto.IdContactoEmergencia].IdContactoEmergencia" value="@contacto.IdContactoEmergencia" />
+                                        <input type="hidden" name="ContactosExistentes[@contacto.IdContactoEmergencia].IdContactoEmergencia" value="@contacto.IdContactoEmergencia"/>
 
                                         <label for="nombre_@contacto.IdContactoEmergencia" class="form-label h6">Nombre</label>
-                                        <input type="text" class="form-control py-11" id="nombre_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].NombreContacto" value="@contacto.NombreContacto" />
+                                        <input type="text" class="form-control py-11" id="nombre_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].NombreContacto" value="@contacto.NombreContacto"/>
 
                                         <label for="relacion_@contacto.IdContactoEmergencia" class="form-label h6 mt-2">Relación</label>
-                                        <input type="text" class="form-control py-11" id="relacion_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].Relacion" value="@contacto.Relacion" />
+                                        <input type="text" class="form-control py-11" id="relacion_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].Relacion" value="@contacto.Relacion"/>
 
                                         <label for="telefono_@contacto.IdContactoEmergencia" class="form-label h6 mt-2">Teléfono</label>
-                                        <input type="tel" class="form-control py-11" id="telefono_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].Telefono" value="@contacto.Telefono" pattern="\d{7,15}" title="Debe ser un número de 7 a 15 dígitos y sin espacios" />
+                                        <input type="tel" class="form-control py-11" id="telefono_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].Telefono" value="@contacto.Telefono" pattern="\d{7,15}" title="Debe ser un número de 7 a 15 dígitos y sin espacios"/>
 
                                         <label for="direccion_@contacto.IdContactoEmergencia" class="form-label h6 mt-2">Dirección</label>
-                                        <input type="text" class="form-control py-11" id="direccion_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].Direccion" value="@contacto.Direccion" />
+                                        <input type="text" class="form-control py-11" id="direccion_@contacto.IdContactoEmergencia" name="ContactosExistentes[@contacto.IdContactoEmergencia].Direccion" value="@contacto.Direccion"/>
 
                                         <!-- Botón para eliminar contacto -->
                                         <button type="submit" class="btn btn-danger rounded-pill py-9 mt-3" name="EliminarContactoId" value="@contacto.IdContactoEmergencia">
                                             Eliminar
                                         </button>
 
-                                        <hr class="mt-4" />
+                                        <hr class="mt-4"/>
                                     </div>
                                 }
+                                <!-- Botones de acción -->
+                                <div class="flex-align justify-content-end gap-8">
+                                    <button type="reset" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancelar</button>
+                                    <button type="submit" class="btn btn-main rounded-pill py-9">Guardar Cambios</button>
+                                </div>
                             }
                             else
                             {
                                 <p class="text-gray-600">No hay contactos de emergencia registrados.</p>
                             }
+                        </form>
+
+                        <form asp-action="Edit_Contacto_Emergencia_2" method="post">
+                            <input hidden type="number" name="IdNino" id="IdNino" value="@Model.IdNino"/>
 
                             <!-- Sección para agregar un nuevo contacto -->
                             <h4 class="mb-4 mt-5">Agregar Nuevo Contacto de Emergencia</h4>
                             <div class="form-group mb-16">
 
-                                @*<input name="IdNinoNew" id="IdNinoNew" value="@Model.IdNino" />*@
-                                
                                 <label for="NewNombre" class="form-label h6">Nombre</label>
                                 <input type="text" class="form-control py-11" name="NewNombre" id="NewNombre" placeholder="Ingrese un nuevo Contacto"/>
 
@@ -363,7 +370,7 @@
 
 
 
-<!-- Información Médica - Tab de Alergias, Medicamentos y Condiciones Médicas -->
+    <!-- Información Médica - Tab de Alergias, Medicamentos y Condiciones Médicas -->
     <div class="tab-pane fade" id="pills-Edit_Info_Medica" role="tabpanel" aria-labelledby="pills-Edit_Info_Medica-tab" tabindex="0">
         <div class="inner d-flex justify-content-center align-items-center">
             <form asp-action="Edit_Info_Medica" asp-route-id="@Model.IdNino" method="post">
