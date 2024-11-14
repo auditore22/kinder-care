@@ -74,7 +74,7 @@ namespace kinder_care.Controllers
         {
             var usuarioRecibido = await _context.Usuarios
                 .Include(u => u.IdRolNavigation)
-                .FirstOrDefaultAsync(u => u.Nombre == usuario.Nombre);
+                .FirstOrDefaultAsync(u => u.CorreoElectronico == usuario.CorreoElectronico);
 
             if (usuarioRecibido == null || !(usuarioRecibido.Activo ?? false))
             {
