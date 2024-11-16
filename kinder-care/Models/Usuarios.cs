@@ -43,7 +43,7 @@ public partial class Usuarios
 
     public DateTime? UltimaActualizacion { get; set; }
 
-    public bool? Activo { get; set; }
+    public bool Activo { get; set; }
 
     public virtual ICollection<Docentes> Docentes { get; set; } = new List<Docentes>();
 
