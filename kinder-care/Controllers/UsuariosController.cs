@@ -9,6 +9,10 @@ using kinder_care.Models;
 using kinder_care.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Microsoft.Data.SqlClient;
+using System.Data;
+using Dapper;
+using System.Security.Claims;
 
 namespace kinder_care.Controllers
 {
@@ -26,24 +30,14 @@ namespace kinder_care.Controllers
         //======================================================[VISTA INDEX]==========================================================================================
         public async Task<IActionResult> Index()
         {
-            var kinderCareContext = _context.Usuarios
+            var usuarios = await _context.Usuarios
                 .Include(u => u.IdRolNavigation)
-                .Select(u => new Usuarios
-                {
-                    IdUsuario = u.IdUsuario,
-                    Nombre = u.Nombre,
-                    Cedula = u.Cedula,
-                    CorreoElectronico = u.CorreoElectronico,
-                    NumTelefono = u.NumTelefono,
-                    Direccion = u.Direccion,
-                    FechaCreacion = u.FechaCreacion,
-                    UltimaActualizacion = u.UltimaActualizacion,
-                    IdRol = u.IdRolNavigation.IdRol,
-                    TokenRecovery = u.TokenRecovery ?? string.Empty // Usa un valor predeterminado si es null
-                });
+                .ToListAsync();
 
-            return View(await kinderCareContext.ToListAsync());
+            return View(usuarios);
         }
+
+
 
         //======================================================[VISTA DETAILS]==========================================================================================
         public async Task<IActionResult> Details(int? id)
@@ -93,6 +87,7 @@ namespace kinder_care.Controllers
         }
 
         //======================================================[VISTA EDIT]==========================================================================================
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -100,64 +95,33 @@ namespace kinder_care.Controllers
                 return NotFound();
             }
 
-            var usuarios = await _context.Usuarios.FindAsync(id);
-            if (usuarios == null)
-            {
-                return NotFound();
-            }
+            var usuarios = await _context.Usuarios
+                .Include(u => u.IdRolNavigation)
+                .FirstOrDefaultAsync(m => m.IdUsuario == id);
 
             ViewData["IdRol"] = new SelectList(_context.Roles, "IdRol", "Nombre", usuarios.IdRol);
             return View(usuarios);
         }
 
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Usuarios usuarios)
+        public async Task<IActionResult> Edit(int id, string Nombre, string Direccion, string CorreoElectronico, bool Activo, int IdRol)
         {
-            if (usuarios == null)
-            {
-                ViewData["IdRol"] = new SelectList(_context.Roles, "IdRol", "Nombre");
-                return View(usuarios);
-            }
+            if (id == 0) return NotFound();
 
-            try
-            {
-                var usuarioGuardado = await _context.Usuarios.FindAsync(id);
-                if (usuarioGuardado == null)
-                {
-                    return NotFound();
-                }
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null) return NotFound();
 
-                usuarioGuardado.Nombre = usuarios.Nombre;
-                usuarioGuardado.NumTelefono = usuarios.NumTelefono;
-                usuarioGuardado.Direccion = usuarios.Direccion;
-                usuarioGuardado.CorreoElectronico = usuarios.CorreoElectronico;
-                usuarioGuardado.IdRol = usuarios.IdRol;
-                usuarioGuardado.FechaCreacion = usuarioGuardado.FechaCreacion;
-                usuarioGuardado.UltimaActualizacion = DateTime.Now;
-                usuarioGuardado.Activo = usuarioGuardado.Activo;
+            // Llamada al procedimiento almacenado para actualizar los datos principales del niño (Dirección y Poliza)
+            var result = await _context.Database.ExecuteSqlRawAsync(
+                "EXEC UsuariosActualizar @id_usuario = {0}, @nombre = {1}, @correo_electronico = {2}, @direccion = {3}, @activo = {4}, @id_rol = {5}",
+                id, Nombre, CorreoElectronico, Direccion, Activo, IdRol);
 
-                // Convertir la nueva contraseña en Hash
-                if (!string.IsNullOrEmpty(usuarios.ContrasenaHash))
-                {
-                    usuarioGuardado.ContrasenaHash = _passwordHasher.HashPassword(usuarioGuardado, usuarios.ContrasenaHash);
-                }
+            if (result == 0) return NotFound();
 
-                _context.Update(usuarioGuardado);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UsuariosExists(usuarios.IdUsuario))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Usuarios");
         }
 
         //======================================================[VISTA DELETE]==========================================================================================
