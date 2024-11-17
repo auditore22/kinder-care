@@ -1,0 +1,201 @@
+﻿@model kinder_care.Models.Docentes
+
+<!-- Breadcrumb Start -->
+<div class="breadcrumb mb-24">
+    <ul class="flex-align gap-4">
+        <li>
+            <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Home</a>
+        </li>
+        <li>
+            <span class="text-gray-500 fw-normal d-flex">
+                <i class="ph ph-caret-right"></i>
+            </span>
+        </li>
+        <li>
+            <span class="text-main-600 fw-normal text-15">Setting</span>
+        </li>
+    </ul>
+</div>
+<!-- Breadcrumb End -->
+
+<div class="card overflow-hidden">
+    <div class="card-body p-0">
+        <div class="cover-img position-relative">
+            <label for="coverImageUpload" class="btn border-gray-200 text-gray-200 fw-normal hover-bg-gray-400 rounded-pill py-4 px-14 position-absolute inset-block-start-0 inset-inline-end-0 mt-24 me-24">Edit Cover</label>
+            <div class="avatar-upload">
+                <input type="file" id="coverImageUpload" accept=".png, .jpg, .jpeg">
+                <div class="avatar-preview">
+                    <div id="coverImagePreview" style="background: rgb(219,162,0); background: linear-gradient(180deg, rgba(219,162,0,0.5041666324733018) 0%, rgba(219,162,0,0) 70%);">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="setting-profile px-24">
+            <div class="flex-between">
+                <div class="d-flex align-items-end flex-wrap mb-32 gap-24">
+                    <img src="~/images/icons/baby_1_icon.png" alt="" class="w-120 h-120 rounded-circle border border-white">
+                    <div>
+                        <h4 class="mb-8">@Model.IdUsuarioNavigation.Nombre</h4>
+                        <div class="setting-profile__infos flex-align flex-wrap gap-16">
+                            <div class="flex-align gap-6">
+                                <span class="text-gray-600 d-flex text-lg">
+                                    <i class="ph ph-swatches"></i>
+                                </span>
+                                <span class="text-gray-600 d-flex text-15">@Model.IdUsuarioNavigation.Cedula</span>
+                            </div>
+                            <div class="flex-align gap-6">
+                                <span class="text-gray-600 d-flex text-lg">
+                                    <i class="ph ph-phone"></i>
+                                </span>
+                                <span class="text-gray-600 d-flex text-15">@Model.IdUsuarioNavigation.NumTelefono</span>
+                            </div>
+                            <div class="flex-align gap-6">
+                                <span class="text-gray-600 d-flex text-lg">
+                                    <i class="ph ph-calendar-dots"></i>
+                                </span>
+                                <span class="text-gray-600 d-flex text-15">@Model.FechaCreacion.ToString("dd/MM/yyyy")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav common-tab style-two nav-pills mb-0" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab" aria-controls="pills-details" aria-selected="true">Detalles</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-edit-tab" data-bs-toggle="pill" data-bs-target="#pills-edit" type="button" role="tab" aria-controls="pills-edit" aria-selected="false">Editar</button>
+                </li>
+                @*                 
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-Edit_Contacto_Emergencia-tab" data-bs-toggle="pill" data-bs-target="#pills-Edit_Contacto_Emergencia" type="button" role="tab" aria-controls="pills-Edit_Contacto_Emergencia" aria-selected="false">Contactos de Emergencia</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-Edit_Info_Medica-tab" data-bs-toggle="pill" data-bs-target="#pills-Edit_Info_Medica" type="button" role="tab" aria-controls="pills-Edit_Info_Medica" aria-selected="false">Informacion Medica</button>
+                </li> 
+*@
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<div class="tab-content" id="pills-tabContent">
+    <!-- My Details Tab start -->
+    <div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab" tabindex="0">
+        <div class="card mt-24">
+            <div class="card-header border-bottom">
+                <h4 class="mb-4">Detalles</h4>
+            </div>
+            <div class="card-body">
+                <div class="row gy-4">
+
+                    <!-- Numero de Telefono -->
+                    <h6 class="mb-8">Direccion:</h6>
+                    <p>@Model.IdUsuarioNavigation.Direccion</p>
+
+                    <!-- Rol del Usuario -->
+                    <h6 class="mb-8">Correo Electronico:</h6>
+                    <p>@Model.IdUsuarioNavigation.CorreoElectronico</p>
+
+                    <h6 class="mb-8">Grupo Asignado:</h6>
+                    @if (Model.GrupoAsignado == null)
+                    {
+                        <p>Sin grupo asignado</p>
+                    }
+                    else
+                    {
+                        <p>@Model.GrupoAsignado</p>
+                    }
+                    
+                    <h6 class="mb-8">Fecha de Nacimiento:</h6>
+                    @if (Model.FechaNacimiento == null)
+                    {
+                        <p>Fecha de Nacimiento no registrada</p>
+                    }
+                    else
+                    {
+                        <p>@Model.FechaNacimiento</p>
+                    }
+
+                    <h6 class="mb-8">Estado del Usuario:</h6>
+                    @if (Model.Activo == true)
+                    {
+                        <p>Docente Activo</p>
+                    }
+                    else
+                    {
+                        <p>Docente Inactivo</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- My Details Tab End -->
+    <!-- Editar Tab Start -->
+    <div class="tab-pane fade" id="pills-edit" role="tabpanel" aria-labelledby="pills-edit-tab" tabindex="0">
+        <div class="card mt-24">
+            <div class="card-header border-bottom">
+                <h4 class="mb-4">Editar y Activar</h4>
+                <p class="text-gray-600 text-15">Por favor ingresa los datos que deseas cambiar</p>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form method="post" asp-action="Edit" asp-route-id="@Model.IdDocente">
+                            <div class="row gy-4">
+
+                                <!-- Campo de texto para el nombre del Usuario -->
+                                <div class="col-sm-6 col-xs-6">
+                                    <label asp-for="IdUsuarioNavigation.Nombre" class="form-label mb-8 h6">Nombre</label>
+                                    <input asp-for="IdUsuarioNavigation.Nombre" type="text" class="form-control py-11" placeholder="Nombre del Docente">
+                                </div>
+
+                                <!-- Campo de texto para la dirección -->
+                                <div class="col-sm-6 col-xs-6">
+                                    <label asp-for="IdUsuarioNavigation.Direccion" class="form-label mb-8 h6">Dirección</label>
+                                    <input asp-for="IdUsuarioNavigation.Direccion" type="text" class="form-control py-11" placeholder="Dirección">
+                                </div>
+
+                                <!-- Campo de texto para el correo -->
+                                <div class="col-sm-6 col-xs-6">
+                                    <label asp-for="IdUsuarioNavigation.CorreoElectronico" class="form-label mb-8 h6">Correo Electronico</label>
+                                    <input asp-for="IdUsuarioNavigation.CorreoElectronico" type="text" class="form-control py-11" placeholder="Correo">
+                                </div>
+
+                                <div class="col-sm-6 col-xs-6">
+                                    <label asp-for="IdUsuarioNavigation.NumTelefono" class="form-label mb-8 h6">Numero Telefono</label>
+                                    <input asp-for="IdUsuarioNavigation.NumTelefono" type="text" class="form-control py-11" placeholder="Numero Telefono">
+                                </div>
+
+                                <div class="col-sm-6 col-xs-6">
+                                    <label asp-for="FechaNacimiento" class="form-label mb-8 h6">Fecha de Nacimiento</label>
+                                    <input asp-for="FechaNacimiento" type="date" class="form-control py-11" placeholder="Fecha de Nacimiento">
+                                </div>
+
+                                <div class="col-sm-6 col-xs-6">
+                                    <label asp-for="GrupoAsignado" class="form-label mb-8 h6">Grupo Asignado</label>
+                                    <input asp-for="GrupoAsignado" type="text" class="form-control py-11" placeholder="Grupo Asignado">
+                                </div>
+
+                                <div>
+                                    <label>Activo</label>
+                                    <input type="checkbox" name="Activo" value="true" @(Model.Activo ? "checked" : "") />
+                                </div>
+
+                                <!-- Botones de acción -->
+                                <div class="col-12">
+                                    <div class="flex-align justify-content-end gap-8">
+                                        <a asp-action="Details" asp-route-id="@Model.IdDocente" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancelar</a>
+                                        <button type="submit" class="btn btn-main rounded-pill py-9">Guardar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

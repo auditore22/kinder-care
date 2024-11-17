@@ -13,11 +13,11 @@ public partial class Docentes
 
     public string? GrupoAsignado { get; set; }
 
-    public DateTime? FechaCreacion { get; set; }
+    public DateTime FechaCreacion { get; set; }
 
     public DateTime? UltimaActualizacion { get; set; }
 
-    public bool? Activo { get; set; }
+    public bool Activo { get; set; }
 
     public virtual Usuarios IdUsuarioNavigation { get; set; } = null!;
 

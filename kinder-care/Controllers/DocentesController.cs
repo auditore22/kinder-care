@@ -25,8 +25,11 @@ namespace kinder_care.Controllers
         //======================================================[VISTA INDEX]==========================================================================================
         public async Task<IActionResult> Index()
         {
-            var kinderCareContext = _context.Docentes.Include(d => d.IdUsuarioNavigation);
-            return View(await kinderCareContext.ToListAsync());
+            var docentes = await _context.Docentes
+                .Include(u => u.IdUsuarioNavigation)
+                .ToListAsync();
+
+            return View(docentes);
         }
 
         //======================================================[VISTA DETAILS]==========================================================================================
