@@ -1,0 +1,177 @@
+@model IEnumerable<Pagos>
+
+@{
+    ViewBag.Title = "Gestión de Pagos";
+}
+
+<!-- Breadcrumb con opciones -->
+<div class="breadcrumb-with-buttons mb-24 flex-between flex-wrap gap-8">
+    <div class="breadcrumb mb-24">
+        <ul class="flex-align gap-4">
+            <li>
+                <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Home</a>
+            </li>
+            <li>
+                <span class="text-gray-500 fw-normal d-flex">
+                    <i class="ph ph-caret-right"></i>
+                </span>
+            </li>
+            <li>
+                <span class="text-main-600 fw-normal text-15">Gestión de Pagos</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="flex-align gap-8 flex-wrap">
+        <div class="position-relative text-gray-500 flex-align gap-4 text-13">
+            <span class="text-inherit">Sort by: </span>
+            <div class="flex-align text-gray-500 text-13 border border-gray-100 rounded-4 ps-20 focus-border-main-600 bg-white">
+                <span class="text-lg">
+                    <i class="ph ph-funnel-simple"></i>
+                </span>
+                <select class="form-control ps-8 pe-20 py-16 border-0 text-inherit rounded-4 text-center">
+                    <option value="1" selected>Fecha más reciente</option>
+                    <option value="1">Fecha más antigua</option>
+                </select>
+            </div>
+        </div>
+        <div class="flex-align text-gray-500 text-13 border border-gray-100 rounded-4 ps-20 focus-border-main-600 bg-white">
+            <span class="text-lg">
+                <i class="ph ph-layout"></i>
+            </span>
+            <select class="form-control ps-8 pe-20 py-16 border-0 text-inherit rounded-4 text-center" id="exportOptions">
+                <option value="" selected disabled>Export</option>
+                <option value="csv">CSV</option>
+                <option value="json">JSON</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Buscador de pagos -->
+<div class="mb-4">
+    <form asp-action="PaymentsSearch" method="get" class="d-flex align-items-center gap-3">
+        <div class="position-relative w-100">
+            <input type="text" name="searchQuery" class="form-control ps-20 pe-20 py-16 border-gray-100 rounded-pill"
+                   placeholder="Buscar por nombre del padre..." value="@ViewBag.SearchQuery"
+                   style="width: 400px; max-width: 100%;"/>
+        </div>
+    </form>
+</div>
+
+<!-- Tabla de pagos -->
+<div class="card overflow-hidden mt-24">
+    <div class="card-body p-0 overflow-x-auto">
+        <table id="paymentsTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="h6 text-gray-300">Fecha de Pago</th>
+                    <th class="h6 text-gray-300">Nombre del Estudiante</th>
+                    <th class="h6 text-gray-300">Nombre del Padre</th>
+                    <th class="h6 text-gray-300">Monto</th>
+                    <th class="h6 text-gray-300">Tipo de Pago</th>
+                    <th class="h6 text-gray-300">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    @foreach (var pago in Model)
+                    {
+                        <tr>
+                            <td>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@pago.FechaPago.ToString("dd/MM/yyyy")</span>
+                            </td>
+                            <td>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@pago.Nino?.NombreNino</span>
+                            </td>
+                            <td>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@pago.Padre?.Nombre</span>
+                            </td>
+                            <td>
+                                <span class="h6 mb-0 fw-medium text-gray-300">$@pago.Monto</span>
+                            </td>
+                            <td>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@pago.TipoPago?.NombreTipoPago</span>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Details", "Payments", new { id = pago.IdPago })" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-gray-500">No se han registrado pagos.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Botón para agregar un nuevo pago -->
+<div class="mb-4 mt-15 text-end">
+    <a href="@Url.Action("CreatePayment", "Payments")" class="btn btn-main rounded-pill">
+        <i class="ph ph-plus"></i> Registrar Nuevo Pago
+    </a>
+</div>
+
+<!-- Paginación y detalles del footer -->
+<div class="card-footer flex-between flex-wrap mt-15">
+    <span class="text-gray-900">Mostrando 1 a 10 de @Model.Count() registros</span>
+    <ul class="pagination flex-align flex-wrap">
+        <!-- Lógica de paginación aquí si es necesario -->
+    </ul>
+</div>
+
+<!-- Estilos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+    /* Estilo para la barra de búsqueda */
+    .form-control {
+        font-size: 16px;
+        background-color: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-search {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        border-radius: 50%;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    /* Alinear la barra de búsqueda con los otros elementos de la página */
+    .d-flex {
+        display: flex;
+        align-items: center;
+    }
+
+    .rounded-pill {
+        border-radius: 50px !important;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+    }
+
+    .card-footer {
+        padding: 16px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #e0e0e0;
+    }
+</style>

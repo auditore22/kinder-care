@@ -178,19 +178,19 @@
                         </a>
                     </li>
                     <li class="sidebar-menu__item">
+                        <a asp-action="ManagePayments" asp-controller="Payments" class="sidebar-menu__link">
+                        <span class="icon">
+                            <i class="ph ph-coins"></i>
+                        </span>
+                            <span class="text">Pagos</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-menu__item">
                         <a href="library.html" class="sidebar-menu__link">
                             <span class="icon">
                                 <i class="ph ph-books"></i>
                             </span>
                             <span class="text">Library</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-menu__item">
-                        <a href="pricing-plan.html" class="sidebar-menu__link">
-                            <span class="icon">
-                                <i class="ph ph-coins"></i>
-                            </span>
-                            <span class="text">Pricing</span>
                         </a>
                     </li>
 
@@ -216,22 +216,13 @@
                         <!-- Submenu start -->
                         <ul class="sidebar-submenu">
                             <li class="sidebar-submenu__item">
-                                <a href="sign-in.html" class="sidebar-submenu__link">Sign In</a>
+                                <a asp-action="Register" asp-controller="Access" class="sidebar-submenu__link">Registrarse</a>
                             </li>
                             <li class="sidebar-submenu__item">
-                                <a href="sign-up.html" class="sidebar-submenu__link">Sign Up</a>
+                                <a asp-action="Recovery" asp-controller="Access" class="sidebar-submenu__link">Recuperar Contraseña</a>
                             </li>
                             <li class="sidebar-submenu__item">
-                                <a href="forgot-password.html" class="sidebar-submenu__link">Forgot Password</a>
-                            </li>
-                            <li class="sidebar-submenu__item">
-                                <a href="reset-password.html" class="sidebar-submenu__link">Reset Password</a>
-                            </li>
-                            <li class="sidebar-submenu__item">
-                                <a href="verify-email.html" class="sidebar-submenu__link">Verify Email</a>
-                            </li>
-                            <li class="sidebar-submenu__item">
-                                <a href="two-step-verification.html" class="sidebar-submenu__link">Two Step Verification</a>
+                                <a asp-action="LogOut" asp-controller="Access" class="sidebar-submenu__link">Cerrar Sesión</a>
                             </li>
                         </ul>
                         <!-- Submenu End -->
