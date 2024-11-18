@@ -9,7 +9,7 @@ public partial class Docentes
 
     public int IdUsuario { get; set; }
 
-    public DateOnly? FechaNacimiento { get; set; }
+    public DateTime? FechaNacimiento { get; set; }
 
     public string? GrupoAsignado { get; set; }
 
