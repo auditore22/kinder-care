@@ -25,8 +25,11 @@ namespace kinder_care.Controllers
         //======================================================[VISTA INDEX]==========================================================================================
         public async Task<IActionResult> Index()
         {
-            var kinderCareContext = _context.Docentes.Include(d => d.IdUsuarioNavigation);
-            return View(await kinderCareContext.ToListAsync());
+            var docentes = await _context.Docentes
+                .Include(u => u.IdUsuarioNavigation)
+                .ToListAsync();
+
+            return View(docentes);
         }
 
         //======================================================[VISTA DETAILS]==========================================================================================
@@ -49,6 +52,7 @@ namespace kinder_care.Controllers
         }
 
         //======================================================[VISTA EDIT]==========================================================================================
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -56,72 +60,32 @@ namespace kinder_care.Controllers
                 return NotFound();
             }
 
-            var docentes = await _context.Docentes.FindAsync(id);
-            if (docentes == null)
-            {
-                return NotFound();
-            }
+            var docentes = await _context.Docentes
+                .Include(u => u.IdUsuarioNavigation)
+                .FirstOrDefaultAsync(m => m.IdDocente == id);
 
-            ViewData["IdUsuario"] = new SelectList(_context.Usuarios.Where(u => u.IdRol == 2).ToList(), "Id", "Nombre");
             return View(docentes);
         }
 
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Docentes docentes, string? ActualizarContraseña)
+        public async Task<IActionResult> Edit(int id, string Nombre, string Direccion, string CorreoElectronico, string NumTelefono, DateTime FechaNacimiento, string GrupoAsignado, bool Activo)
         {
-            if (docentes == null)
-            {
-                ViewData["IdUsuario"] = new SelectList(_context.Usuarios.Where(u => u.IdRol == 2).ToList(), "Id", "Nombre");
-                return View(docentes);
-            }
+            if (id == 0) return NotFound();
 
-            try
-            {
-                var docenteGuardado = await _context.Docentes
-                    .Include(d => d.IdUsuarioNavigation) // Incluir la navegacion para poder llamar los datos de usuario desde docente
-                    .FirstOrDefaultAsync(d => d.IdDocente == id);
+            var docentes = await _context.Docentes.FindAsync(id);
+            if (docentes == null) return NotFound();
 
-                if (docenteGuardado == null)
-                {
-                    return NotFound();
-                }
+            // Llamada al procedimiento almacenado para actualizar los datos principales del niño (Dirección y Poliza)
+            var result = await _context.Database.ExecuteSqlRawAsync(
+                "EXEC DocentesActualizar @id_Docente = {0}, @id_usuario = {1}, @nombre = {2}, @direccion = {3}, @correo_electronico = {4}, @num_Telefono = {5}, @fecha_nacimiento = {6}, @grupo_asignado = {7}, @activo = {8}",
+                id, docentes.IdUsuario, Nombre, Direccion, CorreoElectronico, NumTelefono, FechaNacimiento, GrupoAsignado, Activo);
 
-                docenteGuardado.FechaNacimiento = docentes.FechaNacimiento;
-                docenteGuardado.GrupoAsignado = docentes.GrupoAsignado;
-                docenteGuardado.Activo = docentes.Activo;
+            if (result == 0) return NotFound();
 
-                if (docenteGuardado.IdUsuarioNavigation != null)
-                {
-                    docenteGuardado.IdUsuarioNavigation.Nombre = docentes.IdUsuarioNavigation.Nombre;
-                    docenteGuardado.IdUsuarioNavigation.NumTelefono = docentes.IdUsuarioNavigation.NumTelefono;
-                    docenteGuardado.IdUsuarioNavigation.Direccion = docentes.IdUsuarioNavigation.Direccion;
-                    docenteGuardado.IdUsuarioNavigation.CorreoElectronico = docentes.IdUsuarioNavigation.CorreoElectronico;
+            await _context.SaveChangesAsync();
 
-                    // Actualizar la contraseña si se proporciona una nueva
-                    if (!string.IsNullOrEmpty(ActualizarContraseña))
-                    {
-                        docenteGuardado.IdUsuarioNavigation.ContrasenaHash = _passwordHasher.HashPassword(docenteGuardado, ActualizarContraseña);
-                    }
-
-                    docenteGuardado.IdUsuarioNavigation.UltimaActualizacion = DateTime.Now; // Siempre actualiza la fecha
-                }
-
-                _context.Update(docenteGuardado);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DocentesExists(docentes.IdDocente))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Docentes");
         }
 
         //======================================================[VISTA DELETE]==========================================================================================

@@ -9,15 +9,15 @@ public partial class Docentes
 
     public int IdUsuario { get; set; }
 
-    public DateOnly? FechaNacimiento { get; set; }
+    public DateTime? FechaNacimiento { get; set; }
 
     public string? GrupoAsignado { get; set; }
 
-    public DateTime? FechaCreacion { get; set; }
+    public DateTime FechaCreacion { get; set; }
 
     public DateTime? UltimaActualizacion { get; set; }
 
-    public bool? Activo { get; set; }
+    public bool Activo { get; set; }
 
     public virtual Usuarios IdUsuarioNavigation { get; set; } = null!;
 

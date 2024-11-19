@@ -115,7 +115,28 @@
                                     <span class="text">Usuarios</span>
                                 </a>
                             </li>
+
+                            <li class="sidebar-menu__item">
+                                <a asp-action="Index" asp-controller="Docentes" class="sidebar-menu__link">
+                                    <span class="icon">
+                                        <i class="ph ph-users"></i>
+                                    </span>
+                                    <span class="text">Docentes</span>
+                                </a>
+                            </li>
                         }
+                        else if (RoleName == "Docente")
+                        {
+                            <li class="sidebar-menu__item">
+                                <a asp-action="Index" asp-controller="Docentes" class="sidebar-menu__link">
+                                    <span class="icon">
+                                        <i class="ph ph-users-three"></i>
+                                    </span>
+                                    <span class="text">Estudiantes</span>
+                                </a>
+                            </li>
+                        }
+
                         else if (RoleName == "Padre")
                         {
                             <li class="sidebar-menu__item">
