@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace kinder_care.Controllers;
 
@@ -273,9 +274,9 @@ public class PaymentsController : Controller
     // Confirmar la eliminación del pago
     [HttpPost, ActionName("DeleteConfirmed")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
+    public async Task<IActionResult> DeleteConfirmed(int IdPago)
     {
-        var pago = await _context.Pagos.FindAsync(id);
+        var pago = await _context.Pagos.FindAsync(IdPago);
 
         if (pago == null)
         {
@@ -287,16 +288,13 @@ public class PaymentsController : Controller
         {
             _context.Pagos.Remove(pago);
             await _context.SaveChangesAsync();
-
-            // Redirige a la vista de gestión de pagos después de la eliminación exitosa
             return RedirectToAction("ManagePayments");
         }
         catch (Exception ex)
         {
-            // Capturar cualquier error en la eliminación
             Console.WriteLine($"Error al eliminar el pago: {ex.Message}");
             ViewBag.ErrorMessage = "Hubo un error al intentar eliminar el pago. Por favor, inténtalo de nuevo.";
-            return RedirectToAction("ManagePayments");
+            return View("Details", pago);
         }
     }
 }
