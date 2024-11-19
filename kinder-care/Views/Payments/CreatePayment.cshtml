@@ -1,0 +1,74 @@
+﻿@model kinder_care.Models.ViewModels.PaymentViewModel
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="mb-4">Registrar Nuevo Pago</h4>
+
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+        }
+
+        <form asp-action="CreatePayment" method="post">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <label for="IdNino" class="form-label">Nombre del Estudiante</label>
+                    <select asp-for="IdNino" class="form-select" asp-items="ViewBag.Ninos">
+                        <option value="">Selecciona el nombre del estudiante</option>
+                    </select>
+                    <span asp-validation-for="IdNino" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="IdPadre" class="form-label">Nombre del Padre</label>
+                    <select asp-for="IdPadre" class="form-select" asp-items="ViewBag.Padres">
+                        <option value="">Selecciona el nombre del padre</option>
+                    </select>
+                    <span asp-validation-for="IdPadre" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="IdTipoPago" class="form-label">Tipo de Pago</label>
+                    <select asp-for="IdTipoPago" class="form-select" asp-items="ViewBag.TiposPago">
+                        <option value="">Selecciona el tipo de pago</option>
+                    </select>
+                    <span asp-validation-for="IdTipoPago" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="Monto" class="form-label">Monto</label>
+                    <input asp-for="Monto" class="form-control" placeholder="0.00" />
+                    <span asp-validation-for="Monto" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="FechaPago" class="form-label">Fecha de Pago</label>
+                    <input asp-for="FechaPago" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="FechaPago" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="MetodoPago" class="form-label">Método de Pago</label>
+                    <input asp-for="MetodoPago" class="form-control" placeholder="E.g., Transferencia, Efectivo" />
+                    <span asp-validation-for="MetodoPago" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                    <label for="ReferenciaFactura" class="form-label">Referencia de Factura</label>
+                    <input asp-for="ReferenciaFactura" class="form-control" placeholder="Número de Factura" />
+                    <span asp-validation-for="ReferenciaFactura" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+                <button type="submit" class="btn btn-main rounded-pill">Registrar Pago</button>
+                <a href="@Url.Action("ManagePayments", "Payments")" class="btn btn-secondary rounded-pill">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
