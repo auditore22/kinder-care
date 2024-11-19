@@ -17,7 +17,7 @@ public partial class Ninos
 
     public string? Poliza { get; set; }
 
-    public DateTime FechaCreacion { get; set; }
+    public DateTime? FechaCreacion { get; set; }
 
     public DateTime? UltimaActualizacion { get; set; }
 

@@ -9,13 +9,13 @@ public partial class Asistencia
 
     public int IdNino { get; set; }
 
-    public DateTime Fecha { get; set; }
+    public DateOnly Fecha { get; set; }
 
-    public DateTime HoraEntrada { get; set; }
+    public TimeOnly? HoraEntrada { get; set; }
 
-    public TimeSpan? HoraSalida { get; set; }
+    public TimeOnly? HoraSalida { get; set; }
 
-    public string Estado { get; set; }
+    public string? Estado { get; set; }
 
     public virtual Ninos IdNinoNavigation { get; set; } = null!;
 }
