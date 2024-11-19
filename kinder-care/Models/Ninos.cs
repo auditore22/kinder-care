@@ -46,5 +46,7 @@ public partial class Ninos
     public virtual ICollection<RelNinoCondicion> RelNinoCondicion { get; set; } = new List<RelNinoCondicion>();
 
     public virtual ICollection<RelNinoContactoEmergencia> RelNinoContactoEmergencia { get; set; } =
-        new List<RelNinoContactoEmergencia>(); //
+        new List<RelNinoContactoEmergencia>();
+
+    public virtual ICollection<RelNinoTarea> RelNinoTarea { get; set; } = new List<RelNinoTarea>();
 }

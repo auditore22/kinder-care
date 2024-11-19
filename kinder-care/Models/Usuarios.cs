@@ -38,7 +38,7 @@ public partial class Usuarios
     public string TokenRecovery { get; set; }
 
     public int IdRol { get; set; }
-
+    public virtual Roles IdRolNavigation { get; set; } = null!;
     public DateTime? FechaCreacion { get; set; }
 
     public DateTime? UltimaActualizacion { get; set; }
@@ -47,7 +47,7 @@ public partial class Usuarios
 
     public virtual ICollection<Docentes> Docentes { get; set; } = new List<Docentes>();
 
-    public virtual Roles IdRolNavigation { get; set; } = null!;
+    
 
     public virtual ICollection<Pagos> Pagos { get; set; } = new List<Pagos>();
 

@@ -64,7 +64,6 @@ public class NinosController : Controller
             return View();
         }
 
-        // Traer la información completa del niño junto con todas las relaciones
         var nino = await _context.Ninos
             .Include(n => n.ProgresoAcademico) // Progreso académico
             .Include(n => n.ObservacionesDocentes) // Observaciones de los docentes
@@ -76,9 +75,27 @@ public class NinosController : Controller
             .ThenInclude(rc => rc.Condicion)
             .Include(n => n.RelNinoContactoEmergencia) // Contactos de emergencia
             .ThenInclude(re => re.ContactoEmergencia)
-            .FirstOrDefaultAsync(n => n.IdNino == id);
+            .Include(n => n.RelNinoTarea)
+            .ThenInclude(rt => rt.Tareas)
+            .Where(n => n.IdNino == id)
+            .FirstOrDefaultAsync();
 
         if (nino == null) return NotFound();
+
+        // Filtrar las tareas por estado
+        var tareasEnProceso = nino.RelNinoTarea?
+            .Where(rt => rt.Tareas.Activo && rt.Tareas.Calificacion == 0)
+            .Select(rt => rt.Tareas)
+            .ToList() ?? new List<Tareas>(); 
+
+        var tareasCompletadas = nino.RelNinoTarea?
+            .Where(rt => rt.Tareas.Activo && rt.Tareas.Calificacion > 0)
+            .Select(rt => rt.Tareas)
+            .ToList() ?? new List<Tareas>();
+
+        // Pasar las tareas al ViewBag      
+        ViewBag.TareasEnProceso = tareasEnProceso;
+        ViewBag.TareasCompletadas = tareasCompletadas;
 
         // Pasar todas las opciones disponibles a la vista
         ViewBag.Alergias = await _context.Alergias.ToListAsync();
@@ -93,14 +110,70 @@ public class NinosController : Controller
         ViewBag.ContactosEmergencia = contactosRelacionados;
 
         // Inicializa ContactosExistentes como un diccionario vacío si no hay contactos
-        if (!contactosRelacionados.Any())
-            ViewBag.ContactosExistentes = new Dictionary<int, ContactosEmergencia>();
-        else
-            ViewBag.ContactosExistentes = contactosRelacionados.ToDictionary(c => c.IdContactoEmergencia);
+        ViewBag.ContactosExistentes = contactosRelacionados.Any()
+            ? contactosRelacionados.ToDictionary(c => c.IdContactoEmergencia)
+            : new Dictionary<int, ContactosEmergencia>();
 
         return View(nino);
     }
 
+    /*[HttpGet]
+    public async Task<IActionResult> Details_Tareas(int id_nino, int id_tarea)
+    {
+        if (id_nino == null && id_tarea == null) return NotFound();
+
+        var VerificarNino = await _context.Ninos.FindAsync(id_nino);
+        var VerificarTarea = await _context.Tareas.FindAsync(id_tarea);
+        
+        if (VerificarNino == null || VerificarTarea == null) return NotFound();
+        
+        var VerificarRel = _context.RelNinoTarea.FindAsync(VerificarNino.IdNino, VerificarTarea.IdTarea);
+        
+        if (VerificarRel == null)
+        {
+            return NotFound();
+        }
+        else
+        {
+            // var DetallesTarea = await _context.RelNinoTarea.Include(t => t.Tareas).Where(tn => tn.IdNino == VerificarNino.IdNino && tn.IdTarea == VerificarTarea.IdTarea).FirstOrDefaultAsync();
+            ViewBag.DetallesTarea = await _context.RelNinoTarea.Include(t => t.Tareas).Where(tn => tn.IdNino == VerificarNino.IdNino && tn.IdTarea == VerificarTarea.IdTarea).FirstOrDefaultAsync();
+            ViewBag.NinoTarea = VerificarNino;
+            ViewBag.ProfesorTarea = await _context.Docentes.FindAsync(VerificarTarea.IdProfesor);
+        }
+        
+        return View();
+    }*/
+
+    
+    [HttpGet]
+    public async Task<IActionResult> Details_Tareas(int id_nino, int id_tarea)
+    {
+        if (id_nino <= 0 || id_tarea <= 0) return NotFound();
+
+        // Verificar existencia del niño y la tarea
+        var VerificarNino = await _context.Ninos.FindAsync(id_nino);
+        var VerificarTarea = await _context.Tareas.FindAsync(id_tarea);
+
+        if (VerificarNino == null || VerificarTarea == null) return NotFound();
+
+        // Verificar la relación entre niño y tarea
+        var VerificarRel = await _context.RelNinoTarea
+            .Include(t => t.Tareas)
+            .FirstOrDefaultAsync(tn => tn.IdNino == id_nino && tn.IdTarea == id_tarea);
+
+        if (VerificarRel == null) return NotFound();
+
+        // Obtener detalles del profesor asignado
+        var profesorTarea = await _context.Docentes.FindAsync(VerificarRel.Tareas.IdProfesor);
+
+        var profUsuario = await _context.Usuarios.FindAsync(profesorTarea.IdUsuario);
+        // Pasar datos a la vista mediante ViewBag
+        ViewBag.Nino = VerificarNino;
+        ViewBag.Tarea = VerificarRel.Tareas;
+        ViewBag.Profesor = profUsuario;
+
+        return View();
+    }
 
     [HttpGet]
     public async Task<IActionResult> Edit(int? id)
@@ -255,7 +328,7 @@ public class NinosController : Controller
         await _context.SaveChangesAsync();
         return RedirectToAction("Index", "Ninos");
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> Edit_Contacto_Emergencia_2(int IdNino,
         string NewNombre, string NewRelacion, int NewTelefono,
