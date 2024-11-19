@@ -43,6 +43,81 @@ BEGIN
 END;
 GO
 
+-- SP para Gestionar Tareas de niños (Listo)
+CREATE PROCEDURE GestionarTareas @id_nino INT = NULL,
+                                 @id_tarea INT = NULL,
+                                 @id_profesor INT = NULL,
+                                 @nombre NVARCHAR(255) = NULL,
+                                 @descripcion NVARCHAR(MAX) = NULL,
+                                 @calificacion INT = NULL,
+                                 @fecha_asignada DATE = NULL,
+                                 @fecha_entrega DATE = NULL,
+                                 @activo BIT = 1,
+                                 @accion NVARCHAR(10) = 'AGREGAR'
+AS
+BEGIN
+    IF @accion = 'AGREGAR'
+        BEGIN
+            IF @id_profesor IS NULL OR @nombre IS NULL OR @fecha_entrega IS NULL
+                BEGIN
+                    RAISERROR ('Debe proporcionar id_profesor, nombre y fecha_entrega para agregar una nueva tarea.', 16, 1);
+                    RETURN;
+                END
+
+            -- Insertar la nueva tarea
+            INSERT INTO Tareas (id_profesor, nombre, descripcion, calificacion, fecha_asignada, fecha_entrega, activo)
+            VALUES (@id_profesor, @nombre, @descripcion, ISNULL(@calificacion, 0), ISNULL(@fecha_asignada, GETDATE()),
+                    @fecha_entrega, @activo);
+
+            -- Obtener el id_tarea de la tarea recién insertada
+            SET @id_tarea = SCOPE_IDENTITY();
+
+            -- Insertar en la tabla rel_nino_tarea
+            INSERT INTO rel_nino_tarea(id_nino, id_tarea) VALUES (@id_nino, @id_tarea);
+
+            RETURN;
+        END
+    ELSE
+        IF @accion = 'ACTUALIZAR' AND @id_tarea IS NOT NULL
+            BEGIN
+                IF @id_profesor IS NULL OR @nombre IS NULL OR @fecha_entrega IS NULL
+                    BEGIN
+                        RAISERROR ('Debe proporcionar id_profesor, nombre y fecha_entrega para actualizar una tarea.', 16, 1);
+                        RETURN;
+                    END
+
+                UPDATE Tareas
+                SET id_profesor    = @id_profesor,
+                    nombre         = @nombre,
+                    descripcion    = @descripcion,
+                    calificacion   = ISNULL(@calificacion, 0),
+                    fecha_asignada = ISNULL(@fecha_asignada, GETDATE()),
+                    fecha_entrega  = @fecha_entrega,
+                    activo         = @activo
+                WHERE id_tarea = @id_tarea;
+
+                RETURN;
+            END
+        ELSE
+            IF @accion = 'ELIMINAR' AND @id_tarea IS NOT NULL
+                BEGIN
+                    -- Eliminación lógica: marcar el registro como inactivo
+                    UPDATE Tareas
+                    SET activo = 0
+                    WHERE id_tarea = @id_tarea;
+
+                    DELETE FROM rel_nino_tarea WHERE id_tarea = @id_tarea AND id_nino = @id_nino;
+
+                    RETURN;
+                END
+            ELSE
+                BEGIN
+                    RAISERROR ('Acción no válida o parámetros incompletos.', 16, 1);
+                    RETURN;
+                END
+END;
+GO
+  
 -- SP para actualizar datos de niños (Listo)
 CREATE PROCEDURE GestionarNino @IdNino INT = NULL,
                                @Cedula VARCHAR(20),
