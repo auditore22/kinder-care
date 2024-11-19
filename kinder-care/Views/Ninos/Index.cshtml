@@ -49,50 +49,60 @@
     <!-- Breadcrumb Right End -->
 </div>
 
-<div class="card overflow-hidden">
-    <div class="card-body p-0 overflow-x-auto">
-        <table id="studentTable" class="table table-striped">
-            <thead>
-            <tr>
-                <th class="h6 text-gray-300">ID</th>
-                <th class="h6 text-gray-300">Cedula</th>
-                <th class="h6 text-gray-300">Estudiante</th>
-                <th class="h6 text-gray-300">Poliza</th>
-                <th class="h6 text-gray-300">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var nino in Model)
-            {
-                <tr>
-                    <td>
-                        <div class="flex-align gap-8">
-                            <img src="~/images/icons/baby_1_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
-                            <span class="h6 mb-0 fw-medium text-gray-300">@nino.IdNino</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="h6 mb-0 fw-medium text-gray-300">@nino.Cedula</span>
-                    </td>
-                    <td>
-                        <span class="h6 mb-0 fw-medium text-gray-300">@nino.NombreNino</span> <!-- Ajusta según la propiedad -->
-                    </td>
-                    <td>
-                        <span class="h6 mb-0 fw-medium text-gray-300">@nino.Poliza</span> <!-- Ajusta según la propiedad -->
-                    </td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@nino.IdNino" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
+<!-- Verificar si hay un mensaje en ViewBag y mostrarlo -->
+@if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+{
+    <div class="alert alert-warning">
+        @ViewBag.Mensaje
     </div>
-</div>
+}
+else
+{
+    <div class="card overflow-hidden">
+        <div class="card-body p-0 overflow-x-auto">
+            <table id="studentTable" class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="h6 text-gray-300">ID</th>
+                    <th class="h6 text-gray-300">Cedula</th>
+                    <th class="h6 text-gray-300">Estudiante</th>
+                    <th class="h6 text-gray-300">Poliza</th>
+                    <th class="h6 text-gray-300">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var nino in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="flex-align gap-8">
+                                <img src="~/images/icons/baby_1_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
+                                <span class="h6 mb-0 fw-medium text-gray-300">@nino.IdNino</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@nino.Cedula</span>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@nino.NombreNino</span>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@nino.Poliza</span>
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@nino.IdNino" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-<div class="card-footer flex-between flex-wrap">
-    <span class="text-gray-900">Showing 1 to 10 of @Model.Count() entries</span>
-    <ul class="pagination flex-align flex-wrap">
-        <!-- Aquí puedes agregar la lógica de paginación si lo necesitas -->
-    </ul>
-</div>
+    <div class="card-footer flex-between flex-wrap">
+        <span class="text-gray-900">Showing 1 to @Model.Count() of @Model.Count() entries</span>
+        <ul class="pagination flex-align flex-wrap">
+            <!-- Aquí puedes agregar la lógica de paginación si lo necesitas -->
+        </ul>
+    </div>
+}
