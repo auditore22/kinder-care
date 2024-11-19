@@ -410,6 +410,74 @@ BEGIN
     WHERE id_Nino = @id_nino;
 END;
 GO
+
+CREATE PROCEDURE UsuariosActualizar
+    @IdUsuario INT,
+    @Nombre NVARCHAR(100),
+    @Direccion NVARCHAR(200),
+    @CorreoElectronico NVARCHAR(100),
+    @Activo BIT,
+    @IdRol INT
+AS
+BEGIN
+    UPDATE Usuarios
+    SET 
+        Nombre = @Nombre,
+        Direccion = @Direccion,
+        correo_electronico = @CorreoElectronico,
+        Activo = @Activo,
+        id_rol = @IdRol
+    WHERE id_Usuario = @IdUsuario
+END
+
+CREATE PROCEDURE DocentesActualizar
+    @id_docente INT,
+    @id_usuario INT,
+    @nombre VARCHAR(100),
+    @correo_electronico VARCHAR(100),
+    @direccion VARCHAR(256),
+    @activo BIT,
+    @fecha_nacimiento DATE,
+    @grupo_asignado VARCHAR(50),
+    @num_Telefono VARCHAR(15)  
+AS
+BEGIN
+
+    UPDATE usuarios
+    SET 
+        nombre = @nombre,
+        correo_electronico = @correo_electronico,
+        direccion = @direccion,
+        num_Telefono = @num_Telefono,  
+        activo = @activo,
+        ultima_actualizacion = GETDATE()
+    WHERE id_usuario = @id_usuario;
+
+    UPDATE docentes
+    SET 
+        fecha_nacimiento = @fecha_nacimiento, 
+        grupo_asignado = @grupo_asignado,
+        ultima_actualizacion = GETDATE()
+    WHERE id_docente = @id_docente;
+
+END;
+
+CREATE PROCEDURE ObtenerAsistenciaDiaria
+    @Fecha DATE
+AS
+BEGIN
+    SELECT 
+        a.id_asistencia,
+        n.nombre_nino,
+        a.hora_entrada,
+        a.hora_salida,
+        a.estado
+    FROM asistencia a
+    INNER JOIN ninos n ON a.id_nino = n.id_nino
+    WHERE a.fecha = @Fecha;
+END;
+
+  
 -------------------------------------------- VISTAS --------------------------------------------
 
 
