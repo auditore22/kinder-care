@@ -13,6 +13,22 @@ CREATE TABLE roles
 );
 GO
 
+--------------------------------- Tabla de tareas ---------------------------------
+CREATE TABLE tareas
+(
+    id_tarea       INT IDENTITY (1,1) PRIMARY KEY,
+    id_profesor    INT           NOT NULL,
+    nombre         NVARCHAR(255) NOT NULL,
+    descripcion    NVARCHAR(MAX) NULL,
+    calificacion   INT  DEFAULT 0,
+    fecha_asignada DATE DEFAULT GETDATE(),
+    fecha_entrega  DATE          NOT NULL,
+    activo         BIT  DEFAULT 1,
+
+    FOREIGN KEY (id_profesor) REFERENCES docentes (id_Docente)
+);
+GO
+    
 --------------------------------- Tabla de Usuarios ---------------------------------
 CREATE TABLE usuarios
 (
@@ -81,6 +97,14 @@ CREATE TABLE rel_padres_ninos
 );
 GO
 
+--------------------------------- Tabla de Relación Tarea-Niño ---------------------------------
+CREATE TABLE rel_nino_tarea
+(
+    id_nino  INT NOT NULL REFERENCES Ninos (id_Nino),
+    id_tarea INT NOT NULL REFERENCES Tareas (id_tarea),
+    PRIMARY KEY (id_nino, id_tarea)
+);
+GO
 --------------------------------- Tabla de Docentes ---------------------------------
 CREATE TABLE docentes
 (
