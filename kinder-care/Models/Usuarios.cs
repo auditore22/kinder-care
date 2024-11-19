@@ -40,7 +40,6 @@ public partial class Usuarios
     public int IdRol { get; set; }
 
     public virtual Roles IdRolNavigation { get; set; } = null!;
-    public DateTime? FechaCreacion { get; set; }
 
     public DateTime FechaCreacion { get; set; }
 
