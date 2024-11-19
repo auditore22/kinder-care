@@ -19,21 +19,21 @@
         <PackageReference Include="Dapper" Version="2.1.35" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" NoWarn="NU1605" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.8" NoWarn="NU1605" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.8" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Identity.Web" Version="3.2.0" />
-        <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.2.0" />
-        <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="3.2.0" />
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
+        <PackageReference Include="Microsoft.Identity.Web" Version="3.4.0" />
+        <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.4.0" />
+        <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="3.4.0" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -96,11 +96,6 @@
       <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-solid-900.ttf" />
       <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-solid-900.woff" />
       <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-solid-900.woff2" />
-      <_ContentIncludedByDefault Remove="Views\Usuarios\Create.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Usuarios\Delete.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Usuarios\Details.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Usuarios\Edit.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Usuarios\Index.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Users\ManageProfiles.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Users\ManageRecords.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Users\ManageRoles.cshtml" />

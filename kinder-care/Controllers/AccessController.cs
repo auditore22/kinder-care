@@ -76,7 +76,7 @@ namespace kinder_care.Controllers
                 .Include(u => u.IdRolNavigation)
                 .FirstOrDefaultAsync(u => u.CorreoElectronico == usuario.CorreoElectronico);
 
-            if (usuarioRecibido == null || !(usuarioRecibido.Activo ?? false))
+            if (usuarioRecibido == null || !usuarioRecibido.Activo)
             {
                 ViewData["Mensaje"] = "Usuario no encontrado o inactivo";
                 return View();

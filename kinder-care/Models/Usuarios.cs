@@ -18,14 +18,14 @@ public partial class Usuarios
     public string Nombre { get; set; } = null!;
 
     [Display(Name = "Contraseña")]
-    [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,25}$",
+    [RegularExpression(@"^(?=.[A-Za-z])(?=.\d)[A-Za-z\d]{8,25}$",
         ErrorMessage =
             "La contrasena debe estar entre 8 y 25 caracteres, tambien contener minimo una letra y un numero")]
     public string ContrasenaHash { get; set; } = null!;
 
     [Display(Name = "Número de Teléfono")]
     [RegularExpression(@"^\d{8}$", ErrorMessage = "El número de teléfono debe contener exactamente 8 dígitos.")]
-    public int? NumTelefono { get; set; }
+    public int NumTelefono { get; set; }
 
     [Display(Name = "Dirección")]
     [MaxLength(200, ErrorMessage = "Ingrese su direccion sin exeder los 200 caracteres")]
@@ -38,16 +38,17 @@ public partial class Usuarios
     public string TokenRecovery { get; set; }
 
     public int IdRol { get; set; }
+
     public virtual Roles IdRolNavigation { get; set; } = null!;
     public DateTime? FechaCreacion { get; set; }
 
+    public DateTime FechaCreacion { get; set; }
+
     public DateTime? UltimaActualizacion { get; set; }
 
-    public bool? Activo { get; set; }
+    public bool Activo { get; set; }
 
     public virtual ICollection<Docentes> Docentes { get; set; } = new List<Docentes>();
-
-    
 
     public virtual ICollection<Pagos> Pagos { get; set; } = new List<Pagos>();
 
