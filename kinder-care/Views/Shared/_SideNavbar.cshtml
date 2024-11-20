@@ -1,0 +1,164 @@
+﻿<!-- ============================ Sidebar Start ============================ -->
+
+<aside class="sidebar">
+    <!-- sidebar close btn -->
+    <button type="button" class="sidebar-close-btn text-gray-500 hover-text-white hover-bg-main-600 text-md w-24 h-24 border border-gray-100 hover-border-main-600 d-xl-none d-flex flex-center rounded-circle position-absolute">
+        <i class="ph ph-x"></i>
+    </button>
+    <!-- sidebar close btn -->
+
+    <a asp-action="Index" asp-controller="Home" class="sidebar__logo text-center p-20 position-sticky inset-block-start-0 bg-white w-100 z-1 pb-10">
+        <img src="~/images/logo/logo-kinder.png" alt="Logo" style="width: 170px; height: 170px">
+    </a>
+
+    <div class="sidebar-menu-wrapper overflow-y-auto scroll-sm">
+        <div class="p-20 pt-10">
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu__item">
+                    <a asp-action="Index" asp-controller="Home" class="sidebar-menu__link">
+                        <span class="icon">
+                            <i class="ph ph-chats-teardrop"></i>
+                        </span>
+                        <span class="text">Inicio</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu__item has-dropdown">
+                    <a href="javascript:void(0)" class="sidebar-menu__link">
+                        <span class="icon">
+                            <i class="ph ph-graduation-cap"></i>
+                        </span>
+                        <span class="text">Matrículas</span>
+                    </a>
+                    <!-- Submenu start -->
+                    <ul class="sidebar-submenu">
+                        <li class="sidebar-submenu__item">
+                            <a asp-action="StudentCourses" asp-controller="Enrollment" class="sidebar-submenu__link">Student Courses</a>
+                        </li>
+                        <li class="sidebar-submenu__item">
+                            <a asp-action="MentorCourses" asp-controller="Enrollment" class="sidebar-submenu__link">Mentor Courses</a>
+                        </li>
+                        <li class="sidebar-submenu__item">
+                            <a asp-action="CreateCourse" asp-controller="Enrollment" class="sidebar-submenu__link">Create Course</a>
+                        </li>
+                    </ul>
+                    <!-- Submenu End -->
+                </li>
+                @{
+                if (ViewBag.RoleName == "Administrador")
+                {
+                <li class="sidebar-menu__item">
+                    <a asp-action="Index" asp-controller="Usuarios" class="sidebar-menu__link">
+                                <span class="icon">
+                                    <i class="ph ph-users-three"></i>
+                                </span>
+                        <span class="text">Usuarios</span>
+                    </a>
+                </li>
+                }
+                else if (ViewBag.RoleName == "Padre")
+                {
+                <li class="sidebar-menu__item">
+                    <a asp-action="Index" asp-controller="Ninos" class="sidebar-menu__link">
+                                <span class="icon">
+                                    <i class="ph ph-users-three"></i>
+                                </span>
+                        <span class="text">Hijos</span>
+                    </a>
+                </li>
+                }
+                }
+
+                <li class="sidebar-menu__item">
+                    <a asp-action="ManageRecords" asp-controller="Users" class="sidebar-menu__link">
+                        <span class="icon">
+                            <i class="ph ph-clipboard-text"></i>
+                        </span>
+                        <span class="text">Expedientes</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-menu__item">
+                    <a asp-action="Assignment" asp-controller="Ninos" class="sidebar-menu__link">
+                        <span class="icon">
+                            <i class="ph ph-clipboard-text"></i>
+                        </span>
+                        <span class="text">Assignments</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu__item">
+                    <a asp-action="Mentors" asp-controller="Docentes" class="sidebar-menu__link">
+                        <span class="icon">
+                            <i class="ph ph-users"></i>
+                        </span>
+                        <span class="text">Mentors</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu__item">
+                    <a asp-action="Resources" asp-controller="Reports" class="sidebar-menu__link">
+                        <span class="icon">
+                            <i class="ph ph-bookmarks"></i>
+                        </span>
+                        <span class="text">Resources</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu__item">
+                    <a asp-action="Messages" asp-controller="Communication" class="sidebar-menu__link">
+                        <span class="icon">
+                            <i class="ph ph-chats-teardrop"></i>
+                        </span>
+                        <span class="text">Messages</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu__item">
+                    <a asp-action="Analytics" asp-controller="Reports" class="sidebar-menu__link">
+                        <span class="icon">
+                            <i class="ph ph-chart-bar"></i>
+                        </span>
+                        <span class="text">Analytics</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu__item">
+                    <a asp-action="Event" asp-controller="Events" class="sidebar-menu__link">
+                        <span class="icon">
+                            <i class="ph ph-calendar-dots"></i>
+                        </span>
+                        <span class="text">Events</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu__item">
+                    <a asp-action="Library" asp-controller="Reports" class="sidebar-menu__link">
+                        <span class="icon">
+                            <i class="ph ph-books"></i>
+                        </span>
+                        <span class="text">Library</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu__item">
+                    <a asp-action="PricingPlan" asp-controller="Payments" class="sidebar-menu__link">
+                        <span class="icon">
+                            <i class="ph ph-coins"></i>
+                        </span>
+                        <span class="text">Pricing</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-menu__item">
+                    <span class="text-gray-300 text-sm px-20 pt-20 fw-semibold border-top border-gray-100 d-block text-uppercase">Settings</span>
+                </li>
+                <li class="sidebar-menu__item">
+                    <a asp-action="AccountSettings" asp-controller="Settings" class="sidebar-menu__link">
+                        <span class="icon">
+                            <i class="ph ph-gear"></i>
+                        </span>
+                        <span class="text">Account Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="p-20 pt-80">
+            <div class="bg-main-50 p-20 pt-0 rounded-16 text-center mt-74">
+            </div>
+        </div>
+    </div>
+</aside>
+<!-- ============================ Sidebar End  ============================ -->
