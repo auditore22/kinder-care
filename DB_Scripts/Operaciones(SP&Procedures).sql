@@ -412,24 +412,25 @@ END;
 GO
 
 CREATE PROCEDURE UsuariosActualizar
-    @IdUsuario INT,
-    @Nombre NVARCHAR(100),
-    @Direccion NVARCHAR(200),
-    @CorreoElectronico NVARCHAR(100),
-    @Activo BIT,
-    @IdRol INT
+    @id_Usuario INT,
+    @nombre NVARCHAR(100),
+    @direccion NVARCHAR(200),
+    @correo_electronico NVARCHAR(100),
+    @activo BIT,
+    @id_rol INT
 AS
 BEGIN
     UPDATE Usuarios
     SET 
-        Nombre = @Nombre,
-        Direccion = @Direccion,
-        correo_electronico = @CorreoElectronico,
-        Activo = @Activo,
-        id_rol = @IdRol
-    WHERE id_Usuario = @IdUsuario
-END
-
+        nombre = @nombre,
+        @direccion = @direccion,
+        correo_electronico = @correo_electronico,
+        activo = @activo,
+        id_rol = @id_rol
+    WHERE id_Usuario = @id_Usuario
+END;
+GO
+  
 CREATE PROCEDURE DocentesActualizar
     @id_docente INT,
     @id_usuario INT,
@@ -461,7 +462,8 @@ BEGIN
     WHERE id_docente = @id_docente;
 
 END;
-
+GO
+  
 CREATE PROCEDURE ObtenerAsistenciaDiaria
     @Fecha DATE
 AS
@@ -476,7 +478,7 @@ BEGIN
     INNER JOIN ninos n ON a.id_nino = n.id_nino
     WHERE a.fecha = @Fecha;
 END;
-
+GO
   
 -------------------------------------------- VISTAS --------------------------------------------
 
