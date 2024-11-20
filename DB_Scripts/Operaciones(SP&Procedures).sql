@@ -423,7 +423,7 @@ BEGIN
     UPDATE Usuarios
     SET 
         nombre = @nombre,
-        @direccion = @direccion,
+        direccion = @direccion,
         correo_electronico = @correo_electronico,
         activo = @activo,
         id_rol = @id_rol
