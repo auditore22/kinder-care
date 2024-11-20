@@ -58,9 +58,12 @@ public partial class KinderCareContext : DbContext
     public virtual DbSet<TipoPagos> TipoPagos { get; set; }
 
     public virtual DbSet<Usuarios> Usuarios { get; set; }
-    
+
     public DbSet<ExpedienteCompletoNino> VwExpedienteCompletoNino { get; set; }
 
+    public virtual DbSet<Tareas> Tareas { get; set; }
+
+    public virtual DbSet<RelNinoTarea> RelNinoTarea { get; set; }
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer("Server=(LocalDb)\\MSSQLLocalDB;Database=kinder_care;Trusted_Connection=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -81,7 +84,7 @@ public partial class KinderCareContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("lugar");
-            
+
             // Nueva propiedad Descripcion
             entity.Property(e => e.Descripcion)
                 .HasMaxLength(255)
@@ -262,6 +265,44 @@ public partial class KinderCareContext : DbContext
                 .HasColumnName("nombre_medicamento");
         });
 
+        /*modelBuilder.Entity<Ninos>(entity =>
+        {
+            entity.HasKey(e => e.IdNino).HasName("PK__ninos__3CAF0674B917C51C");
+
+            entity.ToTable("ninos", tb => tb.HasTrigger("trg_update_audit_ninos"));
+
+            entity.HasIndex(e => e.NombreNino, "idx_ninos_nombre");
+
+            entity.Property(e => e.IdNino).HasColumnName("id_Nino");
+            entity.Property(e => e.Activo)
+                .HasDefaultValue(true)
+                .HasColumnName("activo");
+            entity.Property(e => e.Cedula)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("cedula");
+            entity.Property(e => e.Direccion)
+                .HasColumnType("text")
+                .HasColumnName("direccion");
+            entity.Property(e => e.FechaCreacion)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("fecha_creacion");
+            entity.Property(e => e.FechaNacimiento).HasColumnName("fecha_nacimiento");
+            entity.Property(e => e.NombreNino)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("nombre_nino");
+            entity.Property(e => e.Poliza)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("poliza");
+            entity.Property(e => e.UltimaActualizacion)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("ultima_actualizacion");
+        });*/
+
         modelBuilder.Entity<Ninos>(entity =>
         {
             entity.HasKey(e => e.IdNino).HasName("PK__ninos__3CAF0674B917C51C");
@@ -298,6 +339,64 @@ public partial class KinderCareContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("ultima_actualizacion");
+
+            // Configuracion de relación con RelNinoTarea
+            entity.HasMany(n => n.RelNinoTarea)
+                .WithOne(rt => rt.Ninos)
+                .HasForeignKey(rt => rt.IdNino);
+        });
+
+        modelBuilder.Entity<Tareas>(entity =>
+        {
+            entity.HasKey(e => e.IdTarea).HasName("PK__tareas__3ED0E6EAB9285C65");
+
+            entity.ToTable("tareas");
+
+            entity.Property(e => e.IdTarea).HasColumnName("id_tarea");
+            entity.Property(e => e.IdProfesor).HasColumnName("id_profesor");
+            entity.Property(e => e.Nombre)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("nombre");
+            entity.Property(e => e.Descripcion)
+                .HasColumnType("text")
+                .HasColumnName("descripcion");
+            entity.Property(e => e.Calificacion)
+                .HasDefaultValue(0)
+                .HasColumnName("calificacion");
+            entity.Property(e => e.FechaAsignada)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("date")
+                .HasColumnName("fecha_asignada");
+            entity.Property(e => e.FechaEntrega)
+                .HasColumnType("date")
+                .HasColumnName("fecha_entrega");
+            entity.Property(e => e.Activo)
+                .HasDefaultValue(true)
+                .HasColumnName("activo");
+
+            // Configuracion de relación con RelNinoTarea
+            entity.HasMany(t => t.RelNinoTarea)
+                .WithOne(rt => rt.Tareas)
+                .HasForeignKey(rt => rt.IdTarea);
+        });
+
+        modelBuilder.Entity<RelNinoTarea>(entity =>
+        {
+            entity.HasKey(e => new { e.IdNino, e.IdTarea }).HasName("PK__rel_nino_tarea");
+
+            entity.ToTable("rel_nino_tarea");
+
+            entity.Property(e => e.IdNino).HasColumnName("id_nino");
+            entity.Property(e => e.IdTarea).HasColumnName("id_tarea");
+
+            entity.HasOne(rt => rt.Ninos)
+                .WithMany(n => n.RelNinoTarea)
+                .HasForeignKey(rt => rt.IdNino);
+
+            entity.HasOne(rt => rt.Tareas)
+                .WithMany(t => t.RelNinoTarea)
+                .HasForeignKey(rt => rt.IdTarea);
         });
 
         modelBuilder.Entity<ObservacionesDocentes>(entity =>
@@ -502,7 +601,7 @@ public partial class KinderCareContext : DbContext
             entity.Property(e => e.IdNino).HasColumnName("id_nino");
             entity.Property(e => e.IdContacto).HasColumnName("id_contacto");
         });
-        
+
         modelBuilder.Entity<RelDocenteNinoMateria>(entity =>
         {
             entity.HasKey(e => new { e.IdDocente, e.IdNino }).HasName("PK__rel_doce__42BD208A0B7446B8");
@@ -639,11 +738,11 @@ public partial class KinderCareContext : DbContext
             entity.HasKey(e => e.IdUsuario).HasName("PK__usuarios__8E901EAA42E54E3E");
 
             entity.ToTable("usuarios", tb =>
-                {
-                    tb.HasTrigger("trg_insert_docente");
-                    tb.HasTrigger("trg_update_Rol_Docente");
-                    tb.HasTrigger("trg_update_audit_usuarios");
-                });
+            {
+                tb.HasTrigger("trg_insert_docente");
+                tb.HasTrigger("trg_update_Rol_Docente");
+                tb.HasTrigger("trg_update_audit_usuarios");
+            });
 
             entity.HasIndex(e => e.IdRol, "idx_usuarios_rol");
 
@@ -686,7 +785,7 @@ public partial class KinderCareContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_usuarios_rol");
         });
-        
+
         modelBuilder.Entity<ExpedienteCompletoNino>(entity =>
         {
             entity.HasNoKey();
