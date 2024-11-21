@@ -1,0 +1,117 @@
+﻿@model IEnumerable<kinder_care.Models.Ninos>
+
+<div class="breadcrumb-with-buttons mb-24 flex-between flex-wrap gap-8">
+    <!-- Breadcrumb Start -->
+    <div class="breadcrumb mb-24">
+        <ul class="flex-align gap-4">
+            <li>
+                <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Home</a>
+            </li>
+            <li>
+                <span class="text-gray-500 fw-normal d-flex">
+                    <i class="ph ph-caret-right"></i>
+                </span>
+            </li>
+            <li>
+                <span class="text-main-600 fw-normal text-15">Students</span>
+            </li>
+        </ul>
+    </div>
+    <!-- Breadcrumb End -->
+    <!-- Breadcrumb Right Start -->
+    <div class="flex-align gap-8 flex-wrap">
+        <div class="position-relative text-gray-500 flex-align gap-4 text-13">
+            <span class="text-inherit">Sort by: </span>
+            <div class="flex-align text-gray-500 text-13 border border-gray-100 rounded-4 ps-20 focus-border-main-600 bg-white">
+                <span class="text-lg">
+                    <i class="ph ph-funnel-simple"></i>
+                </span>
+                <select class="form-control ps-8 pe-20 py-16 border-0 text-inherit rounded-4 text-center">
+                    <option value="1" selected>Popular</option>
+                    <option value="1">Latest</option>
+                    <option value="1">Trending</option>
+                    <option value="1">Matches</option>
+                </select>
+            </div>
+        </div>
+        <div class="flex-align text-gray-500 text-13 border border-gray-100 rounded-4 ps-20 focus-border-main-600 bg-white">
+            <span class="text-lg">
+                <i class="ph ph-layout"></i>
+            </span>
+            <select class="form-control ps-8 pe-20 py-16 border-0 text-inherit rounded-4 text-center" id="exportOptions">
+                <option value="" selected disabled>Export</option>
+                <option value="csv">CSV</option>
+                <option value="json">JSON</option>
+            </select>
+        </div>
+        <a asp-action="Relacion" asp-controller="Asistencia" class="btn btn-main">
+            Crear Relación
+        </a>
+    </div>
+    <!-- Breadcrumb Right End -->
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <form asp-action="RegistrarAsistencia" method="post">
+        <div class="card overflow-hidden">
+            <div class="card-body p-0 overflow-x-auto">
+                <table id="studentTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="h6 text-gray-300">ID</th>
+                            <th class="h6 text-gray-300">Cédula</th>
+                            <th class="h6 text-gray-300">Estudiante</th>
+                            <th class="h6 text-gray-300">Fecha de Nacimiento</th>
+                            <th class="h6 text-gray-300">Póliza</th>
+                            <th class="h6 text-gray-300">Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var estudiante in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="flex-align gap-8">
+                                        <img src="~/images/icons/baby_1_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
+                                        <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.IdNino</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.Cedula</span>
+                                </td>
+                                <td>
+                                    <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.NombreNino</span>
+                                </td>
+                                <td>
+                                    <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.FechaNacimiento.ToString("dd/MM/yyyy")</span>
+                                </td>
+                                <td>
+                                    <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.Poliza</span>
+                                </td>
+                                <td>
+                                    <input type="checkbox" name="SelectedNinos" value="@estudiante.IdNino" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-footer flex-between flex-wrap">
+            <span class="text-gray-900">Showing 1 to @Model.Count() entries</span>
+            <div class="flex-align gap-8">
+                <button type="submit" class="btn btn-main">Registrar Asistencia</button>
+            </div>
+        </div>
+    </form>
+
+
+}
+else
+{
+    <div class="alert alert-info">
+        @ViewBag.Mensaje ?? "No hay estudiantes relacionados con este docente."
+    </div>
+}
