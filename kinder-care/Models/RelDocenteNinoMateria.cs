@@ -9,8 +9,6 @@ public partial class RelDocenteNinoMateria
 
     public int IdNino { get; set; }
 
-    public string Materia { get; set; } = null!;
-
     public virtual Docentes IdDocenteNavigation { get; set; } = null!;
 
     public virtual Ninos IdNinoNavigation { get; set; } = null!;
