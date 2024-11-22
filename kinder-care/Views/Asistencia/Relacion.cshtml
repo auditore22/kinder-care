@@ -27,18 +27,18 @@
             </div>
         </div>
 
-        <div class="setting-profile px-24">
+        <div class="setting-profile px-24" style="margin-top: 10px">
             <div class="flex-between">
                 <div class="d-flex align-items-end flex-wrap mb-32 gap-24">
-                    <img src="~/images/icons/Registro_logo.png" alt="Docente" class="w-100 h-100 rounded-circle border border-white">
+                    <img src="~/images/icons/Registro_logo.png" alt="Docente" class="w-90 h-90 rounded-circle border border-white">
                     <div>
-                        <h4 class="mb-8">Docente: @(Model.Docentes.FirstOrDefault()?.IdUsuarioNavigation?.Nombre ?? "Nombre no disponible")</h4>
+                        <h4 class="mb-8">Docente: @(Model.UsuarioNombre)</h4>
                         <div class="setting-profile__infos flex-align flex-wrap gap-16">
                             <div class="flex-align gap-6">
                                 <span class="text-gray-600 d-flex text-lg">
                                     <i class="ph ph-id-card"></i>
                                 </span>
-                                <span class="text-gray-600 d-flex text-15">@(Model.Docentes.FirstOrDefault()?.IdUsuarioNavigation?.Cedula ?? "Cédula no disponible")</span>
+                                <span class="text-gray-600 d-flex text-15">@(Model.UsuarioCedula)</span>
                             </div>
                         </div>
                     </div>
@@ -53,38 +53,45 @@
     <div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab" tabindex="0">
         <div class="card mt-24">
             <div class="card-header border-bottom">
-                <h4 class="mb-4">Seleccionar Estudiantes</h4>
-                <p class="text-gray-600 text-15">Selecciona los estudiantes que deseas relacionar con el docente.</p>
+                <h4 class="mb-4">Estudiantes sin grupo</h4>
+                <p class="text-gray-600 text-15">Seleccione los estudiantes para su grupo.</p>
             </div>
-            <div class="card-body">
+            <div class="card-body p-0 overflow-x-auto">
                 <form asp-action="Relacion" method="post">
                     <input type="hidden" asp-for="IdDocente" />
 
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
+                    <table id="studentTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="h6 text-gray-300">ID</th>
+                                <th class="h6 text-gray-300">Cédula</th>
+                                <th class="h6 text-gray-300">Estudiante</th>
+                                <th class="h6 text-gray-300">Seleccionar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var nino in Model.Ninos)
+                            {
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Cédula</th>
-                                    <th>Nombre</th>
-                                    <th>Seleccionar</th>
+                                    <td>
+                                        <div class="flex-align gap-8">
+                                            <img src="~/images/icons/baby_1_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
+                                            <span class="h6 mb-0 fw-medium text-gray-300">@nino.IdNino</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="h6 mb-0 fw-medium text-gray-300">@nino.Cedula</span>
+                                    </td>
+                                    <td>
+                                        <span class="h6 mb-0 fw-medium text-gray-300">@nino.NombreNino</span>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="Ninos" value="@nino.IdNino" />
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var nino in Model.Ninos)
-                                {
-                                    <tr>
-                                        <td>@nino.IdNino</td>
-                                        <td>@nino.Cedula</td>
-                                        <td>@nino.NombreNino</td>
-                                        <td>
-                                            <input type="checkbox" name="Ninos" value="@nino.IdNino" />
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                            }
+                        </tbody>
+                    </table>
 
                     <div class="d-flex justify-content-end mt-3 gap-2">
                         <a asp-action="ListaNinos" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancelar</a>

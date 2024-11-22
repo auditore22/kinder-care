@@ -22,26 +22,28 @@ namespace kinder_care.Controllers
 
             var userRole = User.FindFirstValue(ClaimTypes.Role);
 
+            var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
+
             if (userRole == "Docente")
             {
                 var estudiantes = await _context.RelDocenteNinoMateria
-                .Where(r => r.IdDocente == userId)
-                .Select(r => r.IdNino)
-                .Join(_context.Ninos, 
-                    rel => rel, 
-                    nino => nino.IdNino, 
-                    (rel, nino) => nino)
-                .ToListAsync();
+                    .Where(r => r.IdDocente == docente.IdDocente)
+                    .Select(r => r.IdNino)
+                    .Join(_context.Ninos,
+                        rel => rel,
+                        nino => nino.IdNino,
+                        (rel, nino) => nino)
+                    .ToListAsync();
 
-                if (estudiantes.Any()) return View(estudiantes);
+            if (estudiantes.Any()) return View(estudiantes);
 
-                ViewBag.Mensaje = "No tienes niños asociados.";
-                return View();
+            return View();
             }
             ViewBag.Mensaje = "No tienes acceso a esta información.";
             return View();
         }
 
+        [HttpGet]
         public async Task<IActionResult> Relacion()
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -52,12 +54,14 @@ namespace kinder_care.Controllers
 
             var estudiantesDisponibles = await _context.Ninos
                 .Where(n => !_context.RelDocenteNinoMateria
-                .Any(r => r.IdDocente == docente.IdDocente && r.IdNino == n.IdNino))
+                .Any(r => r.IdNino == n.IdNino))
                 .ToListAsync();
 
             var vm = new RelacionDocenteNinosVM
             {
                 IdDocente = docente.IdDocente,
+                UsuarioNombre = docente.IdUsuarioNavigation.Nombre,
+                UsuarioCedula = docente.IdUsuarioNavigation.Cedula,
                 Ninos = estudiantesDisponibles
             };
 
