@@ -107,10 +107,6 @@
       <_ContentIncludedByDefault Remove="Views\Access\ResetPassword.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Configuration\SystemConfig.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Configuration\UserProfile.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Docentes\Delete.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Docentes\Details.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Docentes\Edit.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Docentes\Index.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Enrollment\AcademicRecord.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Enrollment\AttendanceRecord.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Enrollment\ManageEnrollments.cshtml" />
