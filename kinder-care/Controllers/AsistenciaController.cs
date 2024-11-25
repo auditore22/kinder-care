@@ -19,9 +19,7 @@ namespace kinder_care.Controllers
         public async Task<IActionResult> ListaNinos()
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
             var userRole = User.FindFirstValue(ClaimTypes.Role);
-
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
 
             if (userRole == "Docente")
@@ -94,6 +92,90 @@ namespace kinder_care.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction("ListaNinos");
+        }
+
+        //===========================[Asistencia de Estudiantes]===========================
+        public async Task<IActionResult> ListaAsistencia()
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userRole = User.FindFirstValue(ClaimTypes.Role);
+            var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
+
+            if (userRole == "Docente")
+            {
+                var estudiantes = await _context.RelDocenteNinoMateria
+                    .Where(r => r.IdDocente == docente.IdDocente)
+                    .Select(r => r.IdNino)
+                    .Join(_context.Ninos,
+                        rel => rel,
+                        nino => nino.IdNino,
+                        (rel, nino) => nino)
+                    .ToListAsync();
+
+                if (estudiantes.Any()) return View(estudiantes);
+
+                return View();
+            }
+            ViewBag.Mensaje = "No tienes acceso a esta información.";
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegistrarAsistencia(List<int> estudiantesPresentes)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var fechaActual = DateTime.Now;
+            var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
+
+            var estudiantes = await _context.RelDocenteNinoMateria
+                .Where(r => r.IdDocente == docente.IdDocente)
+                .Select(r => r.IdNino)
+                .ToListAsync();
+
+            foreach (var idNino in estudiantes)
+            {
+                var presente = estudiantesPresentes?.Contains(idNino) ?? false;
+
+                var asistencia = new Asistencia
+                {
+                    IdNino = idNino,
+                    Fecha = fechaActual,
+                    Presente = presente 
+                };
+
+                _context.Asistencia.Add(asistencia);
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ListaAsistencia");
+        }
+
+        public IActionResult HistorialAsistencia(DateTime? fechaInicio, DateTime? fechaFin)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var docente = _context.Docentes.FirstOrDefault(d => d.IdUsuario == userId);
+            
+            var estudiantesDelDocente = _context.RelDocenteNinoMateria
+                .Where(r => r.IdDocente == docente.IdDocente)
+                .Select(r => r.IdNino)
+                .ToList();
+
+            var query = _context.Asistencia
+                .Include(a => a.IdNinoNavigation)
+                .Where(a => estudiantesDelDocente.Contains(a.IdNino)) 
+                .AsQueryable();
+
+
+            if (fechaInicio.HasValue && fechaFin.HasValue)
+            {
+                query = query.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
+            }
+
+            var asistencias = query.ToList();
+
+            ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd");
+            ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd");
+
+            return View(asistencias);
         }
 
 

@@ -37,8 +37,6 @@ namespace kinder_care.Controllers
             return View(usuarios);
         }
 
-
-
         //======================================================[VISTA DETAILS]==========================================================================================
         public async Task<IActionResult> Details(int? id)
         {
@@ -68,9 +66,8 @@ namespace kinder_care.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Usuarios usuarios)
         {
-
             usuarios.ContrasenaHash = _passwordHasher.HashPassword(usuarios, usuarios.ContrasenaHash);
-            usuarios.TokenRecovery = usuarios.TokenRecovery ?? Guid.NewGuid().ToString(); // Generar un token si es null
+            usuarios.TokenRecovery = usuarios.TokenRecovery ?? Guid.NewGuid().ToString(); 
 
             await _context.Usuarios.AddAsync(usuarios);
             await _context.SaveChangesAsync();
@@ -112,7 +109,6 @@ namespace kinder_care.Controllers
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario == null) return NotFound();
 
-            // Llamada al procedimiento almacenado para actualizar los datos principales del niño (Dirección y Poliza)
             var result = await _context.Database.ExecuteSqlRawAsync(
                 "EXEC UsuariosActualizar @id_usuario = {0}, @nombre = {1}, @correo_electronico = {2}, @direccion = {3}, @activo = {4}, @id_rol = {5}",
                 id, Nombre, CorreoElectronico, Direccion, Activo, IdRol);
@@ -143,34 +139,22 @@ namespace kinder_care.Controllers
             return View(usuarios);
         }
 
-        // POST: Usuarios/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            // Encuentra el usuario a eliminar
             var usuarios = await _context.Usuarios.FindAsync(id);
             if (usuarios != null)
             {
-                // Elimina los docentes relacionados
-                var docentes = await _context.Docentes.Where(d => d.IdUsuario == id).ToListAsync(); //Esto es que busca usuarios relacionados a docentes
+                var docentes = await _context.Docentes.Where(d => d.IdUsuario == id).ToListAsync(); 
                 if (docentes.Any())
                 {
-                    _context.Docentes.RemoveRange(docentes); //Esto es para eliminar los docentes para luego eliminar los usuarios
+                    _context.Docentes.RemoveRange(docentes); 
                 }
-
-
-                _context.Usuarios.Remove(usuarios); //Eliminamos el usuario
+                _context.Usuarios.Remove(usuarios);
                 await _context.SaveChangesAsync();
             }
-
             return RedirectToAction(nameof(Index));
-        }
-
-        //======================================================[PROBAR QUE UN USUARIO EXISTE]==========================================================================================
-        private bool UsuariosExists(int id)
-        {
-            return _context.Usuarios.Any(e => e.IdUsuario == id);
         }
     }
 }

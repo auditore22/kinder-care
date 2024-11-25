@@ -76,7 +76,6 @@ namespace kinder_care.Controllers
             var docentes = await _context.Docentes.FindAsync(id);
             if (docentes == null) return NotFound();
 
-            // Llamada al procedimiento almacenado para actualizar los datos principales del niño (Dirección y Poliza)
             var result = await _context.Database.ExecuteSqlRawAsync(
                 "EXEC DocentesActualizar @id_Docente = {0}, @id_usuario = {1}, @nombre = {2}, @direccion = {3}, @correo_electronico = {4}, @num_Telefono = {5}, @fecha_nacimiento = {6}, @grupo_asignado = {7}, @activo = {8}",
                 id, docentes.IdUsuario, Nombre, Direccion, CorreoElectronico, NumTelefono, FechaNacimiento, GrupoAsignado, Activo);
@@ -118,17 +117,12 @@ namespace kinder_care.Controllers
 
             if (docentes != null)
             {
-                docentes.IdUsuarioNavigation.IdRol = 3; //Si se elimina un docente, el id del usuario relacionado se volvera un rol de padre
+                docentes.IdUsuarioNavigation.IdRol = 3;
                 _context.Docentes.Remove(docentes);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool DocentesExists(int id)
-        {
-            return _context.Docentes.Any(e => e.IdDocente == id);
         }
     }
 }

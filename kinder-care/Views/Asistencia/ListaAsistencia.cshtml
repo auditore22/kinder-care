@@ -13,7 +13,7 @@
                 </span>
             </li>
             <li>
-                <span class="text-main-600 fw-normal text-15">Estudiantes</span>
+                <span class="text-main-600 fw-normal text-15">Asistencias</span>
             </li>
         </ul>
     </div>
@@ -44,29 +44,19 @@
                 <option value="json">JSON</option>
             </select>
         </div>
-        <a asp-action="Relacion" asp-controller="Asistencia" class="btn btn-main">
-            Asignar Estudiantes
-        </a>
-        <a asp-action="ListaAsistencia" asp-controller="Asistencia" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 hover-bg-main-600 hover-text-white">
-            Ver Asistencias
-        </a>
     </div>
     <!-- Breadcrumb Right End -->
 </div>
 
-@if (Model != null && Model.Any())
-{
+<form asp-action="RegistrarAsistencia" method="post">
     <div class="card overflow-hidden">
         <div class="card-body p-0 overflow-x-auto">
             <table id="studentTable" class="table table-striped">
                 <thead>
                     <tr>
-                        <th class="h6 text-gray-300">ID</th>
-                        <th class="h6 text-gray-300">Cédula</th>
+                        <th class="h6 text-gray-300">ID Niño</th>
                         <th class="h6 text-gray-300">Estudiante</th>
-                        <th class="h6 text-gray-300">Fecha de Nacimiento</th>
-                        <th class="h6 text-gray-300">Póliza</th>
-                        <th class="h6 text-gray-300">Acciones</th>
+                        <th class="h6 text-gray-300">Presente</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,25 +64,13 @@
                     {
                         <tr>
                             <td>
-                                <div class="flex-align gap-8">
-                                    <img src="~/images/icons/baby_1_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
-                                    <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.IdNino</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.Cedula</span>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.IdNino</span>
                             </td>
                             <td>
                                 <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.NombreNino</span>
                             </td>
                             <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.FechaNacimiento.ToString("dd/MM/yyyy")</span>
-                            </td>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.Poliza</span>
-                            </td>
-                            <td>
-                                <a asp-action="Details" asp-controller="Ninos" asp-route-id="@estudiante.IdNino" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
+                                <input type="checkbox" name="estudiantesPresentes" value="@estudiante.IdNino" />
                             </td>
                         </tr>
                     }
@@ -100,18 +78,8 @@
             </table>
         </div>
     </div>
-}
-else
-{
-    <div class="alert alert-info">
-        @ViewBag.Mensaje "No hay estudiantes relacionados con este docente."
-    </div>
-}
 
-<div class="card-footer flex-between flex-wrap">
-    <span class="text-gray-900">Showing 1 to 10 of @Model.Count() entries</span>
-    <ul class="pagination flex-align flex-wrap">
-        <div class="card-footer flex-between flex-wrap">
-        </div>
-    </ul>
-</div>
+    <div class="card-footer flex-between flex-wrap">
+        <button type="submit" class="btn btn-main">Registrar Asistencia</button>
+    </div>
+</form>
