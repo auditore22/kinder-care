@@ -237,9 +237,7 @@ CREATE TABLE asistencia
     id_Asistencia INT PRIMARY KEY IDENTITY (1,1),
     id_nino       INT  NOT NULL,
     fecha         DATE NOT NULL,
-    hora_entrada  TIME,
-    hora_salida   TIME,
-    estado        VARCHAR(20) CHECK (estado IN ('Presente', 'Ausente', 'Tarde')),
+    presente      BIT NOT NULL DEFAULT 0,
     CONSTRAINT fk_asistencia_nino FOREIGN KEY (id_nino) REFERENCES ninos (id_Nino)
 );
 GO
@@ -290,7 +288,6 @@ CREATE TABLE rel_docente_nino_materia
 (
     id_docente INT          NOT NULL,
     id_nino    INT          NOT NULL,
-    materia    VARCHAR(100) NOT NULL,
     PRIMARY KEY (id_docente, id_nino),
     FOREIGN KEY (id_docente) REFERENCES docentes (id_Docente),
     FOREIGN KEY (id_nino) REFERENCES ninos (id_Nino)
