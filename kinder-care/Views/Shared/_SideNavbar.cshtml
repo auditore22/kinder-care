@@ -78,7 +78,7 @@
                 </li>
 
                 <li class="sidebar-menu__item">
-                    <a asp-action="Assignment" asp-controller="Ninos" class="sidebar-menu__link">
+                    <a asp-action="Index" asp-controller="Ninos" class="sidebar-menu__link">
                         <span class="icon">
                             <i class="ph ph-clipboard-text"></i>
                         </span>
@@ -86,7 +86,7 @@
                     </a>
                 </li>
                 <li class="sidebar-menu__item">
-                    <a asp-action="Mentors" asp-controller="Docentes" class="sidebar-menu__link">
+                    <a asp-action="Index" asp-controller="Docentes" class="sidebar-menu__link">
                         <span class="icon">
                             <i class="ph ph-users"></i>
                         </span>
@@ -94,23 +94,7 @@
                     </a>
                 </li>
                 <li class="sidebar-menu__item">
-                    <a asp-action="Resources" asp-controller="Reports" class="sidebar-menu__link">
-                        <span class="icon">
-                            <i class="ph ph-bookmarks"></i>
-                        </span>
-                        <span class="text">Resources</span>
-                    </a>
-                </li>
-                <li class="sidebar-menu__item">
-                    <a asp-action="Messages" asp-controller="Communication" class="sidebar-menu__link">
-                        <span class="icon">
-                            <i class="ph ph-chats-teardrop"></i>
-                        </span>
-                        <span class="text">Messages</span>
-                    </a>
-                </li>
-                <li class="sidebar-menu__item">
-                    <a asp-action="Analytics" asp-controller="Reports" class="sidebar-menu__link">
+                    <a asp-action="GenerateReports" asp-controller="Reports" class="sidebar-menu__link">
                         <span class="icon">
                             <i class="ph ph-chart-bar"></i>
                         </span>
@@ -118,7 +102,7 @@
                     </a>
                 </li>
                 <li class="sidebar-menu__item">
-                    <a asp-action="Event" asp-controller="Events" class="sidebar-menu__link">
+                    <a asp-action="ManageEvents" asp-controller="Events" class="sidebar-menu__link">
                         <span class="icon">
                             <i class="ph ph-calendar-dots"></i>
                         </span>
@@ -126,7 +110,7 @@
                     </a>
                 </li>
                 <li class="sidebar-menu__item">
-                    <a asp-action="Library" asp-controller="Reports" class="sidebar-menu__link">
+                    <a asp-action="GenerateReports" asp-controller="Reports" class="sidebar-menu__link">
                         <span class="icon">
                             <i class="ph ph-books"></i>
                         </span>
@@ -134,7 +118,7 @@
                     </a>
                 </li>
                 <li class="sidebar-menu__item">
-                    <a asp-action="PricingPlan" asp-controller="Payments" class="sidebar-menu__link">
+                    <a asp-action="PaymentsSearch" asp-controller="Payments" class="sidebar-menu__link">
                         <span class="icon">
                             <i class="ph ph-coins"></i>
                         </span>
@@ -146,7 +130,7 @@
                     <span class="text-gray-300 text-sm px-20 pt-20 fw-semibold border-top border-gray-100 d-block text-uppercase">Settings</span>
                 </li>
                 <li class="sidebar-menu__item">
-                    <a asp-action="AccountSettings" asp-controller="Settings" class="sidebar-menu__link">
+                    <a asp-action="UserProfile" asp-controller="Configuration" class="sidebar-menu__link">
                         <span class="icon">
                             <i class="ph ph-gear"></i>
                         </span>
