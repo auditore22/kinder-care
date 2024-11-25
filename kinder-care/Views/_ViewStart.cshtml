@@ -1,3 +1,7 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     Layout = "_MainLayout";
+    ViewBag.RoleName = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault()!;
+    ViewBag.UserName = User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault()!;
+    ViewBag.UserEmail = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault()!;
 }
