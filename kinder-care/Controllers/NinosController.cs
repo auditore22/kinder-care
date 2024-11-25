@@ -66,21 +66,23 @@ public class NinosController : Controller
 
         // Traer la información completa del niño junto con todas las relaciones
         var nino = await _context.Ninos
-            .Include(n => n.ProgresoAcademico) // Progreso académico
-            .Include(n => n.ObservacionesDocentes) // Observaciones de los docentes
-            .Include(n => n.RelNinoAlergia) // Alergias
+            .Include(n => n.ProgresoAcademico)           // Progreso académico
+            .Include(n => n.ObservacionesDocentes)       // Observaciones de los docentes
+            .Include(n => n.RelNinoAlergia)              // Alergias
             .ThenInclude(ra => ra.Alergia)
-            .Include(n => n.RelNinoMedicamento) // Medicamentos
+            .Include(n => n.RelNinoMedicamento)          // Medicamentos
             .ThenInclude(rm => rm.Medicamento)
-            .Include(n => n.RelNinoCondicion) // Condiciones médicas
+            .Include(n => n.RelNinoCondicion)            // Condiciones médicas
             .ThenInclude(rc => rc.Condicion)
-            .Include(n => n.RelNinoContactoEmergencia) // Contactos de emergencia
+            .Include(n => n.RelNinoContactoEmergencia)   // Contactos de emergencia
             .ThenInclude(re => re.ContactoEmergencia)
+            .Include(n => n.Asistencia)                  // Asistencias
             .FirstOrDefaultAsync(n => n.IdNino == id);
 
         if (nino == null) return NotFound();
 
         // Pasar todas las opciones disponibles a la vista
+        ViewBag.Asistencias = await _context.Asistencia.ToListAsync();
         ViewBag.Alergias = await _context.Alergias.ToListAsync();
         ViewBag.Medicamentos = await _context.Medicamentos.ToListAsync();
         ViewBag.CondicionesMedicas = await _context.CondicionesMedicas.ToListAsync();

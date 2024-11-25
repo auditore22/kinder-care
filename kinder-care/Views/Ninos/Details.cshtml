@@ -73,6 +73,9 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="pills-Edit_Info_Medica-tab" data-bs-toggle="pill" data-bs-target="#pills-Edit_Info_Medica" type="button" role="tab" aria-controls="pills-Edit_Info_Medica" aria-selected="false">Informacion Medica</button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-Asistencias-tab" data-bs-toggle="pill" data-bs-target="#pills-Asistencias" type="button" role="tab" aria-controls="pills-Asistencias" aria-selected="false">Asistencias</button>
+                </li>
             </ul>
         </div>
 
@@ -487,5 +490,44 @@
             </form>
         </div>
     </div>
+
+    <div class="tab-pane fade" id="pills-Asistencias" role="tabpanel" aria-labelledby="pills-Asistencias-tab" tabindex="0">
+    <div class="card mt-24">
+        <div class="card-header border-bottom">
+            <h4 class="mb-4">Asistencias</h4>
+        </div>
+        <div class="card-body">
+            @if (Model.Asistencia != null && Model.Asistencia.Any())
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-gray-600 text-start">Fecha</th>
+                            <th scope="col" class="text-gray-600 text-start">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var asistencia in Model.Asistencia) 
+                        {
+                            <tr>
+                                <td class="text-start">@asistencia.Fecha.ToString("dd/MM/yyyy")</td>
+                                <td class="text-start">
+                                    <span class="fw-medium @(asistencia.Presente ? "text-success" : "text-danger")">
+                                        @(asistencia.Presente ? "Presente" : "Ausente")
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-gray-600">No hay asistencias registradas para este niño.</p>
+            }
+        </div>
+    </div>
+</div>
+
 
 </div>
