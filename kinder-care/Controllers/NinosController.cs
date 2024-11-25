@@ -3,6 +3,7 @@ using kinder_care.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace kinder_care.Controllers;
 
@@ -48,7 +49,7 @@ public class NinosController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Details(int? id)
+    public async Task<IActionResult> Details(int? id, DateTime? fechaInicio, DateTime? fechaFin)
     {
         if (id == null) return NotFound();
 
@@ -65,15 +66,16 @@ public class NinosController : Controller
         }
 
         var nino = await _context.Ninos
-            .Include(n => n.ProgresoAcademico) // Progreso académico
-            .Include(n => n.ObservacionesDocentes) // Observaciones de los docentes
-            .Include(n => n.RelNinoAlergia) // Alergias
+            .Include(n => n.ProgresoAcademico)          // Progreso académico
+            .Include(n => n.ObservacionesDocentes)      // Observaciones de los docentes
+            .Include(n => n.Asistencia)                 // Asistencia
+            .Include(n => n.RelNinoAlergia)             // Alergias
             .ThenInclude(ra => ra.Alergia)
-            .Include(n => n.RelNinoMedicamento) // Medicamentos
+            .Include(n => n.RelNinoMedicamento)         // Medicamentos
             .ThenInclude(rm => rm.Medicamento)
-            .Include(n => n.RelNinoCondicion) // Condiciones médicas
+            .Include(n => n.RelNinoCondicion)           // Condiciones médicas
             .ThenInclude(rc => rc.Condicion)
-            .Include(n => n.RelNinoContactoEmergencia) // Contactos de emergencia
+            .Include(n => n.RelNinoContactoEmergencia)  // Contactos de emergencia
             .ThenInclude(re => re.ContactoEmergencia)
             .Include(n => n.RelNinoTarea)
             .ThenInclude(rt => rt.Tareas)
@@ -98,6 +100,7 @@ public class NinosController : Controller
         ViewBag.TareasCompletadas = tareasCompletadas;
 
         // Pasar todas las opciones disponibles a la vista
+        ViewBag.Asistencias = await _context.Asistencia.ToListAsync();
         ViewBag.Alergias = await _context.Alergias.ToListAsync();
         ViewBag.Medicamentos = await _context.Medicamentos.ToListAsync();
         ViewBag.CondicionesMedicas = await _context.CondicionesMedicas.ToListAsync();
@@ -108,6 +111,22 @@ public class NinosController : Controller
             .ToList();
 
         ViewBag.ContactosEmergencia = contactosRelacionados;
+
+        var asistenciaNino = _context.Asistencia
+            .Where(a => a.IdNino == id)
+            .AsQueryable();
+
+        if (fechaInicio.HasValue && fechaFin.HasValue)
+        {
+            asistenciaNino = asistenciaNino.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
+        }
+
+        var asistencias = await asistenciaNino.ToListAsync();
+
+        nino.Asistencia = asistencias;
+
+        ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd");
+        ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd");
 
         // Inicializa ContactosExistentes como un diccionario vacío si no hay contactos
         ViewBag.ContactosExistentes = contactosRelacionados.Any()
