@@ -48,7 +48,7 @@ public class NinosController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Details(int? id)
+    public async Task<IActionResult> Details(int? id, DateTime? fechaInicio, DateTime? fechaFin)
     {
         if (id == null) return NotFound();
 
@@ -86,6 +86,23 @@ public class NinosController : Controller
         ViewBag.Alergias = await _context.Alergias.ToListAsync();
         ViewBag.Medicamentos = await _context.Medicamentos.ToListAsync();
         ViewBag.CondicionesMedicas = await _context.CondicionesMedicas.ToListAsync();
+
+        var query = _context.Asistencia
+            .Where(a => a.IdNino == id) 
+            .AsQueryable();
+
+        if (fechaInicio.HasValue && fechaFin.HasValue)
+        {
+            query = query.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
+        }
+
+        var asistencias = await query.ToListAsync();
+
+        nino.Asistencia = asistencias;
+
+        ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd");
+        ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd");
+
 
         // Obtener contactos de emergencia relacionados
         var contactosRelacionados = nino.RelNinoContactoEmergencia

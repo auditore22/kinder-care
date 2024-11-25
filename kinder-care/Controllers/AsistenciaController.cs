@@ -2,7 +2,11 @@
 using kinder_care.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 using System.Security.Claims;
+
 
 namespace kinder_care.Controllers
 {
@@ -154,14 +158,14 @@ namespace kinder_care.Controllers
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var docente = _context.Docentes.FirstOrDefault(d => d.IdUsuario == userId);
             
-            var estudiantesDelDocente = _context.RelDocenteNinoMateria
+            var estudiantes = _context.RelDocenteNinoMateria
                 .Where(r => r.IdDocente == docente.IdDocente)
                 .Select(r => r.IdNino)
                 .ToList();
 
             var query = _context.Asistencia
                 .Include(a => a.IdNinoNavigation)
-                .Where(a => estudiantesDelDocente.Contains(a.IdNino)) 
+                .Where(a => estudiantes.Contains(a.IdNino)) 
                 .AsQueryable();
 
 
@@ -170,7 +174,9 @@ namespace kinder_care.Controllers
                 query = query.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
             }
 
-            var asistencias = query.ToList();
+            var asistencias = query
+                .OrderByDescending(a => a.Fecha)
+                .ToList();
 
             ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd");
             ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd");
@@ -178,6 +184,77 @@ namespace kinder_care.Controllers
             return View(asistencias);
         }
 
+        //=============================[Reporte de Asistencia]=============================
+        public IActionResult GenerarReportePDF(DateTime? fechaInicio, DateTime? fechaFin)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
+            var docente = _context.Docentes
+                .Include(d => d.IdUsuarioNavigation)
+                .FirstOrDefault(d => d.IdUsuario == userId);
+
+            var estudiantes = _context.RelDocenteNinoMateria
+                .Where(r => r.IdDocente == docente.IdDocente)
+                .Select(r => r.IdNino)
+                .ToList();
+
+            var query = _context.Asistencia
+                .Include(a => a.IdNinoNavigation)
+                .Where(a => estudiantes.Contains(a.IdNino))
+                .AsQueryable();
+
+            if (fechaInicio.HasValue && fechaFin.HasValue)
+            {
+                query = query.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
+            }
+
+            var asistencias = query.OrderByDescending(a => a.Fecha).ToList();
+
+            var PdfDoc = Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(2, Unit.Centimetre);
+                    page.DefaultTextStyle(TextStyle.Default.Size(12));
+                    page.Header().Text($"Reporte de Asistencias - {docente.IdUsuarioNavigation.Nombre}").Bold().FontSize(18).AlignCenter();
+                    page.Content().Table(table =>
+                    {
+                        table.ColumnsDefinition(columns =>
+                        {
+                            columns.ConstantColumn(100); 
+                            columns.RelativeColumn();   
+                            columns.ConstantColumn(80);  
+                        });
+
+                        table.Header(header =>
+                        {
+                            header.Cell().Text("Fecha").Bold();
+                            header.Cell().Text("Estudiante").Bold();
+                            header.Cell().Text("Estado").Bold();
+                        });
+
+                        foreach (var asistencia in asistencias)
+                        {
+                            table.Cell().Text(asistencia.Fecha.ToString("dd/MM/yyyy"));
+                            table.Cell().Text(asistencia.IdNinoNavigation.NombreNino);
+                            table.Cell().Text(asistencia.Presente ? "Presente" : "Ausente")
+                                 .FontColor(asistencia.Presente ? Colors.Green.Darken2 : Colors.Red.Darken2);
+                        }
+                    });
+
+                    page.Footer().AlignCenter().Text(text =>
+                    {
+                        text.Span("Página ");
+                        text.CurrentPageNumber();
+                        text.Span(" de ");
+                        text.TotalPages();
+                    });
+                });
+            });
+
+            var pdfBytes = PdfDoc.GeneratePdf();
+            return File(pdfBytes, "application/pdf", "Reporte_Asistencia.pdf");
+        }
     }
 }

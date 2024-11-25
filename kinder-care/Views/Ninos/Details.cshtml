@@ -497,6 +497,22 @@
             <h4 class="mb-4">Asistencias</h4>
         </div>
         <div class="card-body">
+                <form method="get" asp-action="Details" asp-route-id="@Model.IdNino">
+                    <div class="row mb-4">
+                        <input type="hidden" name="id" value="@Model.IdNino" />
+                        <div class="col-md-4">
+                            <label for="fechaInicio" class="form-label">Desde:</label>
+                            <input type="date" id="fechaInicio" name="fechaInicio" class="form-control" value="@ViewBag.FechaInicio" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="fechaFin" class="form-label">Hasta:</label>
+                            <input type="date" id="fechaFin" name="fechaFin" class="form-control" value="@ViewBag.FechaFin" />
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                        </div>
+                    </div>
+                </form>
             @if (Model.Asistencia != null && Model.Asistencia.Any())
             {
                 <table class="table table-hover">

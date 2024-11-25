@@ -81,5 +81,17 @@
                 }
             </tbody>
         </table>
+
     </div>
+</div>
+
+<div class="card-footer flex-between flex-wrap">
+    <span class="text-gray-900">Showing 1 to 10 of @Model.Count() entries</span>
+    <ul class="pagination flex-align flex-wrap">
+        <form asp-action="GenerarReportePDF" asp-controller="Asistencia" method="get">
+            <input type="hidden" name="fechaInicio" value="@ViewBag.FechaInicio" />
+            <input type="hidden" name="fechaFin" value="@ViewBag.FechaFin" />
+            <button type="submit" class="btn btn-primary">Generar PDF</button>
+        </form>
+    </ul>
 </div>
