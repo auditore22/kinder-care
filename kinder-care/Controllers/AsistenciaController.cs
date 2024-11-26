@@ -22,27 +22,30 @@ namespace kinder_care.Controllers
         //===========================[Relacion Ninos y Docentes]===========================
         public async Task<IActionResult> ListaNinos()
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var userRole = User.FindFirstValue(ClaimTypes.Role);
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
 
             if (userRole == "Docente")
             {
                 var estudiantes = await _context.RelDocenteNinoMateria
-                    .Where(r => r.IdDocente == docente.IdDocente)
+                    .Where(r => r.IdDocente == docente!.IdDocente)
                     .Select(r => r.IdNino)
                     .Join(_context.Ninos,
                         rel => rel,
                         nino => nino.IdNino,
                         (rel, nino) => nino)
                     .ToListAsync();
-
-            if (estudiantes.Any()) return View(estudiantes);
-
-            return View();
+                
+                if (!estudiantes.Any())
+                {
+                    ViewBag.Mensaje = "No hay estudiantes relacionados con este docente.";
+                    return View(new List<Ninos>());
+                }
+                return View(estudiantes);
             }
             ViewBag.Mensaje = "No tienes acceso a esta información.";
-            return View();
+            return View(new List<Ninos>());
         }
 
         [HttpGet]
