@@ -49,7 +49,7 @@ namespace kinder_care.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Relacion()
+        public async Task<IActionResult> CrearGrupo()
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
@@ -74,7 +74,7 @@ namespace kinder_care.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Relacion(List<int> Ninos)
+        public async Task<IActionResult> CrearGrupo(List<int> Ninos)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);

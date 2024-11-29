@@ -4,7 +4,7 @@
 <div class="breadcrumb mb-24">
     <ul class="flex-align gap-4">
         <li>
-            <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Home</a>
+            <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Inicio</a>
         </li>
         <li>
             <span class="text-gray-500 fw-normal d-flex">
@@ -12,7 +12,7 @@
             </span>
         </li>
         <li>
-            <span class="text-main-600 fw-normal text-15">Setting</span>
+            <span class="text-main-600 fw-normal text-15">Detalles Usuario</span>
         </li>
     </ul>
 </div>
@@ -21,7 +21,7 @@
 <div class="card overflow-hidden">
     <div class="card-body p-0">
         <div class="cover-img position-relative">
-            <label for="coverImageUpload" class="btn border-gray-200 text-gray-200 fw-normal hover-bg-gray-400 rounded-pill py-4 px-14 position-absolute inset-block-start-0 inset-inline-end-0 mt-24 me-24">Edit Cover</label>
+            <label for="coverImageUpload" class="btn border-gray-200 text-gray-200 fw-normal hover-bg-gray-400 rounded-pill py-4 px-14 position-absolute inset-block-start-0 inset-inline-end-0 mt-24 me-24">Editar fondo</label>
             <div class="avatar-upload">
                 <input type="file" id="coverImageUpload" accept=".png, .jpg, .jpeg">
                 <div class="avatar-preview">
@@ -144,7 +144,6 @@
                                 <div class="form-group">
                                     <label asp-for="IdRol" class="control-label"></label>
                                     <select asp-for="IdRol" class="form-control">
-                                        <option value="1">Administrador</option>
                                         <option value="2">Docente</option>
                                         <option value="3">Padre</option>
                                     </select>

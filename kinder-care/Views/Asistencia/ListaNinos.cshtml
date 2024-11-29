@@ -44,7 +44,7 @@
                 <option value="json">JSON</option>
             </select>
         </div>
-        <a asp-action="Relacion" asp-controller="Asistencia" class="btn btn-main">
+        <a asp-action="CrearGrupo" asp-controller="Asistencia" class="btn btn-main">
             Asignar Estudiantes
         </a>
         <a asp-action="ListaAsistencia" asp-controller="Asistencia" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 hover-bg-main-600 hover-text-white">
@@ -66,7 +66,6 @@
                         <th class="h6 text-gray-300">Estudiante</th>
                         <th class="h6 text-gray-300">Fecha de Nacimiento</th>
                         <th class="h6 text-gray-300">Póliza</th>
-                        <th class="h6 text-gray-300">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -92,7 +91,7 @@
                                 <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.Poliza</span>
                             </td>
                             <td>
-                                <a asp-action="Details" asp-controller="Ninos" asp-route-id="@estudiante.IdNino" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
+                                <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@estudiante.IdNino" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
                             </td>
                         </tr>
                     }

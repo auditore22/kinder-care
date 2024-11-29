@@ -57,31 +57,42 @@ namespace kinder_care.Controllers
         }
 
         //======================================================[VISTA CREATE]==========================================================================================
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["IdRol"] = new SelectList(_context.Roles, "IdRol", "Nombre");
+            ViewData["IdRol"] = new SelectList(await _context.Roles.ToListAsync(), "IdRol", "Nombre");
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Usuarios usuarios)
+        public async Task<IActionResult> Create(Usuarios usuario)
         {
-            usuarios.ContrasenaHash = _passwordHasher.HashPassword(usuarios, usuarios.ContrasenaHash);
-            usuarios.TokenRecovery = usuarios.TokenRecovery ?? Guid.NewGuid().ToString(); 
+            usuario.ContrasenaHash = _passwordHasher.HashPassword(usuario, usuario.ContrasenaHash);
 
-            await _context.Usuarios.AddAsync(usuarios);
-            await _context.SaveChangesAsync();
+            if (usuario.IdRol == 0)
+            {
+                var sinRol = await _context.Roles.FirstOrDefaultAsync(r => r.Nombre == "Padre");
+                if (sinRol != null)
+                {
+                    usuario.IdRol = sinRol.IdRol;
+                }
+            }
 
-            if (usuarios.IdUsuario != 0)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                ViewData["Mensaje"] = "No se pudo crear el usuario";
-                return View(usuarios);
-            }
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC UsuariosCrear @Cedula = {0}, @Nombre = {1}, @ContrasenaHash = {2}, @NumTelefono = {3}, @Direccion = {4}, @CorreoElectronico = {5}, @IdRol = {6}, @Activo = {7}",
+                usuario.Cedula,
+                usuario.Nombre,
+                usuario.ContrasenaHash,
+                usuario.NumTelefono,
+                usuario.Direccion,
+                usuario.CorreoElectronico,
+                usuario.IdRol,
+                usuario.Activo
+            );
+
+
+            return RedirectToAction("Index", "Usuarios");
         }
+
 
         //======================================================[VISTA EDIT]==========================================================================================
         [HttpGet]
