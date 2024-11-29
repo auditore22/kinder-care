@@ -411,6 +411,30 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE UsuariosCrear
+    @Cedula VARCHAR(20),
+    @Nombre VARCHAR(100),
+    @ContrasenaHash VARCHAR(100),
+    @NumTelefono INT = NULL,
+    @Direccion VARCHAR(256),
+    @CorreoElectronico VARCHAR(100),
+    @IdRol INT,
+    @Activo BIT = 1
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (SELECT 1 FROM usuarios WHERE correo_electronico = @CorreoElectronico)
+    BEGIN
+        RAISERROR ('El correo electrónico ya está registrado.', 16, 1);
+        RETURN;
+    END
+
+    INSERT INTO usuarios (cedula, nombre, contrasena_hash, num_Telefono, direccion, correo_electronico, id_rol, fecha_creacion, activo)
+    VALUES (@Cedula, @Nombre, @ContrasenaHash, @NumTelefono, @Direccion, @CorreoElectronico, @IdRol, GETDATE(), @Activo);
+END;
+
+  
 CREATE PROCEDURE UsuariosActualizar
     @id_Usuario INT,
     @nombre NVARCHAR(100),
