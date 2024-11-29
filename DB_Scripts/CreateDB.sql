@@ -391,9 +391,10 @@ CREATE TABLE actividades
 (
     id_Actividad      INT PRIMARY KEY IDENTITY (1,1),
     id_tipo_actividad INT  NOT NULL,
-    fecha             DATE NOT NULL,
+    fecha             DATETIME NOT NULL,
     lugar             VARCHAR(100),
     activo            BIT DEFAULT 1,
+    Descripcion       NVARCHAR(255),
     FOREIGN KEY (id_tipo_actividad) REFERENCES tipo_actividad (id_Tipo_Actividad)
 );
 GO
