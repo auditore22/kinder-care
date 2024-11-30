@@ -79,12 +79,6 @@ namespace kinder_care.Controllers
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
 
-            if (Ninos == null || !Ninos.Any())
-            {
-                ViewBag.Mensaje = "Se debe escojer al menos un estudiante.";
-                return RedirectToAction("Relacion");
-            }
-
             foreach (var ninoId in Ninos)
             {
                 if (!_context.RelDocenteNinoMateria.Any(r => r.IdDocente == docente.IdDocente && r.IdNino == ninoId))
@@ -102,7 +96,7 @@ namespace kinder_care.Controllers
         }
 
         //===========================[Asistencia de Estudiantes]===========================
-        public async Task<IActionResult> ListaAsistencia()
+        public async Task<IActionResult> ControlAsistencias()
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var userRole = User.FindFirstValue(ClaimTypes.Role);
@@ -119,16 +113,18 @@ namespace kinder_care.Controllers
                         (rel, nino) => nino)
                     .ToListAsync();
 
-                if (estudiantes.Any()) return View(estudiantes);
-
-                return View();
+                if (!estudiantes.Any())
+                {
+                    ViewBag.Mensaje = "No se pueden hacer asistencias por que no hay estudiantes en el grupo";
+                    return View();
+                }
+                return View(estudiantes);
             }
-            ViewBag.Mensaje = "No tienes acceso a esta información.";
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegistrarAsistencia(List<int> estudiantesPresentes)
+        public async Task<IActionResult> ControlAsistencias(List<int> estudiantesPresentes)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var fechaActual = DateTime.Now;
@@ -153,7 +149,7 @@ namespace kinder_care.Controllers
                 _context.Asistencia.Add(asistencia);
             }
             await _context.SaveChangesAsync();
-            return RedirectToAction("ListaAsistencia");
+            return RedirectToAction("ListaNinos");
         }
 
         public IActionResult HistorialAsistencia(DateTime? fechaInicio, DateTime? fechaFin)

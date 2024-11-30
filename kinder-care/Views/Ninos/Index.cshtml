@@ -5,7 +5,7 @@
     <div class="breadcrumb mb-24">
         <ul class="flex-align gap-4">
             <li>
-                <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Home</a>
+                <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Inicio</a>
             </li>
             <li>
                 <span class="text-gray-500 fw-normal d-flex">
@@ -13,7 +13,7 @@
                 </span>
             </li>
             <li>
-                <span class="text-main-600 fw-normal text-15">Students</span>
+                <span class="text-main-600 fw-normal text-15">Hijos</span>
             </li>
         </ul>
     </div>
@@ -22,16 +22,16 @@
     <!-- Breadcrumb Right Start -->
     <div class="flex-align gap-8 flex-wrap">
         <div class="position-relative text-gray-500 flex-align gap-4 text-13">
-            <span class="text-inherit">Sort by: </span>
+            <span class="text-inherit">Buscar por: </span>
             <div class="flex-align text-gray-500 text-13 border border-gray-100 rounded-4 ps-20 focus-border-main-600 bg-white">
                 <span class="text-lg">
                     <i class="ph ph-funnel-simple"></i>
                 </span>
                 <select class="form-control ps-8 pe-20 py-16 border-0 text-inherit rounded-4 text-center">
                     <option value="1" selected>Popular</option>
-                    <option value="1">Latest</option>
-                    <option value="1">Trending</option>
-                    <option value="1">Matches</option>
+                    <option value="1">Mas recientes</option>
+                    <option value="1">Mas buscados</option>
+                    <option value="1">Similares</option>
                 </select>
             </div>
         </div>
@@ -40,7 +40,7 @@
                 <i class="ph ph-layout"></i>
             </span>
             <select class="form-control ps-8 pe-20 py-16 border-0 text-inherit rounded-4 text-center" id="exportOptions">
-                <option value="" selected disabled>Export</option>
+                <option value="" selected disabled>Exportar</option>
                 <option value="csv">CSV</option>
                 <option value="json">JSON</option>
             </select>
@@ -100,7 +100,7 @@ else
     </div>
 
     <div class="card-footer flex-between flex-wrap">
-        <span class="text-gray-900">Showing 1 to @Model.Count() of @Model.Count() entries</span>
+        <span class="text-gray-900">Mostrando del 1 al 10 de @Model.Count() entrantes</span>
         <ul class="pagination flex-align flex-wrap">
             <!-- Aquí puedes agregar la lógica de paginación si lo necesitas -->
         </ul>
