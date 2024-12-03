@@ -47,10 +47,7 @@
                                 <span class="text">Docentes</span>
                             </a>
                         </li>
-                    }
 
-                    if (ViewBag.RoleName == "Administrador" || ViewBag.RoleName == "Docente")
-                    {
                         <li class="sidebar-menu__item">
                             <a asp-action="ListaNinos_Administracion" asp-controller="Asistencia" class="sidebar-menu__link">
                                 <span class="icon">
@@ -61,6 +58,41 @@
                         </li>
 
                         <li class="sidebar-menu__item">
+                            <a asp-action="ListaAsistencia_Admin" asp-controller="Asistencia" class="sidebar-menu__link">
+                                <span class="icon">
+                                    <i class="ph ph-chart-bar"></i>
+                                </span>
+                                <span class="text">Asistencias</span>
+                            </a>
+                        </li>
+                    }
+
+                    if (ViewBag.RoleName == "Docente") 
+                    {
+                        <li class="sidebar-menu__item">
+                            <a asp-action="ListaNinos" asp-controller="Asistencia" class="sidebar-menu__link">
+                                <span class="icon">
+                                    <i class="ph ph-users-three"></i>
+                                </span>
+                                <span class="text">Estudiantes</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-menu__item">
+                            <a asp-action="ListaAsistencia" asp-controller="Asistencia" class="sidebar-menu__link">
+                                <span class="icon">
+                                    <i class="ph ph-chart-bar"></i>
+                                </span>
+                                <span class="text">Asistencias</span>
+                            </a>
+                        </li>
+                    }
+
+                    if (ViewBag.RoleName == "Administrador" || ViewBag.RoleName == "Docente")
+                    {
+                        
+
+                        <li class="sidebar-menu__item">
                             <a asp-action="ManageRecords" asp-controller="Users" class="sidebar-menu__link">
                                 <span class="icon">
                                     <i class="ph ph-clipboard-text"></i>
@@ -69,14 +101,7 @@
                             </a>
                         </li>
 
-                        <li class="sidebar-menu__item">
-                            <a asp-action="HistorialAsistencia" asp-controller="Asistencia" class="sidebar-menu__link">
-                                <span class="icon">
-                                    <i class="ph ph-chart-bar"></i>
-                                </span>
-                                <span class="text">Asistencias</span>
-                            </a>
-                        </li>
+                        
 
                         <li class="sidebar-menu__item">
                             <a asp-action="PaymentsSearch" asp-controller="Payments" class="sidebar-menu__link">

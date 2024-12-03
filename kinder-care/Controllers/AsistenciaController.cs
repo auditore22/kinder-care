@@ -160,7 +160,7 @@ namespace kinder_care.Controllers
             return RedirectToAction("ListaNinos");
         }
 
-        public IActionResult HistorialAsistencia(DateTime? fechaInicio, DateTime? fechaFin)
+        public IActionResult ListaAsistencia(DateTime? fechaInicio, DateTime? fechaFin)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var docente = _context.Docentes.FirstOrDefault(d => d.IdUsuario == userId);
@@ -174,6 +174,28 @@ namespace kinder_care.Controllers
                 .Include(a => a.IdNinoNavigation)
                 .Where(a => estudiantes.Contains(a.IdNino)) 
                 .AsQueryable();
+
+
+            if (fechaInicio.HasValue && fechaFin.HasValue)
+            {
+                query = query.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
+            }
+
+            var asistencias = query
+                .OrderByDescending(a => a.Fecha)
+                .ToList();
+
+            ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd");
+            ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd");
+
+            return View(asistencias);
+        }
+
+        public IActionResult ListaAsistencia_Admin(DateTime? fechaInicio, DateTime? fechaFin)
+        {
+            var query = _context.Asistencia
+                    .Include(a => a.IdNinoNavigation)
+                    .AsQueryable();
 
 
             if (fechaInicio.HasValue && fechaFin.HasValue)
