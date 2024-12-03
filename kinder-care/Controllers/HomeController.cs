@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using kinder_care.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +13,10 @@ public class HomeController(ILogger<HomeController> logger) : Controller
 
     public IActionResult Index()
     {
+        var currentUserId = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault();
+        int parsedCurrentUserId = int.TryParse(currentUserId, out int result) ? result : -1; // Convierte a entero o usa un valor no válido (-1) si falla
+        
+        ViewBag.UserId = parsedCurrentUserId;
         return View();
     }
     
