@@ -94,7 +94,7 @@ namespace kinder_care.Controllers
         }
 
 
-        //======================================================[VISTA EDIT]==========================================================================================
+        //======================================================[FUNCION EDIT]==========================================================================================
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -131,7 +131,7 @@ namespace kinder_care.Controllers
             return RedirectToAction("Index", "Usuarios");
         }
 
-        //======================================================[VISTA DELETE]==========================================================================================
+        //======================================================[FUNCION DELETE]==========================================================================================
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -148,24 +148,6 @@ namespace kinder_care.Controllers
             }
 
             return View(usuarios);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var usuarios = await _context.Usuarios.FindAsync(id);
-            if (usuarios != null)
-            {
-                var docentes = await _context.Docentes.Where(d => d.IdUsuario == id).ToListAsync(); 
-                if (docentes.Any())
-                {
-                    _context.Docentes.RemoveRange(docentes); 
-                }
-                _context.Usuarios.Remove(usuarios);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction(nameof(Index));
-        }
+        } 
     }
 }

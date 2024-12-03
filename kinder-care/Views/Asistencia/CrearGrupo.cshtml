@@ -4,7 +4,7 @@
 <div class="breadcrumb mb-24">
     <ul class="flex-align gap-4">
         <li>
-            <a asp-action="ListaNinos" asp-controller="Asistencia" class="text-gray-200 fw-normal text-15 hover-text-main-600">Home</a>
+            <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Inicio</a>
         </li>
         <li>
             <span class="text-gray-500 fw-normal d-flex">
@@ -12,12 +12,19 @@
             </span>
         </li>
         <li>
-            <span class="text-main-600 fw-normal text-15">Administracion del grupo</span>
+            <a asp-action="ListaNinos" asp-controller="Asistencia" class="text-gray-200 fw-normal text-15 hover-text-main-600">Estudiantes</a>
+        </li>
+        <li>
+            <span class="text-gray-500 fw-normal d-flex">
+                <i class="ph ph-caret-right"></i>
+            </span>
+        </li>
+        <li>
+            <span class="text-main-600 fw-normal text-15">Crear Grupo</span>
         </li>
     </ul>
 </div>
 <!-- Breadcrumb End -->
-
 <div class="card overflow-hidden">
     <div class="card-body p-0">
         <div class="cover-img position-relative">
@@ -48,6 +55,15 @@
     </div>
 </div>
 
+
+@if (Model.Ninos == null || !Model.Ninos.Any())
+{
+    <div class="alert alert-info">
+        <strong>No hay estudiantes disponibles para asignar al grupo.</strong>
+    </div>
+}
+else
+{
 <div class="tab-content" id="pills-tabContent">
     <!-- My Details Tab start -->
     <div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab" tabindex="0">
@@ -57,7 +73,7 @@
                 <p class="text-gray-600 text-15">Seleccione los estudiantes para su grupo.</p>
             </div>
             <div class="card-body p-0 overflow-x-auto">
-                <form asp-action="Relacion" method="post">
+                <form asp-action="CrearGrupo" method="post">
                     <input type="hidden" asp-for="IdDocente" />
 
                     <table id="studentTable" class="table table-striped">
@@ -95,10 +111,11 @@
 
                     <div class="d-flex justify-content-end mt-3 gap-2">
                         <a asp-action="ListaNinos" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancelar</a>
-                        <button type="submit" class="btn btn-main rounded-pill py-9">Crear Relación</button>
+                        <button type="submit" class="btn btn-main rounded-pill py-9">Confirmar</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+}

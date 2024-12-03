@@ -106,6 +106,9 @@
 
                         <td>
                             <a asp-action="Details" asp-route-id="@usuario.IdUsuario" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
+                            <form asp-action="Delete" asp-route-id="@usuario.IdUsuario" method="post" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
+                                <button type="submit" class="btn btn-danger py-2 px-14 rounded-pill">Eliminar</button>
+                            </form>
                         </td>
                     </tr>
                 }
