@@ -1,0 +1,142 @@
+@model kinder_care.Models.Actividades
+
+<!-- Breadcrumb Start -->
+<div class="breadcrumb mb-24">
+    <ul class="flex-align gap-4">
+        <li>
+            <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Home</a>
+        </li>
+        <li>
+            <span class="text-gray-500 fw-normal d-flex">
+                <i class="ph ph-caret-right"></i>
+            </span>
+        </li>
+        <li>
+            <span class="text-main-600 fw-normal text-15">Detalles del Evento</span>
+        </li>
+    </ul>
+</div>
+<!-- Breadcrumb End -->
+
+<div class="card overflow-hidden">
+    <div class="card-body p-0">
+        <div class="cover-img position-relative">
+           <div class="avatar-upload">
+                <input type="file" id="coverImageUpload" accept=".png, .jpg, .jpeg">
+                <div class="avatar-preview">
+                    <div id="coverImagePreview" style="background: rgb(45, 156, 219); background: linear-gradient(180deg, rgba(45, 156, 219, 0.5) 0%, rgba(45, 156, 219, 0) 70%);">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="setting-profile px-24">
+            <div class="d-flex align-items-end flex-wrap mb-32 gap-24">
+                <img src="~/images/icons/calendar.png" alt="Event Icon" class="w-120 h-120 rounded-circle">
+                <div>
+                    <h4 class="mb-8">Evento ID: @Model.IdActividad</h4>
+                    <div class="setting-profile__infos flex-align flex-wrap gap-16">
+                        <div class="flex-align gap-6">
+                            <span class="text-gray-600 d-flex text-lg">
+                                <i class="ph ph-calendar"></i>
+                            </span>
+                            <span class="text-gray-600 d-flex text-15">Fecha: @Model.Fecha.ToString("yyyy-MM-dd HH:mm")</span>
+                        </div>
+                        <div class="flex-align gap-6">
+                            <span class="text-gray-600 d-flex text-lg">
+                                <i class="ph ph-map-pin"></i>
+                            </span>
+                            <span class="text-gray-600 d-flex text-15">Lugar: @Model.Lugar</span>
+                        </div>
+                        <div class="flex-align gap-6">
+                            <span class="text-gray-600 d-flex text-lg">
+                                <i class="ph ph-list"></i>
+                            </span>
+                            <span class="text-gray-600 d-flex text-15">Tipo: @Model.IdTipoActividadNavigation.NombreTipoActividad</span>
+                        </div>
+                        <div class="flex-align gap-6">
+                            <span class="text-gray-600 d-flex text-lg">
+                                <i class="ph ph-note"></i>
+                            </span>
+                            <span class="text-gray-600 d-flex text-15">Descripción: @Model.Descripcion</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="nav common-tab style-two nav-pills mb-0" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-edit-tab" data-bs-toggle="pill" data-bs-target="#pills-edit" type="button" role="tab" aria-controls="pills-edit" aria-selected="false">Editar</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-delete-tab" data-bs-toggle="pill" data-bs-target="#pills-delete" type="button" role="tab" aria-controls="pills-delete" aria-selected="false">Eliminar</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="tab-content" id="pills-tabContent">
+    <!-- Editar Evento -->
+    <div class="tab-pane fade show active" id="pills-edit" role="tabpanel" aria-labelledby="pills-edit-tab">
+        <div class="card mt-24">
+            <div class="card-body">
+                <h4 class="mb-4">Editar Evento</h4>
+
+                @if (ViewBag.ErrorMessage != null)
+                {
+                <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+                }
+                
+                <form asp-action="EditEvent" asp-controller="Events" method="post">
+                    <input type="hidden" asp-for="IdActividad" />
+
+                    <div class="mb-4">
+                        <label for="Fecha" class="form-label">Fecha y Hora</label>
+                        <input type="datetime-local" class="form-control" asp-for="Fecha" value="@Model.Fecha.ToString("yyyy-MM-ddTHH:mm")" />
+                        <span asp-validation-for="Fecha" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="Lugar" class="form-label">Lugar</label>
+                        <input type="text" class="form-control" asp-for="Lugar" />
+                        <span asp-validation-for="Lugar" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="Descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" asp-for="Descripcion"></textarea>
+                        <span asp-validation-for="Descripcion" class="text-danger"></span>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="submit" class="btn btn-main rounded-pill">Guardar Cambios</button>
+                        <a href="@Url.Action("ManageEvents", "Events")" class="btn btn-secondary rounded-pill">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Eliminar Evento -->
+    <div class="tab-pane fade" id="pills-delete" role="tabpanel" aria-labelledby="pills-delete-tab">
+        <div class="card mt-24">
+            <div class="card-body">
+                <h4>¿Estás seguro de que deseas eliminar este evento?</h4>
+                <form asp-action="DeleteEvent" asp-route-id="@Model.IdActividad" method="post">
+                    <input type="hidden" asp-for="IdActividad"/>
+                    <button type="submit" class="btn btn-danger rounded-pill">Eliminar</button>
+                    <a href="@Url.Action("ManageEvents", "Events")" class="btn btn-secondary rounded-pill">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Botón de Volver -->
+<div class="mt-24">
+    <a href="@Url.Action("ManageEvents", "Events")" class="btn btn-main rounded-pill">
+        <i class="fas fa-arrow-left me-2"></i> Volver a la Gestión de Eventos
+    </a>
+</div>
