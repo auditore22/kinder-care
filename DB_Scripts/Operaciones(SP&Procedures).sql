@@ -1,45 +1,82 @@
 -------------------------------------------- SPs --------------------------------------------
 -- SP para la creación de usuarios (Listo)
 CREATE PROCEDURE GestionarUsuario @IdUsuario INT = NULL,
-                                  @Cedula VARCHAR(20),
-                                  @Nombre VARCHAR(100),
-                                  @Contrasena VARCHAR(100), -- Contraseña ya hasheada
-                                  @Num_Telefono INT,
-                                  @Direccion VARCHAR(256),
-                                  @CorreoElectronico VARCHAR(100),
-                                  @IdRol INT
+                                  @Cedula VARCHAR(20) = NULL,
+                                  @Nombre VARCHAR(100) = NULL,
+                                  @Num_Telefono INT = NULL,
+                                  @Direccion VARCHAR(256) = NULL,
+                                  @CorreoElectronico VARCHAR(100) = NULL,
+                                  @IdRol INT = NULL,
+                                  @Activo BIT = 1,
+                                  @Accion NVARCHAR(10) = 'AGREGAR' -- Puede ser 'AGREGAR', 'ACTUALIZAR' o 'ELIMINAR'
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF @IdUsuario IS NULL
+    IF @Accion = 'AGREGAR'
         BEGIN
-            -- Validar si el nombre de usuario ya existe antes de insertar
-            IF EXISTS (SELECT 1 FROM usuarios WHERE nombre = @Nombre)
+            IF @Cedula IS NULL OR @Nombre IS NULL OR @Num_Telefono IS NULL OR
+               @Direccion IS NULL OR @CorreoElectronico IS NULL OR @IdRol IS NULL
+                BEGIN
+                    RAISERROR ('Todos los campos son obligatorios para agregar un nuevo usuario.', 16, 1);
+                    RETURN;
+                END
+
+            -- Validar si el email ya existe antes de insertar
+            IF EXISTS (SELECT 1 FROM usuarios WHERE correo_electronico = @CorreoElectronico)
                 BEGIN
                     RAISERROR ('El nombre de usuario ya existe.', 16, 1);
+                    RETURN;
                 END
 
             -- Inserción de nuevo usuario
-            INSERT INTO usuarios (cedula, nombre, contrasena_hash, num_Telefono, direccion, correo_electronico, id_rol,
-                                  fecha_creacion, ultima_actualizacion)
-            VALUES (@Cedula, @Nombre, @Contrasena, @Num_Telefono, @Direccion, @CorreoElectronico, @IdRol, GETDATE(),
-                    GETDATE());
+            INSERT INTO usuarios (cedula, nombre, num_Telefono, direccion, correo_electronico, id_rol,
+                                  fecha_creacion, ultima_actualizacion, activo)
+            VALUES (@Cedula, @Nombre, @Num_Telefono, @Direccion, @CorreoElectronico, @IdRol,
+                    GETDATE(), GETDATE(), @Activo);
+
+            RETURN;
         END
     ELSE
-        BEGIN
-            -- Actualización de usuario existente
-            UPDATE usuarios
-            SET cedula               = @Cedula,
-                nombre               = @Nombre,
-                contrasena_hash      = @Contrasena,
-                num_Telefono         = @Num_Telefono,
-                direccion            = @Direccion,
-                correo_electronico   = @CorreoElectronico,
-                id_rol               = @IdRol,
-                ultima_actualizacion = GETDATE()
-            WHERE id_Usuario = @IdUsuario;
-        END
+        IF @Accion = 'ACTUALIZAR' AND @IdUsuario IS NOT NULL
+            BEGIN
+                IF @Cedula IS NULL OR @Nombre IS NULL OR @Num_Telefono IS NULL OR
+                   @Direccion IS NULL OR @CorreoElectronico IS NULL OR @IdRol IS NULL
+                    BEGIN
+                        RAISERROR ('Todos los campos son obligatorios para actualizar un usuario.', 16, 1);
+                        RETURN;
+                    END
+
+                -- Actualización de usuario existente
+                UPDATE usuarios
+                SET cedula               = @Cedula,
+                    nombre               = @Nombre,
+                    num_Telefono         = @Num_Telefono,
+                    direccion            = @Direccion,
+                    correo_electronico   = @CorreoElectronico,
+                    id_rol               = @IdRol,
+                    ultima_actualizacion = GETDATE(),
+                    activo               = @Activo
+                WHERE id_Usuario = @IdUsuario;
+
+                RETURN;
+            END
+        ELSE
+            IF @Accion = 'ELIMINAR' AND @IdUsuario IS NOT NULL
+                BEGIN
+                    -- Eliminación lógica: marcar el registro como inactivo
+                    UPDATE usuarios
+                    SET activo               = 0,
+                        ultima_actualizacion = GETDATE()
+                    WHERE id_Usuario = @IdUsuario;
+
+                    RETURN;
+                END
+            ELSE
+                BEGIN
+                    RAISERROR ('Acción no válida o parámetros incompletos.', 16, 1);
+                    RETURN;
+                END
 END;
 GO
 
