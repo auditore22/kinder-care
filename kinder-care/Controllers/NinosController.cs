@@ -225,6 +225,81 @@ public class NinosController : Controller
         return View(nino);
     }
 
+    public async Task<IActionResult> Details_Admin(int? id, DateTime? fechaInicio, DateTime? fechaFin)
+    {
+        if (id == null) return NotFound();
+
+        var nino = await _context.Ninos
+            .Include(n => n.ProgresoAcademico)          // Progreso académico
+            .Include(n => n.ObservacionesDocentes)      // Observaciones de los docentes
+            .Include(n => n.Asistencia)                 // Asistencia
+            .Include(n => n.RelNinoAlergia)             // Alergias
+            .ThenInclude(ra => ra.Alergia)
+            .Include(n => n.RelNinoMedicamento)         // Medicamentos
+            .ThenInclude(rm => rm.Medicamento)
+            .Include(n => n.RelNinoCondicion)           // Condiciones médicas
+            .ThenInclude(rc => rc.Condicion)
+            .Include(n => n.RelNinoContactoEmergencia)  // Contactos de emergencia
+            .ThenInclude(re => re.ContactoEmergencia)
+            .Include(n => n.RelNinoTarea)
+            .ThenInclude(rt => rt.Tareas)
+            .Where(n => n.IdNino == id)
+            .FirstOrDefaultAsync();
+
+        if (nino == null) return NotFound();
+
+        // Filtrar las tareas por estado
+        var tareasEnProceso = nino.RelNinoTarea?
+            .Where(rt => rt.Tareas.Activo && rt.Tareas.Calificacion == 0)
+            .Select(rt => rt.Tareas)
+            .ToList() ?? new List<Tareas>();
+
+        var tareasCompletadas = nino.RelNinoTarea?
+            .Where(rt => rt.Tareas.Activo && rt.Tareas.Calificacion > 0)
+            .Select(rt => rt.Tareas)
+            .ToList() ?? new List<Tareas>();
+
+        // Pasar las tareas al ViewBag      
+        ViewBag.TareasEnProceso = tareasEnProceso;
+        ViewBag.TareasCompletadas = tareasCompletadas;
+
+        // Pasar todas las opciones disponibles a la vista
+        ViewBag.Asistencias = await _context.Asistencia.ToListAsync();
+        ViewBag.Alergias = await _context.Alergias.ToListAsync();
+        ViewBag.Medicamentos = await _context.Medicamentos.ToListAsync();
+        ViewBag.CondicionesMedicas = await _context.CondicionesMedicas.ToListAsync();
+
+        // Obtener contactos de emergencia relacionados
+        var contactosRelacionados = nino.RelNinoContactoEmergencia
+            .Select(r => r.ContactoEmergencia)
+            .ToList();
+
+        ViewBag.ContactosEmergencia = contactosRelacionados;
+
+        var asistenciaNino = _context.Asistencia
+            .Where(a => a.IdNino == id)
+            .AsQueryable();
+
+        if (fechaInicio.HasValue && fechaFin.HasValue)
+        {
+            asistenciaNino = asistenciaNino.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
+        }
+
+        var asistencias = await asistenciaNino.ToListAsync();
+
+        nino.Asistencia = asistencias;
+
+        ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd");
+        ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd");
+
+        // Inicializa ContactosExistentes como un diccionario vacío si no hay contactos
+        ViewBag.ContactosExistentes = contactosRelacionados.Any()
+            ? contactosRelacionados.ToDictionary(c => c.IdContactoEmergencia)
+            : new Dictionary<int, ContactosEmergencia>();
+
+        return View(nino);
+    }
+
     /*[HttpGet]
     public async Task<IActionResult> Details_Tareas(int id_nino, int id_tarea)
     {

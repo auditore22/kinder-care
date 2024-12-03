@@ -44,8 +44,16 @@ namespace kinder_care.Controllers
                 }
                 return View(estudiantes);
             }
-            ViewBag.Mensaje = "No tienes acceso a esta información.";
             return View(new List<Ninos>());
+        }
+
+        public async Task<IActionResult> ListaNinos_Administracion()
+        {
+            var ninos = await _context.Ninos
+                .Include(r => r.RelDocenteNinoMateria)
+                .ThenInclude(d => d.IdDocenteNavigation)
+                .ToListAsync();
+            return View(ninos);
         }
 
         [HttpGet]
@@ -120,7 +128,7 @@ namespace kinder_care.Controllers
                 }
                 return View(estudiantes);
             }
-            return View();
+            return View(new List<Ninos>());
         }
 
         [HttpPost]
@@ -254,6 +262,23 @@ namespace kinder_care.Controllers
 
             var pdfBytes = PdfDoc.GeneratePdf();
             return File(pdfBytes, "application/pdf", "Reporte_Asistencia.pdf");
+        }
+
+        //=============================[Eliminar de Grupos]=============================
+        [HttpPost]
+        public async Task<IActionResult> EliminarRelacion(int idNino)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
+
+            var relacion = await _context.RelDocenteNinoMateria
+                .FirstOrDefaultAsync(r => r.IdDocente == docente.IdDocente && r.IdNino == idNino);
+
+            _context.RelDocenteNinoMateria.Remove(relacion);
+            await _context.SaveChangesAsync();
+
+            ViewBag.Mensaje = "El estudiante fue eliminado del grupo.";
+            return RedirectToAction("ListaNinos");
         }
     }
 }

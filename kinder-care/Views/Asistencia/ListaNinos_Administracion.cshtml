@@ -44,12 +44,6 @@
                 <option value="json">JSON</option>
             </select>
         </div>
-        <a asp-action="CrearGrupo" asp-controller="Asistencia" class="btn btn-main">
-            Crear un Grupo
-        </a>
-        <a asp-action="ControlAsistencias" asp-controller="Asistencia" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 hover-bg-main-600 hover-text-white">
-            Realizar una Asistencia
-        </a>
     </div>
     <!-- Breadcrumb Right End -->
 </div>
@@ -66,35 +60,46 @@
                         <th class="h6 text-gray-300">Estudiante</th>
                         <th class="h6 text-gray-300">Fecha de Nacimiento</th>
                         <th class="h6 text-gray-300">Póliza</th>
+                        <th class="h6 text-gray-300">Grupo</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var estudiante in Model)
+                    @foreach (var nino in Model)
                     {
                         <tr>
                             <td>
                                 <div class="flex-align gap-8">
                                     <img src="~/images/icons/baby_1_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
-                                    <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.IdNino</span>
+                                    <span class="h6 mb-0 fw-medium text-gray-300">@nino.IdNino</span>
                                 </div>
                             </td>
                             <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.Cedula</span>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@nino.Cedula</span>
                             </td>
                             <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.NombreNino</span>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@nino.NombreNino</span>
                             </td>
                             <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.FechaNacimiento.ToString("dd/MM/yyyy")</span>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@nino.FechaNacimiento.ToString("dd/MM/yyyy")</span>
                             </td>
                             <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.Poliza</span>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@nino.Poliza</span>
                             </td>
                             <td>
-                                <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@estudiante.IdNino" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
-                                <form asp-action="EliminarRelacion" asp-route-idNino="@estudiante.IdNino" method="post" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta relación?');">
-                                    <button type="submit" class="btn btn-danger py-2 px-14 rounded-pill">Eliminar</button>
-                                </form>
+                                @foreach (var relacion in nino.RelDocenteNinoMateria)
+                                {
+                                    @if (@relacion.IdDocenteNavigation.GrupoAsignado == null)
+                                    {
+                                        <span class="h6 mb-0 fw-medium text-gray-300">Sin grupo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="h6 mb-0 fw-medium text-gray-300">@relacion.IdDocenteNavigation.GrupoAsignado</span>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Details_Admin" asp-controller="Ninos" asp-route-id="@nino.IdNino" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
                             </td>
                         </tr>
                     }
@@ -106,7 +111,7 @@
 else
 {
     <div class="alert alert-info">
-        @ViewBag.Mensaje 
+        @ViewBag.Mensaje
     </div>
 }
 
