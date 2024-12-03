@@ -1,5 +1,4 @@
 ﻿<!-- ============================ Sidebar Start ============================ -->
-
 <aside class="sidebar">
     <!-- sidebar close btn -->
     <button type="button"
@@ -25,27 +24,7 @@
                     </a>
                 </li>
                 <li class="sidebar-menu__item has-dropdown">
-                    @*<a href="javascript:void(0)" class="sidebar-menu__link">
-                        <span class="icon">
-                            <i class="ph ph-graduation-cap"></i>
-                        </span>
-                        <span class="text">Matrículas</span>
-                    </a>
-                    <!-- Submenu start -->
-                    <ul class="sidebar-submenu">
-                        <li class="sidebar-submenu__item">
-                            <a asp-action="StudentCourses" asp-controller="Enrollment" class="sidebar-submenu__link">Student
-                                Courses</a>
-                        </li>
-                        <li class="sidebar-submenu__item">
-                            <a asp-action="MentorCourses" asp-controller="Enrollment" class="sidebar-submenu__link">Mentor
-                                Courses</a>
-                        </li>
-                        <li class="sidebar-submenu__item">
-                            <a asp-action="CreateCourse" asp-controller="Enrollment" class="sidebar-submenu__link">Create
-                                Course</a>
-                        </li>
-                    </ul>*@
+
                     <!-- Submenu End -->
                 </li>
                 @{
@@ -59,7 +38,7 @@
                                 <span class="text">Usuarios</span>
                             </a>
                         </li>
-                        
+
                         <li class="sidebar-menu__item">
                             <a asp-action="Index" asp-controller="Docentes" class="sidebar-menu__link">
                                 <span class="icon">
@@ -69,7 +48,7 @@
                             </a>
                         </li>
                     }
-                    
+
                     if (ViewBag.RoleName == "Administrador" || ViewBag.RoleName == "Docente")
                     {
                         <li class="sidebar-menu__item">
@@ -98,7 +77,7 @@
                                 <span class="text">Asistencias</span>
                             </a>
                         </li>
-                        
+
                         <li class="sidebar-menu__item">
                             <a asp-action="PaymentsSearch" asp-controller="Payments" class="sidebar-menu__link">
                                 <span class="icon">
@@ -108,7 +87,7 @@
                             </a>
                         </li>
                     }
-                    
+
                     if (ViewBag.RoleName == "Padre")
                     {
                         <li class="sidebar-menu__item">
@@ -119,17 +98,8 @@
                                 <span class="text">Hijos</span>
                             </a>
                         </li>
-
-                        @*<li class="sidebar-menu__item">
-                            <a asp-action="ManageRecords" asp-controller="Users" class="sidebar-menu__link">
-                                <span class="icon">
-                                    <i class="ph ph-clipboard-text"></i>
-                                </span>
-                                <span class="text">Expedientes</span>
-                            </a>
-                        </li>*@
                     }
-                    
+
                     <li class="sidebar-menu__item">
                         <a asp-action="ManageEvents" asp-controller="Events" class="sidebar-menu__link">
                         <span class="icon">
@@ -154,7 +124,7 @@
                         class="text-gray-300 text-sm px-20 pt-20 fw-semibold border-top border-gray-100 d-block text-uppercase">Ajustes</span>
                 </li>
                 <li class="sidebar-menu__item">
-                    <a asp-action="UserProfile" asp-controller="Configuration" class="sidebar-menu__link">
+                    <a asp-action="Index" asp-route-id="@ViewBag.UserId" asp-controller="UserProfile" class="sidebar-menu__link">
                         <span class="icon">
                             <i class="ph ph-gear"></i>
                         </span>
