@@ -42,6 +42,7 @@ public class ConfigurationController : Controller
                 return usuario ?? throw new Exception("Usuario no encontrado");
             }
         }
+
         // Si no está autenticado, retornamos null o lanzamos una excepción.
         throw new Exception("Usuario no autenticado");
     }
@@ -66,67 +67,67 @@ public class ConfigurationController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
-    
-[HttpPost]
-public IActionResult SaveProfile(ChangePasswordViewModel model)
-{
-    _logger.LogInformation("Entrando al método SaveProfile.");
 
-    if (!ModelState.IsValid)
+    [HttpPost]
+    public IActionResult SaveProfile(ChangePasswordViewModel model)
     {
-        _logger.LogWarning("El modelo no es válido.");
-        return View("UserProfile", model);
-    }
+        _logger.LogInformation("Entrando al método SaveProfile.");
 
-    try
-    {
-        var usuario = ObtenerUsuarioActual();
-        _logger.LogInformation("Usuario obtenido correctamente: {UserId}", usuario.IdUsuario);
-
-        // Verificar la contraseña actual
-        var passwordHasher = new PasswordHasher<Usuarios>();
-        var passwordVerificationResult = passwordHasher.VerifyHashedPassword(usuario, usuario.ContrasenaHash, model.CurrentPassword);
-
-        if (passwordVerificationResult == PasswordVerificationResult.Failed)
+        if (!ModelState.IsValid)
         {
-            _logger.LogWarning("La contraseña actual es incorrecta.");
-            ModelState.AddModelError("CurrentPassword", "La contraseña actual es incorrecta.");
+            _logger.LogWarning("El modelo no es válido.");
             return View("UserProfile", model);
         }
 
-        // Validar nueva contraseña
-        var regex = new System.Text.RegularExpressions.Regex(@"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,25}$");
-        if (!regex.IsMatch(model.NewPassword))
+        try
         {
-            _logger.LogWarning("La nueva contraseña no cumple con los requisitos.");
-            ModelState.AddModelError("NewPassword", "La nueva contraseña debe tener entre 8 y 25 caracteres, incluyendo al menos una letra y un número.");
+            var usuario = ObtenerUsuarioActual();
+            _logger.LogInformation("Usuario obtenido correctamente: {UserId}", usuario.IdUsuario);
+
+            // Verificar la contraseña actual
+            var passwordHasher = new PasswordHasher<Usuarios>();
+            var passwordVerificationResult =
+                passwordHasher.VerifyHashedPassword(usuario, usuario.ContrasenaHash, model.CurrentPassword);
+
+            if (passwordVerificationResult == PasswordVerificationResult.Failed)
+            {
+                _logger.LogWarning("La contraseña actual es incorrecta.");
+                ModelState.AddModelError("CurrentPassword", "La contraseña actual es incorrecta.");
+                return View("UserProfile", model);
+            }
+
+            // Validar nueva contraseña
+            var regex = new System.Text.RegularExpressions.Regex(@"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,25}$");
+            if (!regex.IsMatch(model.NewPassword))
+            {
+                _logger.LogWarning("La nueva contraseña no cumple con los requisitos.");
+                ModelState.AddModelError("NewPassword",
+                    "La nueva contraseña debe tener entre 8 y 25 caracteres, incluyendo al menos una letra y un número.");
+                return View("UserProfile", model);
+            }
+
+            // Validar que la nueva contraseña y su confirmación coincidan
+            if (model.NewPassword != model.ConfirmPassword)
+            {
+                _logger.LogWarning("La nueva contraseña y su confirmación no coinciden.");
+                ModelState.AddModelError("ConfirmPassword", "La nueva contraseña y su confirmación no coinciden.");
+                return View("UserProfile", model);
+            }
+
+            // Actualizar la contraseña
+            usuario.ContrasenaHash = passwordHasher.HashPassword(usuario, model.NewPassword);
+            _context.Usuarios.Update(usuario);
+            _context.SaveChanges();
+
+            _logger.LogInformation("Contraseña cambiada exitosamente.");
+            ViewBag.SuccessMessage = "Su contraseña ha sido cambiada exitosamente.";
             return View("UserProfile", model);
         }
-
-        // Validar que la nueva contraseña y su confirmación coincidan
-        if (model.NewPassword != model.ConfirmPassword)
+        catch (Exception ex)
         {
-            _logger.LogWarning("La nueva contraseña y su confirmación no coinciden.");
-            ModelState.AddModelError("ConfirmPassword", "La nueva contraseña y su confirmación no coinciden.");
+            _logger.LogError(ex, "Error al cambiar la contraseña.");
+            ModelState.AddModelError("", "Hubo un error al cambiar la contraseña. Intente de nuevo más tarde.");
             return View("UserProfile", model);
         }
-
-        // Actualizar la contraseña
-        usuario.ContrasenaHash = passwordHasher.HashPassword(usuario, model.NewPassword);
-        _context.Usuarios.Update(usuario);
-        _context.SaveChanges();
-
-        _logger.LogInformation("Contraseña cambiada exitosamente.");
-        ViewBag.SuccessMessage = "Su contraseña ha sido cambiada exitosamente.";
-        return View("UserProfile", model);
     }
-    catch (Exception ex)
-    {
-        _logger.LogError(ex, "Error al cambiar la contraseña.");
-        ModelState.AddModelError("", "Hubo un error al cambiar la contraseña. Intente de nuevo más tarde.");
-        return View("UserProfile", model);
-    }
-}
-
-
 }
