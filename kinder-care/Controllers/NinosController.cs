@@ -300,34 +300,6 @@ public class NinosController : Controller
         return View(nino);
     }
 
-    /*[HttpGet]
-    public async Task<IActionResult> Details_Tareas(int id_nino, int id_tarea)
-    {
-        if (id_nino == null && id_tarea == null) return NotFound();
-
-        var VerificarNino = await _context.Ninos.FindAsync(id_nino);
-        var VerificarTarea = await _context.Tareas.FindAsync(id_tarea);
-        
-        if (VerificarNino == null || VerificarTarea == null) return NotFound();
-        
-        var VerificarRel = _context.RelNinoTarea.FindAsync(VerificarNino.IdNino, VerificarTarea.IdTarea);
-        
-        if (VerificarRel == null)
-        {
-            return NotFound();
-        }
-        else
-        {
-            // var DetallesTarea = await _context.RelNinoTarea.Include(t => t.Tareas).Where(tn => tn.IdNino == VerificarNino.IdNino && tn.IdTarea == VerificarTarea.IdTarea).FirstOrDefaultAsync();
-            ViewBag.DetallesTarea = await _context.RelNinoTarea.Include(t => t.Tareas).Where(tn => tn.IdNino == VerificarNino.IdNino && tn.IdTarea == VerificarTarea.IdTarea).FirstOrDefaultAsync();
-            ViewBag.NinoTarea = VerificarNino;
-            ViewBag.ProfesorTarea = await _context.Docentes.FindAsync(VerificarTarea.IdProfesor);
-        }
-        
-        return View();
-    }*/
-
-
     [HttpGet]
     public async Task<IActionResult> Details_Tareas(int id_nino, int id_tarea)
     {
@@ -387,7 +359,7 @@ public class NinosController : Controller
 
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("Index", "Ninos");
+        return RedirectToAction("Details", "Ninos", new {id = id});
     }
 
     [HttpPost]
@@ -483,7 +455,7 @@ public class NinosController : Controller
                 medicamentoId);
 
         await _context.SaveChangesAsync();
-        return RedirectToAction("Index", "Ninos");
+        return RedirectToAction("Details", "Ninos", new {id = id});
     }
 
     [HttpPost]
@@ -509,7 +481,7 @@ public class NinosController : Controller
                     contacto.Direccion, contacto.IdContactoEmergencia, "ACTUALIZAR");
 
         await _context.SaveChangesAsync();
-        return RedirectToAction("Index", "Ninos");
+        return RedirectToAction("Details", "Ninos", new {Id = IdNino});
     }
 
     [HttpPost]
@@ -525,6 +497,6 @@ public class NinosController : Controller
                 IdNino, NewNombre, NewTelefono, NewRelacion, NewDireccion, null, "AGREGAR");
 
         await _context.SaveChangesAsync();
-        return RedirectToAction("Index", "Ninos");
+        return RedirectToAction("Details", "Ninos", new {Id = IdNino});
     }
 }

@@ -98,10 +98,7 @@ namespace kinder_care.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var usuarios = await _context.Usuarios
                 .Include(u => u.IdRolNavigation)
@@ -110,7 +107,6 @@ namespace kinder_care.Controllers
             ViewData["IdRol"] = new SelectList(_context.Roles, "IdRol", "Nombre", usuarios.IdRol);
             return View(usuarios);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Edit(int id, string Nombre, string Direccion, string CorreoElectronico, bool Activo, int IdRol)
