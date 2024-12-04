@@ -47,7 +47,7 @@ public class ConfigurationController : Controller
         throw new Exception("Usuario no autenticado");
     }
 
-    public ActionResult UserProfile()
+    public ActionResult ChangePassword()
     {
         try
         {
@@ -76,7 +76,7 @@ public class ConfigurationController : Controller
         if (!ModelState.IsValid)
         {
             _logger.LogWarning("El modelo no es válido.");
-            return View("UserProfile", model);
+            return View("ChangePassword", model);
         }
 
         try
@@ -93,7 +93,7 @@ public class ConfigurationController : Controller
             {
                 _logger.LogWarning("La contraseña actual es incorrecta.");
                 ModelState.AddModelError("CurrentPassword", "La contraseña actual es incorrecta.");
-                return View("UserProfile", model);
+                return View("ChangePassword", model);
             }
 
             // Validar nueva contraseña
@@ -103,7 +103,7 @@ public class ConfigurationController : Controller
                 _logger.LogWarning("La nueva contraseña no cumple con los requisitos.");
                 ModelState.AddModelError("NewPassword",
                     "La nueva contraseña debe tener entre 8 y 25 caracteres, incluyendo al menos una letra y un número.");
-                return View("UserProfile", model);
+                return View("ChangePassword", model);
             }
 
             // Validar que la nueva contraseña y su confirmación coincidan
@@ -111,7 +111,7 @@ public class ConfigurationController : Controller
             {
                 _logger.LogWarning("La nueva contraseña y su confirmación no coinciden.");
                 ModelState.AddModelError("ConfirmPassword", "La nueva contraseña y su confirmación no coinciden.");
-                return View("UserProfile", model);
+                return View("ChangePassword", model);
             }
 
             // Actualizar la contraseña
@@ -121,13 +121,13 @@ public class ConfigurationController : Controller
 
             _logger.LogInformation("Contraseña cambiada exitosamente.");
             ViewBag.SuccessMessage = "Su contraseña ha sido cambiada exitosamente.";
-            return View("UserProfile", model);
+            return View("ChangePassword", model);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error al cambiar la contraseña.");
             ModelState.AddModelError("", "Hubo un error al cambiar la contraseña. Intente de nuevo más tarde.");
-            return View("UserProfile", model);
+            return View("ChangePassword", model);
         }
     }
 }
