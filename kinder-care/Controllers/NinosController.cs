@@ -464,6 +464,16 @@ public class NinosController : Controller
                 medicamentoId);
 
         await _context.SaveChangesAsync();
+        
+        var rolUsuarioLogueado = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
+
+        if (rolUsuarioLogueado == "Administrador")
+        {
+            return RedirectToAction("Details_Admin", "Ninos", new {id = id});
+        }else if (rolUsuarioLogueado == "Docente")
+        {
+            return RedirectToAction("Details_Docente", "Ninos", new {id = id});
+        }
         return RedirectToAction("Details", "Ninos", new {id = id});
     }
 
@@ -490,7 +500,17 @@ public class NinosController : Controller
                     contacto.Direccion, contacto.IdContactoEmergencia, "ACTUALIZAR");
 
         await _context.SaveChangesAsync();
-        return RedirectToAction("Details", "Ninos", new {Id = IdNino});
+        
+        var rolUsuarioLogueado = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
+
+        if (rolUsuarioLogueado == "Administrador")
+        {
+            return RedirectToAction("Details_Admin", "Ninos", new {id = IdNino});
+        }else if (rolUsuarioLogueado == "Docente")
+        {
+            return RedirectToAction("Details_Docente", "Ninos", new {id = IdNino});
+        }
+        return RedirectToAction("Details", "Ninos", new {id = IdNino});
     }
 
     [HttpPost]
@@ -506,6 +526,16 @@ public class NinosController : Controller
                 IdNino, NewNombre, NewTelefono, NewRelacion, NewDireccion, null, "AGREGAR");
 
         await _context.SaveChangesAsync();
-        return RedirectToAction("Details", "Ninos", new {Id = IdNino});
+        
+        var rolUsuarioLogueado = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
+
+        if (rolUsuarioLogueado == "Administrador")
+        {
+            return RedirectToAction("Details_Admin", "Ninos", new {id = IdNino});
+        }else if (rolUsuarioLogueado == "Docente")
+        {
+            return RedirectToAction("Details_Docente", "Ninos", new {id = IdNino});
+        }
+        return RedirectToAction("Details", "Ninos", new {id = IdNino});
     }
 }
