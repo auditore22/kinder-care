@@ -18,12 +18,6 @@ public class PaymentsController : Controller
         _context = context;
     }
 
-    public IActionResult FinanceDetails()
-    {
-        ViewBag.CurrentSection = "FinanceDetails";
-        return View();
-    }
-
     // GET: PaymentsSearch
     [HttpGet]
     public async Task<IActionResult> PaymentsSearch(string searchQuery)
@@ -50,8 +44,14 @@ public class PaymentsController : Controller
     }
     
     // Mostrar la lista de pagos
-    public async Task<IActionResult> ManagePayments()
+    public async Task<IActionResult> ManagePayments(int pageNumber = 1)
     {
+        // Número de registros por página
+        int pageSize = 10;
+        
+        // Total de pagos
+        var totalPagos = await _context.Pagos.CountAsync();
+
         // Obtén solo los usuarios con rol 3 (Padres)
         var padres = await _context.Usuarios
             .Where(u => u.IdRol == 3)
@@ -59,7 +59,7 @@ public class PaymentsController : Controller
 
         // Obtén los niños registrados
         var ninos = await _context.Ninos
-            .Where(n => n.Activo == true) // Asegúrate de que solo se muestren los niños activos
+            .Where(n => n.Activo == true)
             .ToListAsync();
 
         // Obtén los tipos de pago activos
@@ -69,20 +69,30 @@ public class PaymentsController : Controller
 
         // Pasar las listas a la vista
         ViewBag.Padres = new SelectList(padres, "IdUsuario", "Nombre");
-        ViewBag.Ninos =
-            new SelectList(ninos, "IdNino",
-                "NombreCompleto"); // Asegúrate de que "NombreCompleto" sea la propiedad correcta
+        ViewBag.Ninos = new SelectList(ninos, "IdNino", "NombreCompleto");
         ViewBag.TiposPago = new SelectList(tiposPago, "IdTipoPago", "NombreTipoPago");
 
+        // Obtén los pagos y realiza la paginación
         var pagos = await _context.Pagos
             .Include(p => p.Nino)
             .Include(p => p.Padre)
             .Include(p => p.TipoPago)
             .OrderByDescending(p => p.FechaPago) // Ordena por fecha de pago descendente
+            .Skip((pageNumber - 1) * pageSize)  // Salta los registros previos
+            .Take(pageSize)                    // Toma los primeros 10 registros
             .ToListAsync();
+
+        // Cálculo del total de páginas
+        var totalPages = (int)Math.Ceiling(totalPagos / (double)pageSize);
+
+        // Pasar los datos a la vista
+        ViewBag.CurrentPage = pageNumber;
+        ViewBag.TotalPages = totalPages;
+        ViewBag.TotalPagos = totalPagos;
 
         return View(pagos);
     }
+
 
     [HttpGet]
     public async Task<IActionResult> CreatePayment()

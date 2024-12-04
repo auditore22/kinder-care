@@ -1,11 +1,11 @@
-﻿@model IEnumerable<kinder_care.Models.Ninos>
+﻿@model IEnumerable<kinder_care.Models.Asistencia>
 
 <div class="breadcrumb-with-buttons mb-24 flex-between flex-wrap gap-8">
-    <!-- Breadcrumb Start -->
+    <!-- Breadcrumb -->
     <div class="breadcrumb mb-24">
         <ul class="flex-align gap-4">
             <li>
-                <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Home</a>
+                <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Inicio</a>
             </li>
             <li>
                 <span class="text-gray-500 fw-normal d-flex">
@@ -13,73 +13,85 @@
                 </span>
             </li>
             <li>
-                <span class="text-main-600 fw-normal text-15">Asistencias</span>
+                <span class="text-main-600 fw-normal text-15">Historial de Asistencias</span>
             </li>
         </ul>
     </div>
-    <!-- Breadcrumb End -->
-    <!-- Breadcrumb Right Start -->
-    <div class="flex-align gap-8 flex-wrap">
-        <div class="position-relative text-gray-500 flex-align gap-4 text-13">
-            <span class="text-inherit">Sort by: </span>
-            <div class="flex-align text-gray-500 text-13 border border-gray-100 rounded-4 ps-20 focus-border-main-600 bg-white">
-                <span class="text-lg">
-                    <i class="ph ph-funnel-simple"></i>
-                </span>
-                <select class="form-control ps-8 pe-20 py-16 border-0 text-inherit rounded-4 text-center">
-                    <option value="1" selected>Popular</option>
-                    <option value="1">Latest</option>
-                    <option value="1">Trending</option>
-                    <option value="1">Matches</option>
-                </select>
-            </div>
-        </div>
-        <div class="flex-align text-gray-500 text-13 border border-gray-100 rounded-4 ps-20 focus-border-main-600 bg-white">
-            <span class="text-lg">
-                <i class="ph ph-layout"></i>
-            </span>
-            <select class="form-control ps-8 pe-20 py-16 border-0 text-inherit rounded-4 text-center" id="exportOptions">
-                <option value="" selected disabled>Export</option>
-                <option value="csv">CSV</option>
-                <option value="json">JSON</option>
-            </select>
-        </div>
-    </div>
-    <!-- Breadcrumb Right End -->
 </div>
 
-<form asp-action="RegistrarAsistencia" method="post">
-    <div class="card overflow-hidden">
-        <div class="card-body p-0 overflow-x-auto">
-            <table id="studentTable" class="table table-striped">
-                <thead>
+<!-- Formulario de filtros -->
+<form asp-action="ListaAsistencia" method="get" class="card mb-24 p-16">
+    <div class="row">
+        <div class="col-md-4">
+            <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+            <input type="date" name="fechaInicio" id="fechaInicio" class="form-control"
+                   value="@ViewBag.FechaInicio" />
+        </div>
+        <div class="col-md-4">
+            <label for="fechaFin" class="form-label">Fecha Fin</label>
+            <input type="date" name="fechaFin" id="fechaFin" class="form-control"
+                   value="@ViewBag.FechaFin" />
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-main w-100">Filtrar</button>
+        </div>
+    </div>
+</form>
+
+<!-- Tabla de resultados -->
+<div class="card overflow-hidden">
+    <div class="card-body p-0 overflow-x-auto">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="h6 text-gray-300">ID Niño</th>
+                    <th class="h6 text-gray-300">Estudiante</th>
+                    <th class="h6 text-gray-300">Fecha</th>
+                    <th class="h6 text-gray-300">Presente</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
                     <tr>
-                        <th class="h6 text-gray-300">ID Niño</th>
-                        <th class="h6 text-gray-300">Estudiante</th>
-                        <th class="h6 text-gray-300">Presente</th>
+                        <td colspan="4" class="text-center text-gray-500">No se encontraron registros.</td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var estudiante in Model)
+                }
+                else
+                {
+                    @foreach (var asistencia in Model)
                     {
                         <tr>
                             <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.IdNino</span>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.IdNino</span>
                             </td>
                             <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.NombreNino</span>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.IdNinoNavigation.NombreNino</span>
                             </td>
                             <td>
-                                <input type="checkbox" name="estudiantesPresentes" value="@estudiante.IdNino" />
+                                <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.Fecha.ToString("yyyy-MM-dd")</span>
+                            </td>
+                            <td>
+                                <span class="h6 mb-0 fw-medium @(asistencia.Presente ? "text-success" : "text-danger")">
+                                    @(asistencia.Presente ? "Presente" : "Ausente")
+                                </span>
                             </td>
                         </tr>
                     }
-                </tbody>
-            </table>
-        </div>
-    </div>
+                }
+            </tbody>
+        </table>
 
-    <div class="card-footer flex-between flex-wrap">
-        <button type="submit" class="btn btn-main">Registrar Asistencia</button>
     </div>
-</form>
+</div>
+
+<div class="card-footer flex-between flex-wrap">
+    <span class="text-gray-900">Showing 1 to 10 of @Model.Count() entries</span>
+    <ul class="pagination flex-align flex-wrap">
+        <form asp-action="GenerarReportePDF" asp-controller="Asistencia" method="get">
+            <input type="hidden" name="fechaInicio" value="@ViewBag.FechaInicio" />
+            <input type="hidden" name="fechaFin" value="@ViewBag.FechaFin" />
+            <button type="submit" class="btn btn-primary">Generar PDF</button>
+        </form>
+    </ul>
+</div>

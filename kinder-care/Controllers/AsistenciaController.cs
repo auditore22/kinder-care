@@ -44,12 +44,20 @@ namespace kinder_care.Controllers
                 }
                 return View(estudiantes);
             }
-            ViewBag.Mensaje = "No tienes acceso a esta información.";
             return View(new List<Ninos>());
         }
 
+        public async Task<IActionResult> ListaNinos_Administracion()
+        {
+            var ninos = await _context.Ninos
+                .Include(r => r.RelDocenteNinoMateria)
+                .ThenInclude(d => d.IdDocenteNavigation)
+                .ToListAsync();
+            return View(ninos);
+        }
+
         [HttpGet]
-        public async Task<IActionResult> Relacion()
+        public async Task<IActionResult> CrearGrupo()
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
@@ -74,16 +82,10 @@ namespace kinder_care.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Relacion(List<int> Ninos)
+        public async Task<IActionResult> CrearGrupo(List<int> Ninos)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
-
-            if (Ninos == null || !Ninos.Any())
-            {
-                ViewBag.Mensaje = "Se debe escojer al menos un estudiante.";
-                return RedirectToAction("Relacion");
-            }
 
             foreach (var ninoId in Ninos)
             {
@@ -102,7 +104,7 @@ namespace kinder_care.Controllers
         }
 
         //===========================[Asistencia de Estudiantes]===========================
-        public async Task<IActionResult> ListaAsistencia()
+        public async Task<IActionResult> ControlAsistencias()
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var userRole = User.FindFirstValue(ClaimTypes.Role);
@@ -119,16 +121,18 @@ namespace kinder_care.Controllers
                         (rel, nino) => nino)
                     .ToListAsync();
 
-                if (estudiantes.Any()) return View(estudiantes);
-
-                return View();
+                if (!estudiantes.Any())
+                {
+                    ViewBag.Mensaje = "No se pueden hacer asistencias por que no hay estudiantes en el grupo";
+                    return View();
+                }
+                return View(estudiantes);
             }
-            ViewBag.Mensaje = "No tienes acceso a esta información.";
-            return View();
+            return View(new List<Ninos>());
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegistrarAsistencia(List<int> estudiantesPresentes)
+        public async Task<IActionResult> ControlAsistencias(List<int> estudiantesPresentes)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var fechaActual = DateTime.Now;
@@ -153,10 +157,10 @@ namespace kinder_care.Controllers
                 _context.Asistencia.Add(asistencia);
             }
             await _context.SaveChangesAsync();
-            return RedirectToAction("ListaAsistencia");
+            return RedirectToAction("ListaNinos");
         }
 
-        public IActionResult HistorialAsistencia(DateTime? fechaInicio, DateTime? fechaFin)
+        public IActionResult ListaAsistencia(DateTime? fechaInicio, DateTime? fechaFin)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var docente = _context.Docentes.FirstOrDefault(d => d.IdUsuario == userId);
@@ -170,6 +174,28 @@ namespace kinder_care.Controllers
                 .Include(a => a.IdNinoNavigation)
                 .Where(a => estudiantes.Contains(a.IdNino)) 
                 .AsQueryable();
+
+
+            if (fechaInicio.HasValue && fechaFin.HasValue)
+            {
+                query = query.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
+            }
+
+            var asistencias = query
+                .OrderByDescending(a => a.Fecha)
+                .ToList();
+
+            ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd");
+            ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd");
+
+            return View(asistencias);
+        }
+
+        public IActionResult ListaAsistencia_Admin(DateTime? fechaInicio, DateTime? fechaFin)
+        {
+            var query = _context.Asistencia
+                    .Include(a => a.IdNinoNavigation)
+                    .AsQueryable();
 
 
             if (fechaInicio.HasValue && fechaFin.HasValue)
@@ -258,6 +284,23 @@ namespace kinder_care.Controllers
 
             var pdfBytes = PdfDoc.GeneratePdf();
             return File(pdfBytes, "application/pdf", "Reporte_Asistencia.pdf");
+        }
+
+        //=============================[Eliminar de Grupos]=============================
+        [HttpPost]
+        public async Task<IActionResult> EliminarRelacion(int idNino)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
+
+            var relacion = await _context.RelDocenteNinoMateria
+                .FirstOrDefaultAsync(r => r.IdDocente == docente.IdDocente && r.IdNino == idNino);
+
+            _context.RelDocenteNinoMateria.Remove(relacion);
+            await _context.SaveChangesAsync();
+
+            ViewBag.Mensaje = "El estudiante fue eliminado del grupo.";
+            return RedirectToAction("ListaNinos");
         }
     }
 }

@@ -8,7 +8,7 @@
     <div class="breadcrumb mb-24">
         <ul class="flex-align gap-4">
             <li>
-                <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Home</a>
+                <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Inicio</a>
             </li>
             <li>
                 <span class="text-gray-500 fw-normal d-flex">
@@ -24,16 +24,16 @@
     <!-- Breadcrumb Right Start -->
     <div class="flex-align gap-8 flex-wrap">
         <div class="position-relative text-gray-500 flex-align gap-4 text-13">
-            <span class="text-inherit">Sort by: </span>
+            <span class="text-inherit">Buscar por: </span>
             <div class="flex-align text-gray-500 text-13 border border-gray-100 rounded-4 ps-20 focus-border-main-600 bg-white">
                 <span class="text-lg">
                     <i class="ph ph-funnel-simple"></i>
                 </span>
                 <select class="form-control ps-8 pe-20 py-16 border-0 text-inherit rounded-4 text-center">
                     <option value="1" selected>Popular</option>
-                    <option value="1">Latest</option>
-                    <option value="1">Trending</option>
-                    <option value="1">Matches</option>
+                    <option value="1">Mas recientes</option>
+                    <option value="1">Mas buscados</option>
+                    <option value="1">Similares</option>
                 </select>
             </div>
         </div>
@@ -42,7 +42,7 @@
                 <i class="ph ph-layout"></i>
             </span>
             <select class="form-control ps-8 pe-20 py-16 border-0 text-inherit rounded-4 text-center" id="exportOptions">
-                <option value="" selected disabled>Export</option>
+                <option value="" selected disabled>Exportar</option>
                 <option value="csv">CSV</option>
                 <option value="json">JSON</option>
             </select>
@@ -106,6 +106,9 @@
 
                         <td>
                             <a asp-action="Details" asp-route-id="@usuario.IdUsuario" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
+                            <form asp-action="Delete" asp-route-id="@usuario.IdUsuario" method="post" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
+                                <button type="submit" class="btn btn-danger py-2 px-14 rounded-pill">Eliminar</button>
+                            </form>
                         </td>
                     </tr>
                 }
@@ -115,7 +118,10 @@
 </div>
 
 <div class="card-footer flex-between flex-wrap">
-    <span class="text-gray-900">Showing 1 to 10 of @Model.Count() entries</span>
+    <span class="text-gray-900">Mostrando del 1 al 10 de @Model.Count() entrantes</span>
     <ul class="pagination flex-align flex-wrap">
+        <a asp-action="Create" asp-controller="Usuarios" class="btn btn-main">
+            Agregar Usuario
+        </a>
     </ul>
 </div>
