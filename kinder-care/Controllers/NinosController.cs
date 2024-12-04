@@ -359,6 +359,15 @@ public class NinosController : Controller
 
         await _context.SaveChangesAsync();
 
+        var rolUsuarioLogueado = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
+
+        if (rolUsuarioLogueado == "Administrador")
+        {
+            return RedirectToAction("Details_Admin", "Ninos", new {id = id});
+        }else if (rolUsuarioLogueado == "Docente")
+        {
+            return RedirectToAction("Details_Docente", "Ninos", new {id = id});
+        }
         return RedirectToAction("Details", "Ninos", new {id = id});
     }
 
