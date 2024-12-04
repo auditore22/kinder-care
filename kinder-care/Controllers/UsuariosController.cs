@@ -53,6 +53,8 @@ namespace kinder_care.Controllers
                 return NotFound();
             }
 
+            ViewBag.verificarRol = usuarios.IdRol == 1; 
+
             return View(usuarios);
         }
 
