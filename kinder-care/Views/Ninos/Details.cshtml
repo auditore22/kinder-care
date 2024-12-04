@@ -119,85 +119,133 @@
             </div>
             <div class="card-body">
                 <div class="row gy-4">
+                    <ul>
+                        <!-- Contactos de Emergencia -->
 
-                    <!-- Contactos de Emergencia -->
-                    <h6 class="mb-8">Contactos de Emergencia:</h6>
-                    @if (Model.RelNinoContactoEmergencia.Any())
-                    {
-                        <ul class="list-unstyled">
+                        <h5><strong>Contactos de Emergencia:</strong></h5>
+
+                        @if (Model.RelNinoContactoEmergencia.Any())
+                        {
                             @foreach (var contacto in Model.RelNinoContactoEmergencia)
                             {
-                                <li>
-                                    <strong>@contacto.ContactoEmergencia.NombreContacto</strong>
-                                    (Relación: @contacto.ContactoEmergencia.Relacion,
-                                    Tel: @contacto.ContactoEmergencia.Telefono)
+                                <li class="flex-align gap-6 text-black text-15 mb-12">
+                                    <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                        <img style="height: 20px; width: 20px"
+                                             src="~/images/icons/item_icon.png" alt="Información Médica"/>
+                                    </span>
+                                    <p>
+                                        <strong>@contacto.ContactoEmergencia.NombreContacto</strong> -
+                                        Relación: @contacto.ContactoEmergencia.Relacion,
+                                        Tel: @contacto.ContactoEmergencia.Telefono
+                                    </p>
                                 </li>
                             }
-                        </ul>
-                    }
-                    else
-                    {
-                        <p class="text-gray-600">No se han registrado contactos de emergencia.</p>
-                    }
+                        }
+                        else
+                        {
+                            <li class="flex-align gap-6 text-black text-15 mb-12">
+                                <p class="text-gray-600">No se han registrado contactos de emergencia.</p>
+                            </li>
+                        }
 
-                    <!-- Información Médica -->
-                    <h6 class="mb-8">Información Médica:</h6>
-                    <p>
-                        <strong>Póliza:</strong>
-                    </p>
-                    <p>@Model.Poliza</p>
+                        <!-- Información Médica -->
+                        <h5><strong>Información Médica:</strong></h5>
 
-                    <p>
-                        <strong>Alergias:</strong>
-                    </p>
-                    @if (Model.RelNinoAlergia.Any())
-                    {
-                        <ul class="list-unstyled">
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                            <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                    <img style="height: 20px; width: 20px"
+                                         src="~/images/icons/Poliza_icon.png" alt="Información Médica"/>
+                                </span>
+                            <p><strong>Póliza:</strong> @Model.Poliza</p>
+                        </li>
+
+                        <!-- Alergias -->
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                                <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                    <img style="height: 20px; width: 20px"
+                                         src="~/images/icons/Allergy_icon.png" alt="Alergias"/>
+                                </span>
+                            <p><strong>Alergias:</strong></p>
+                        </li>
+                        @if (Model.RelNinoAlergia.Any())
+                        {
                             @foreach (var alergia in Model.RelNinoAlergia)
                             {
-                                <li>@alergia.Alergia.NombreAlergia</li>
+                                <li class="flex-align gap-6 text-black text-15 mb-12">
+                                    <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                    <img style="height: 20px; width: 20px"
+                                         src="~/images/icons/item_icon.png" alt="Información Médica"/>
+                                    </span>
+                                    <p>@alergia.Alergia.NombreAlergia</p>
+                                </li>
                             }
-                        </ul>
-                    }
-                    else
-                    {
-                        <p class="text-gray-600">No tiene alergias registradas.</p>
-                    }
+                        }
+                        else
+                        {
+                            <li class="flex-align gap-6 text-black text-15 mb-12">
+                                <p class="text-gray-600">No tiene alergias registradas.</p>
+                            </li>
+                        }
 
-                    <p>
-                        <strong>Medicamentos:</strong>
-                    </p>
-                    @if (Model.RelNinoMedicamento.Any())
-                    {
-                        <ul class="list-unstyled">
+                        <!-- Medicamentos -->
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                                <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                    <img style="height: 20px; width: 20px"
+                                         src="~/images/icons/Medicine_icon.png" alt="Medicamentos"/>
+                                </span>
+                            <p><strong>Medicamentos:</strong></p>
+                        </li>
+                        @if (Model.RelNinoMedicamento.Any())
+                        {
                             @foreach (var medicamento in Model.RelNinoMedicamento)
                             {
-                                <li>@medicamento.Medicamento.NombreMedicamento -
-                                    Dosis: @medicamento.Medicamento.Dosis</li>
+                                <li class="flex-align gap-6 text-black text-15 mb-12">
+                                    <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                        <img style="height: 20px; width: 20px"
+                                             src="~/images/icons/item_icon.png" alt="Información Médica"/>
+                                    </span>
+                                    <p>@medicamento.Medicamento.NombreMedicamento -
+                                        Dosis: @medicamento.Medicamento.Dosis</p>
+                                </li>
                             }
-                        </ul>
-                    }
-                    else
-                    {
-                        <p class="text-gray-600">No tiene medicamentos registrados.</p>
-                    }
+                        }
+                        else
+                        {
+                            <li class="flex-align gap-6 text-black text-15 mb-12">
+                                <p class="text-gray-600">No tiene medicamentos registrados.</p>
+                            </li>
+                        }
 
-                    <p>
-                        <strong>Condiciones Médicas:</strong>
-                    </p>
-                    @if (Model.RelNinoCondicion.Any())
-                    {
-                        <ul class="list-unstyled">
+                        <!-- Condiciones Médicas -->
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                                <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                    <img style="height: 20px; width: 20px"
+                                         src="~/images/icons/Condition_icon.png" alt="Condiciones Médicas"/>
+                                </span>
+                            <p><strong>Condiciones Médicas:</strong></p>
+                        </li>
+                        @if (Model.RelNinoCondicion.Any())
+                        {
                             @foreach (var condicion in Model.RelNinoCondicion)
                             {
-                                <li>@condicion.Condicion.NombreCondicion</li>
+                                <li class="flex-align gap-6 text-black text-15 mb-12">
+                                    <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                    <img style="height: 20px; width: 20px"
+                                         src="~/images/icons/item_icon.png" alt="Información Médica"/>
+                                    </span>
+                                    <p>@condicion.Condicion.NombreCondicion</p>
+                                </li>
                             }
-                        </ul>
-                    }
-                    else
-                    {
-                        <p class="text-gray-600">No tiene condiciones médicas registradas.</p>
-                    }
+                        }
+                        else
+                        {
+                            <li class="flex-align gap-6 text-black text-15 mb-12">
+                                <p class="text-gray-600">No tiene condiciones médicas registradas.</p>
+                            </li>
+                        }
+                    </ul>
+
+
                 </div>
             </div>
         </div>

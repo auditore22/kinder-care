@@ -94,7 +94,7 @@ public class UsuariosController : Controller
 
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("Index", "Usuarios");
+        return RedirectToAction("Details", "Usuarios", new {id = id});
     }
 
     //======================================================[VISTA DELETE]==========================================================================================
