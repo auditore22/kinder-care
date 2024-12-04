@@ -1,124 +1,243 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using kinder_care.Models;
+﻿using kinder_care.Models;
+using kinder_care.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace kinder_care.Controllers;
 
 [Authorize]
 public class EventsController : Controller
 {
-    private readonly ILogger<EventsController> _logger;
     private readonly KinderCareContext _context;
 
-    // Constructor para inicializar el logger y el contexto de la base de datos
-    public EventsController(ILogger<EventsController> logger, KinderCareContext context)
+    public EventsController(KinderCareContext context)
     {
-        _logger = logger;
         _context = context;
     }
 
-    public async Task<IActionResult> ManageEvents()
+    // GET: ManageEvents
+    public async Task<IActionResult> ManageEvents(int pageNumber = 1)
     {
-        ViewBag.CurrentSection = "ManageEvents";
+        int pageSize = 10; // Definir la cantidad de registros por página
 
-        // Verificamos si _context está correctamente inicializado
-        if (_context == null)
-        {
-            _logger.LogError("El contexto de la base de datos no está inicializado.");
-            return RedirectToAction("Error");
-        }
+        // Obtener el total de eventos
+        var totalEventos = await _context.Actividades
+            .Where(a => a.Activo == true)
+            .CountAsync(); 
 
-        try
-        {
-            var tiposActividad = await _context.TipoActividad
-                .Where(t => t.Activo == true)
-                .ToListAsync();
-
-            ViewBag.TiposActividad = tiposActividad;
-
-            return View();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Error al obtener los tipos de actividad: {ex.Message}");
-            return RedirectToAction("Error");
-        }
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> CreateEvent(string title, int typeId, string date, string description)
-    {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(title) || typeId <= 0 || string.IsNullOrWhiteSpace(date))
-            {
-                TempData["ErrorMessage"] = "Datos inválidos. Verifica los campos ingresados.";
-                return RedirectToAction("ManageEvents");
-            }
-
-            // Intentar convertir la fecha
-            DateOnly fechaEvento;
-            try
-            {
-                fechaEvento = DateOnly.Parse(date);
-            }
-            catch (FormatException)
-            {
-                TempData["ErrorMessage"] = "Formato de fecha inválido. Utiliza el formato yyyy-MM-dd.";
-                return RedirectToAction("ManageEvents");
-            }
-
-            // Crear la nueva actividad
-            var nuevaActividad = new Actividades
-            {
-                IdTipoActividad = typeId,
-                Fecha = fechaEvento,
-                Lugar = title,
-                Descripcion = description,
-                Activo = true
-            };
-
-            // Agregar la actividad a la base de datos
-            _context.Actividades.Add(nuevaActividad);
-            await _context.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = "Evento creado exitosamente.";
-            return RedirectToAction("ManageEvents");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Error al crear el evento: {ex.Message}");
-            TempData["ErrorMessage"] = "Error al crear el evento. Intenta de nuevo.";
-            return RedirectToAction("ManageEvents");
-        }
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetEvents()
-    {
+        // Obtener los eventos para la página actual
         var eventos = await _context.Actividades
+            .Include(a => a.IdTipoActividadNavigation)
+            .Where(a => a.Activo == true)
+            .OrderByDescending(a => a.Fecha)
+            .Skip((pageNumber - 1) * pageSize) // Salta los registros de las páginas anteriores
+            .Take(pageSize) // Toma solo los 10 registros
+            .ToListAsync();
+
+        // Calcular el total de páginas
+        int totalPages = (int)Math.Ceiling(totalEventos / (double)pageSize);
+
+        // Pasar los datos a la vista
+        ViewBag.CurrentPage = pageNumber;
+        ViewBag.TotalPages = totalPages;
+        ViewBag.TotalEventos = totalEventos;
+
+        return View(eventos);
+    }
+    
+    public async Task<IActionResult> Calendar()
+    {
+        var actividades = await _context.Actividades
             .Include(a => a.IdTipoActividadNavigation)
             .Where(a => a.Activo == true)
             .ToListAsync();
 
-        var eventosJson = eventos.Select(e => new
-        {
-            id = e.IdActividad,
-            title = e.Lugar,
-            start = e.Fecha.ToString("yyyy-MM-dd"),
-            description = e.Descripcion,
-            tipoActividad = e.IdTipoActividadNavigation.NombreTipoActividad
-        });
+        List<object> eventos = new List<object>();
 
-        return Json(eventosJson);
+        foreach (var actividad in actividades)
+        {
+            eventos.Add(new
+            {
+                id = actividad.IdActividad,
+                title = actividad.IdTipoActividadNavigation.NombreTipoActividad,
+                start = actividad.Fecha.ToString("yyyy-MM-ddTHH:mm:ss"),
+                end = actividad.Fecha.AddHours(1).ToString("yyyy-MM-ddTHH:mm:ss"),
+                location = actividad.Lugar,
+                description = actividad.Descripcion
+            });
+        }
+
+        ViewBag.Eventos = JsonConvert.SerializeObject(eventos);
+        return View();
     }
 
-    
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
+    // GET: CreateEvent
+    public IActionResult CreateEvent()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        ViewBag.TipoActividades = _context.TipoActividad
+            .Where(t => t.Activo == true)
+            .Select(t => new SelectListItem
+            {
+                Value = t.IdTipoActividad.ToString(),
+                Text = t.NombreTipoActividad
+            }).ToList();
+        return View(new EventViewModel());
+    }
+
+
+    // POST: CreateEvent
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateEvent(EventViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var nuevaActividad = new Actividades
+            {
+                Fecha = model.Fecha,
+                Lugar = model.Lugar,
+                Descripcion = model.Descripcion,
+                IdTipoActividad = model.IdTipoActividad,
+                Activo = true
+            };
+
+            _context.Actividades.Add(nuevaActividad);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(ManageEvents));
+        }
+
+        ViewBag.TipoActividades = await _context.TipoActividad
+            .Where(t => t.Activo == true)
+            .Select(t => new SelectListItem
+            {
+                Value = t.IdTipoActividad.ToString(),
+                Text = t.NombreTipoActividad
+            }).ToListAsync();
+        return View(model);
+    }
+
+
+    // GET: EventDetails/{id}
+    public async Task<IActionResult> EventDetails(int? id)
+    {
+        if (id == null)
+            return NotFound();
+
+        var actividad = await _context.Actividades
+            .Include(a => a.IdTipoActividadNavigation)
+            .FirstOrDefaultAsync(a => a.IdActividad == id);
+
+        if (actividad == null)
+            return NotFound();
+
+        return View(actividad);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> EditEvent(int id)
+    {
+        var actividad = await _context.Actividades
+            .Include(a => a.IdTipoActividadNavigation)
+            .FirstOrDefaultAsync(a => a.IdActividad == id);
+
+        if (actividad == null)
+        {
+            TempData["ErrorMessage"] = "No se encontró el evento.";
+            return RedirectToAction("ManageEvents");
+        }
+
+        var model = new EventViewModel
+        {
+            IdActividad = actividad.IdActividad,
+            Fecha = actividad.Fecha,
+            Lugar = actividad.Lugar,
+            Descripcion = actividad.Descripcion,
+            IdTipoActividad = actividad.IdTipoActividad
+        };
+
+        ViewBag.TipoActividades = _context.TipoActividad
+            .Where(t => t.Activo == true)
+            .Select(t => new SelectListItem
+            {
+                Value = t.IdTipoActividad.ToString(),
+                Text = t.NombreTipoActividad
+            }).ToList();
+
+        return View(model); 
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditEvent(EventViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            TempData["ErrorMessage"] = "Hay errores en el formulario. Revisa los datos.";
+            return RedirectToAction("EventDetails", new { id = model.IdActividad });
+        }
+
+        try
+        {
+            var actividad = await _context.Actividades.FindAsync(model.IdActividad);
+            if (actividad == null)
+            {
+                TempData["ErrorMessage"] = "El evento no existe.";
+                return RedirectToAction("ManageEvents");
+            }
+
+            // Actualizamos los campos que pueden ser editados
+            actividad.Fecha = model.Fecha;
+            actividad.Lugar = model.Lugar;
+            actividad.Descripcion = model.Descripcion;
+
+            _context.Update(actividad);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Evento actualizado con éxito.";
+            return RedirectToAction("ManageEvents");
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = $"Error al actualizar el evento: {ex.Message}";
+            return RedirectToAction("EventDetails", new { id = model.IdActividad });
+        }
+    }
+
+
+    // GET: DeleteEvent/{id}
+    public async Task<IActionResult> DeleteEvent(int? id)
+    {
+        if (id == null)
+            return NotFound();
+
+        var actividad = await _context.Actividades
+            .Include(a => a.IdTipoActividadNavigation)
+            .FirstOrDefaultAsync(a => a.IdActividad == id);
+
+        if (actividad == null)
+            return NotFound();
+
+        return View(actividad);
+    }
+
+    [HttpPost, ActionName("DeleteEvent")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var actividad = await _context.Actividades.FindAsync(id);
+        if (actividad != null)
+        {
+            actividad.Activo = false; // Desactiva el evento en lugar de eliminarlo si es necesario.
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+            TempData["ErrorMessage"] = "El evento no pudo ser eliminado.";
+        }
+
+        return RedirectToAction(nameof(ManageEvents));
     }
 }

@@ -24,16 +24,7 @@
 
     <div class="flex-align gap-8 flex-wrap">
         <div class="position-relative text-gray-500 flex-align gap-4 text-13">
-            <span class="text-inherit">Sort by: </span>
-            <div class="flex-align text-gray-500 text-13 border border-gray-100 rounded-4 ps-20 focus-border-main-600 bg-white">
-                <span class="text-lg">
-                    <i class="ph ph-funnel-simple"></i>
-                </span>
-                <select class="form-control ps-8 pe-20 py-16 border-0 text-inherit rounded-4 text-center">
-                    <option value="1" selected>Fecha más reciente</option>
-                    <option value="1">Fecha más antigua</option>
-                </select>
-            </div>
+            <span class="text-inherit">Descargar datos: </span>
         </div>
         <div class="flex-align text-gray-500 text-13 border border-gray-100 rounded-4 ps-20 focus-border-main-600 bg-white">
             <span class="text-lg">
@@ -52,7 +43,10 @@
 <div class="mb-4">
     <form asp-action="PaymentsSearch" method="get" class="d-flex align-items-center gap-3">
         <div class="position-relative w-100">
-            <input type="text" name="searchQuery" class="form-control ps-20 pe-20 py-16 border-gray-100 rounded-pill"
+            <button type="submit" class="input-icon text-xl d-flex text-gray-100 pointer-event-none">
+                <i class="ph ph-magnifying-glass"></i>
+            </button>
+            <input type="text" name="searchQuery" class="form-control ps-40 h-40 border-transparent focus-border-main-600 bg-main-50 rounded-pill placeholder-15"
                    placeholder="Buscar por nombre del padre..." value="@ViewBag.SearchQuery"
                    style="width: 400px; max-width: 100%;"/>
         </div>
@@ -62,15 +56,14 @@
 <!-- Tabla de pagos -->
 <div class="card overflow-hidden mt-24">
     <div class="card-body p-0 overflow-x-auto">
-        <table id="paymentsTable" class="table table-striped">
+        <table id="studentTable" class="table table-striped">
             <thead>
                 <tr>
-                    <th class="h6 text-gray-300">Fecha de Pago</th>
-                    <th class="h6 text-gray-300">Nombre del Estudiante</th>
-                    <th class="h6 text-gray-300">Nombre del Padre</th>
-                    <th class="h6 text-gray-300">Monto</th>
-                    <th class="h6 text-gray-300">Tipo de Pago</th>
-                    <th class="h6 text-gray-300">Acciones</th>
+                    <th class="column-fecha h6 text-gray-300">Fecha de Pago</th>
+                    <th class="column-nombreest h6 text-gray-300">Nombre del Estudiante</th>
+                    <th class="column-nombrepadre h6 text-gray-300">Nombre del Padre</th>
+                    <th class="column-tipopago h6 text-gray-300">Tipo de Pago</th>
+                    <th class="column-acciones h6 text-gray-300">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -87,9 +80,6 @@
                             </td>
                             <td>
                                 <span class="h6 mb-0 fw-medium text-gray-300">@pago.Padre?.Nombre</span>
-                            </td>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">$@pago.Monto</span>
                             </td>
                             <td>
                                 <span class="h6 mb-0 fw-medium text-gray-300">@pago.TipoPago?.NombreTipoPago</span>
@@ -110,6 +100,7 @@
         </table>
     </div>
 </div>
+
 <!-- Botón para agregar un nuevo pago -->
 <div class="mb-4 mt-15 text-end">
     <a href="@Url.Action("CreatePayment", "Payments")" class="btn btn-main rounded-pill">
@@ -119,11 +110,41 @@
 
 <!-- Paginación y detalles del footer -->
 <div class="card-footer flex-between flex-wrap mt-15">
-    <span class="text-gray-900">Mostrando 1 a 10 de @Model.Count() registros</span>
-    <ul class="pagination flex-align flex-wrap">
-        <!-- Lógica de paginación aquí si es necesario -->
-    </ul>
+    <span class="text-gray-900">
+        Mostrando @((ViewBag.CurrentPage - 1) * 10 + 1) a
+        @((ViewBag.CurrentPage * 10) > @Model.Count() ? @Model.Count() : ViewBag.CurrentPage * 10)
+        de @ViewBag.TotalPagos pagos
+    </span>
+
+    <!-- Mostrar paginación solo si hay más de 10 pagos -->
+    @if (ViewBag.TotalPagos > 10)
+    {
+        <ul class="pagination flex-align flex-wrap">
+            <!-- Paginación -->
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("ManagePayments", "Payments", new { pageNumber = ViewBag.CurrentPage - 1 })">Anterior</a>
+                </li>
+            }
+
+            @for (var i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @((i == ViewBag.CurrentPage) ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("ManagePayments", "Payments", new { pageNumber = i })">@i</a>
+                </li>
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("ManagePayments", "Payments", new { pageNumber = ViewBag.CurrentPage + 1 })">Siguiente</a>
+                </li>
+            }
+        </ul>
+    }
 </div>
+
 
 <!-- Estilos -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -174,4 +195,38 @@
         background-color: #f8f9fa;
         border-top: 1px solid #e0e0e0;
     }
+    .pagination .page-item {
+        margin-right: 5px; /* Espacio entre los botones */
+    }
+
+    .pagination .page-item .page-link {
+        padding: 8px 15px; /* Aumenta el tamaño de los botones */
+    }
+
+    /* Alineación fija para cada columna */
+    .column-fecha {
+        width: 22%;
+    }
+
+    .column-nombreest {
+        width: 24%;
+    }
+
+    .column-nombrepadre{
+        width: 22%;
+    }
+
+    .column-tipopago{
+        width: 22%;
+    }
+
+    .column-acciones {
+        width: 10%;
+        text-align: center;
+    }
+
+    .manage-events-actions button {
+        margin-right: 5px;
+    }
+    
 </style>
