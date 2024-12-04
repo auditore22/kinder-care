@@ -83,27 +83,65 @@
             <div class="card-body">
                 <div class="row gy-4">
 
-                    <!-- Numero de Correo Electronico -->
-                    <h6 class="mb-8">Correo Electronico:</h6>
-                    <p>@Model.CorreoElectronico</p>
-                    
-                    <!-- Numero de Telefono -->
-                    <h6 class="mb-8">Numero de Telefono:</h6>
-                    <p>@Model.NumTelefono</p>
+                    <ul>
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                                        <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                            <img style="height: 20px; width: 20px"
+                                                 src="~/images/icons/Email_icon.svg"
+                                                 alt="Fecha_asignada_icono"/>
+                                        </span>
 
-                    <!-- Rol del Usuario -->
-                    <h6 class="mb-8">Tipo de Usuario:</h6>
-                    <p>@Model.IdRolNavigation.Nombre</p>
+                            <p><strong>Correo Electronico: </strong></p>
+                            @Model.CorreoElectronico
+                        </li>
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                            <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                <img style="height: 20px; width: 20px"
+                                     src="~/images/icons/Tel_icon.svg" alt="Fecha_entrega_icono"/>
+                            </span>
 
-                    <h6 class="mb-8">Estado del Usuario:</h6>
-                    @if (Model.Activo == true)
-                    {
-                        <p>Usuario Activo</p>
-                    }
-                    else
-                    {
-                        <p>Usuario Inactivo</p>
-                    }
+                            <p><strong>Telefono: </strong></p>
+                            @Model.NumTelefono
+                        </li>
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                            <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                <img style="height: 20px; width: 20px"
+                                     src="~/images/icons/Role_icon.svg" alt="Fecha_entrega_icono"/>
+                            </span>
+
+                            <p><strong>Rol: </strong></p>
+                            @Model.IdRolNavigation.Nombre
+                        </li>
+                        @if (ViewBag.RoleName == "Administrador")
+                        {
+                            <li class="flex-align gap-6 text-black text-15 mb-12">
+                                @if (Model.Activo == true)
+                                {
+                                    <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                        <img style="height: 20px; width: 20px"
+                                             src="~/images/icons/Active_icon.svg" alt="Fecha_entrega_icono"/>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                        <img style="height: 20px; width: 20px"
+                                             src="~/images/icons/Inactive_icon.svg" alt="Fecha_entrega_icono"/>
+                                    </span>
+                                }
+
+                                <p><strong>Estado: </strong></p>
+                                @if (Model.Activo == true)
+                                {
+                                    <p>Usuario Activo</p>
+                                }
+                                else
+                                {
+                                    <p>Usuario Inactivo</p>
+                                }
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-﻿@model Pagos
+@model Pagos
 
 <!-- Breadcrumb Start -->
 <div class="breadcrumb mb-24">
@@ -21,7 +21,6 @@
 <div class="card overflow-hidden">
     <div class="card-body p-0">
         <div class="cover-img position-relative">
-            <label for="coverImageUpload" class="btn border-gray-200 text-gray-200 fw-normal hover-bg-gray-400 rounded-pill py-4 px-14 position-absolute inset-block-start-0 inset-inline-end-0 mt-24 me-24">Editar fondo</label>
             <div class="avatar-upload">
                 <input type="file" id="coverImageUpload" accept=".png, .jpg, .jpeg">
                 <div class="avatar-preview">
@@ -34,7 +33,7 @@
         <div class="setting-profile px-24">
             <div class="flex-between">
                 <div class="d-flex align-items-end flex-wrap mb-32 gap-24">
-                    <img src="~/images/icons/payment_icon.png" alt="Payment Icon" class="w-120 h-120 rounded-circle">
+                    <img src="~/images/icons/payment.png" alt="Payment Icon" class="w-120 h-120 rounded-circle">
                     <div>
                         <h4 class="mb-8">Pago ID: @Model.IdPago</h4>
                         <div class="setting-profile__infos flex-align flex-wrap gap-16">
@@ -103,7 +102,9 @@
                 <h4 class="mb-4">Información Adicional</h4>
             </div>
             <div class="card-body">
+                <p><strong>Monto del pago:</strong> @Model.Monto</p>
                 <p><strong>Método de Pago:</strong> @Model.MetodoPago</p>
+                <p><strong>Referencia de factura:</strong> @Model.ReferenciaFactura</p>
                 <p><strong>Fecha de Creación:</strong> @Model.FechaCreacion?.ToString("dd/MM/yyyy")</p>
                 <p><strong>Última Actualización:</strong> @Model.UltimaActualizacion?.ToString("dd/MM/yyyy")</p>
             </div>
