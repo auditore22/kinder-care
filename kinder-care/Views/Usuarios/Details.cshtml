@@ -186,12 +186,22 @@
 
                                 <div class="form-group">
                                     <label asp-for="IdRol" class="control-label"></label>
-                                    <select asp-for="IdRol" class="form-control">
-                                        <option value="2">Docente</option>
-                                        <option value="3">Padre</option>
-                                    </select>
+                                    @if (ViewBag.verificarRol)
+                                    {
+                                        <!-- Mostrar un campo de solo lectura para el rol Administrador -->
+                                        <input type="text" class="form-control" value="Administrador" readonly />
+                                    }
+                                    else
+                                    {
+                                        <!-- Mostrar el campo select solo para roles editables -->
+                                        <select asp-for="IdRol" class="form-control">
+                                            <option value="2">Docente</option>
+                                            <option value="3">Padre</option>
+                                        </select>
+                                    }
                                     <span asp-validation-for="IdRol" class="text-danger"></span>
                                 </div>
+
                                 <!-- Botones de acción -->
                                 <div class="col-12">
                                     <div class="flex-align justify-content-end gap-8">
