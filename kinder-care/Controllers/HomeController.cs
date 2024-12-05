@@ -42,10 +42,32 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
                 .Take(5)
                 .ToList();
 
-            ViewData["UltimosPagos"] = ultimosPagos;
+            if (ultimosPagos == null || !ultimosPagos.Any())
+            {
+                ViewData["Mensaje"] = "No hay pagos registrados.";
+            }
+            else
+            {
+                ViewData["UltimosPagos"] = ultimosPagos;
+            }
+
+            var actividadesProximas = _context.Actividades
+                .Include(a => a.RelNinoActividad)
+                .ThenInclude(r => r.IdNinoNavigation)
+                .Where(a => a.Fecha > DateTime.Now)
+                .OrderBy(a => a.Fecha)
+                .ToList();
+
+            if (actividadesProximas == null || !actividadesProximas.Any())
+            {
+                ViewData["Mensaje"] = "No hay Actividades.";
+            }
+            else
+            {
+                ViewData["ActividadesProximas"] = actividadesProximas;
+            }
 
             ViewBag.RoleName = "Administrador";
-
         }
         else if (roles.Contains("Docente"))
         {
@@ -60,13 +82,52 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
                 .Take(10) 
                 .ToList();
 
-            ViewData["UltimasAusencias"] = ultimasAusencias;
+            if (ultimasAusencias == null || !ultimasAusencias.Any())
+            {
+                ViewData["Mensaje"] = "Actualmente no hay Ausencias registradas.";
+            }
+            else
+            {
+                ViewData["UltimasAusencias"] = ultimasAusencias;
+            }
+
+            var actividadesProximas = _context.Actividades
+                .Include(a => a.RelNinoActividad)
+                .ThenInclude(r => r.IdNinoNavigation)
+                .Where(a => a.Fecha > DateTime.Now)
+                .OrderBy(a => a.Fecha)
+                .ToList();
+
+            if (actividadesProximas == null || !actividadesProximas.Any())
+            {
+                ViewData["Mensaje"] = "No hay Actividades.";
+            }
+            else
+            {
+                ViewData["ActividadesProximas"] = actividadesProximas;
+            }
 
             ViewBag.RoleName = "Docente";
         }
         else if (roles.Contains("Padre")) 
         {
+            var actividadesProximas = _context.Actividades
+                .Include(a => a.RelNinoActividad)
+                .ThenInclude(r => r.IdNinoNavigation)
+                .Where(a => a.Fecha > DateTime.Now)
+                .OrderBy(a => a.Fecha)
+                .ToList();
 
+            if (actividadesProximas == null || !actividadesProximas.Any())
+            {
+                ViewData["Mensaje"] = "No hay Actividades.";
+            }
+            else
+            {
+                ViewData["ActividadesProximas"] = actividadesProximas;
+            }
+
+            ViewBag.RoleName = "Padre";
         }
 
         return View();
