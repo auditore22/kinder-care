@@ -26,6 +26,8 @@ namespace kinder_care.Controllers
             var userRole = User.FindFirstValue(ClaimTypes.Role);
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
 
+            ViewBag.DocenteId = docente.IdDocente;
+            
             if (userRole == "Docente")
             {
                 var estudiantes = await _context.RelDocenteNinoMateria

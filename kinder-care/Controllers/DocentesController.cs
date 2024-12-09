@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using kinder_care.Models;
 using kinder_care.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace kinder_care.Controllers
 {
+    [Authorize]
     public class DocentesController : Controller
     {
         private readonly KinderCareContext _context;

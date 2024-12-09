@@ -1,10 +1,12 @@
 using kinder_care.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace kinder_care.Controllers;
 
+[Authorize]
 public class UserProfile : Controller
 {
     private readonly KinderCareContext _context;
