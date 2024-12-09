@@ -13,9 +13,11 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using Dapper;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace kinder_care.Controllers
 {
+    [Authorize]
     public class UsuariosController : Controller
     {
         private readonly KinderCareContext _context;
