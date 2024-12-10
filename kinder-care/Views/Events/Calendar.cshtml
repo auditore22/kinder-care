@@ -1,0 +1,447 @@
+@{
+    ViewData["Title"] = "Calendario de Eventos";
+}
+
+<div class="card shadow-sm p-4 rounded-4 border-0">
+    <div class="card-header d-flex justify-content-between align-items-center bg-main-50">
+        <h2 class="text-main-600 mb-0">Calendario de Eventos</h2>
+        @if (ViewBag.RoleName == "Administrador")
+        {
+            <a href="@Url.Action("ManageEvents", "Events")" class="btn btn-main rounded-pill">
+                <i class="ph ph-list"></i> Administrar Eventos
+            </a>
+        }
+    </div>
+
+    <div class="card-body">
+        <div id="calendar" class="calendar-container mt-4"></div>
+    </div>
+</div>
+
+<!-- Modal de Detalles del Evento -->
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">Detalles del Evento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p id="eventTitle" class="fw-bold "></p>
+                <p id="eventDate"></p>
+                <p id="eventLocation"></p>
+                <p id="eventDescription"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            eventOverlap: false,         // Previene que se apilen unos sobre otros
+            locale: 'es',
+            firstDay: 1, // Empieza el lunes
+            timeZone: 'local',
+            dayHeaderFormat: { weekday: 'long' }, // Días completos con mayúscula inicial
+            allDaySlot: false,
+            
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            buttonText: {
+                today: 'Hoy',
+                month: 'Mes',
+                week: 'Semana',
+                day: 'Día',
+                list: 'Lista'
+            },
+            slotLabelFormat: {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true // Muestra formato 12h con a.m./p.m.
+            },
+            events: @Html.Raw(ViewBag.Eventos),
+            editable: false,
+            selectable: true,
+            eventDisplay: 'block',
+            eventTimeFormat: { hour: '2-digit', minute: '2-digit', meridiem: false, hour12: true },
+            eventTextColor: '#000000',
+            noEventsContent: function() {
+                return "🌟¡No hay eventos para este mes!🌟";
+            },
+            views: {
+                listMonth: { // Personaliza solo la vista de lista
+                    eventContent: function(info) {
+                        var container = document.createElement('div');
+                        container.classList.add('fc-list');
+
+                        // Hora, actividad, ubicación y descripción en horizontal
+                        var time = document.createElement('div');
+                        time.classList.add('fc-event-time');
+                        time.innerText = 'Hora: ' + info.event.start.toLocaleString('es-ES', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                        });
+
+                        var title = document.createElement('div');
+                        title.classList.add('fc-list-event-title');
+                        title.innerText = 'Actividad: ' + info.event.title;
+
+                        var location = document.createElement('div');
+                        location.classList.add('fc-list-event-location');
+                        location.innerText = 'Ubicación: ' + (info.event.extendedProps.location || 'No disponible');
+
+                        var description = document.createElement('div');
+                        description.classList.add('fc-list-event-description');
+                        description.innerText = 'Descripción: ' + (info.event.extendedProps.description || 'No disponible');
+
+                        // Agrupar los elementos horizontalmente
+                        container.style.display = 'flex';
+                        container.style.flexDirection = 'row';
+                        container.style.alignItems = 'center';
+                        container.style.justifyContent = 'space-between';
+                        container.style.padding = '8px';
+
+                        container.appendChild(time);
+                        container.appendChild(title);
+                        container.appendChild(location);
+                        container.appendChild(description);
+
+                        return { domNodes: [container] };
+                    }
+                }
+            },
+            eventContent: function (info) {
+                var time = document.createElement('div');
+                time.classList.add('fc-event-time');
+                time.innerText = 'Hora: ' + info.timeText;
+
+                var title = document.createElement('div');
+                title.classList.add('fc-event-title');
+                title.innerText = 'Actividad: ' + info.event.title;
+
+                var container = document.createElement('div');
+                container.appendChild(time);
+                container.appendChild(title);
+
+                return { domNodes: [container] };
+            },
+            eventClick: function (info) {
+                document.getElementById('eventTitle').innerText = 'Actividad: ' + info.event.title;
+                document.getElementById('eventDate').innerText = 'Fecha: ' + info.event.start.toLocaleString();
+                document.getElementById('eventLocation').innerText = 'Ubicación: ' + info.event.extendedProps.location;
+                document.getElementById('eventDescription').innerText = 'Descripción: ' + (info.event.extendedProps.description || 'No disponible');
+
+                var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
+                myModal.show();
+            },
+            eventMouseEnter: function () {
+                calendarEl.style.cursor = 'pointer'; // Cambia el cursor cuando el mouse pasa sobre el evento
+                info.el.style.backgroundColor = '#2d9cdb'; // Cambiar color al pasar el mouse
+                info.el.style.color = 'white';
+            },
+            eventMouseLeave: function () {
+                calendarEl.style.cursor = 'default'; // Restaurar el cursor
+                info.el.style.backgroundColor = ''; // Restaurar color original al salir
+                info.el.style.color = '';
+            },          
+            dateClick: function(info) {
+                calendar.changeView('timeGridDay', info.dateStr); // Cambiar a la vista de día
+            }
+        });
+        
+        calendar.render();
+    });
+
+</script>
+
+
+<!-- Estilo personalizado para el calendario -->
+<style>
+
+    .calendar-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .fc-list-event-time {
+        width: 70%; /* Ancho fijo para la columna de hora */
+        text-align: left; /* Alineación a la izquierda */
+    }
+
+    .fc-list-event-title {
+        width: 25%; /* Ancho fijo o proporcional para el título */
+        text-align: left;
+    }
+
+    .fc-list-event-location {
+        width: 25%; /* Ejemplo: si tienes columna para la ubicación */
+        text-align: left;
+    }
+
+    .fc-list-event-description {
+        width: 25%; /* Ejemplo: si tienes columna para la ubicación */
+        text-align: left;
+    }
+
+    .fc {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Agrandar el bloque de los nombres de los días */
+    .fc-col-header-cell {
+        padding: 15px 10px; /* Ajusta el padding para agrandar */
+        font-size: 1.1em; /* Agranda el texto */
+        background-color: #f8f9fa; /* Fondo claro para contraste */
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    /* Estilizar el texto de los días para que esté centrado verticalmente */
+    .fc-col-header-cell-cushion {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #333;
+    }
+
+    
+    /* Agrandar el bloque donde están los días */
+    .fc-daygrid-day-frame {
+        padding: 4px 8px;
+        min-height: 100px; /* Aumentar la altura */
+    }
+
+    /* Agrandar el texto del número del día */
+    .fc-daygrid-day-number {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: black;
+    }
+
+    /* Efecto hover en el número del día */
+    .fc-daygrid-day:hover .fc-daygrid-day-number {
+        background-color: #2d9cdb;
+        color: white;
+        border-radius: 50%;
+        padding: 5px;
+        transition: all 0.3s ease;
+    }
+    
+    .fc-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .fc-button {
+        background-color: #2d9cdb !important;
+        border: none !important;
+        color: #ffffff !important;
+        margin: 0 20px; !important;
+        border-radius: 4px !important;
+        padding: 8px 12px !important;
+        transition: background-color 0.3s ease;
+    }
+
+    .fc-button:hover {
+        background-color: #1a73e8 !important;
+    }
+
+    .fc-toolbar-title {
+        color: #2d2d2d;
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+
+    .fc-col-header-cell-cushion {
+        text-transform: capitalize; /* Mayúscula en la primera letra */
+        color: #2d2d2d;
+    }
+
+    /* Estilo predeterminado para los números de los días */
+    .fc-daygrid-day-number {
+        color: black;
+        font-weight: bold;
+        transition: 0.3s ease-in-out;
+    }
+
+    /* Al pasar el cursor por encima */
+    .fc-daygrid-day:hover .fc-daygrid-day-number {
+        color: blue;
+        background-color: rgba(45, 156, 219, 0.2);
+        border-radius: 50%;
+        padding: 5px;
+        cursor: pointer;
+    }
+
+    /* Efecto al hacer clic */
+    .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+        background-color: #2d9cdb;
+        color: white;
+        border-radius: 50%;
+    }
+
+    /* Cambiar el cursor y el color de fondo al pasar el mouse */
+    .fc-event {
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .fc-event:hover {
+        background-color: #2d9cdb; /* Azul suave */
+        color: white;
+    }
+
+    .fc-timegrid-event .fc-event-title, .fc-daygrid-event .fc-event-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Cambiar el color de fondo del día actual */
+    .fc .fc-day-today {
+        background-color: #f1f7ff !important; /* Cambia el color aquí */
+    }
+
+    /* Cambiar el color de fondo de la lista de eventos */
+    .fc-list-event {
+        background-color: #ffffff !important; /* Cambia el color aquí */
+        border-color: #0c58e6 !important; /* Cambia el color del borde aquí */
+    }
+    
+    .fc-timegrid-axis-cushion.fc-scrollgrid-shrink {
+        text-align: center !important; /* Centra el texto */
+        vertical-align: middle !important; /* Alineación vertical */
+    }
+
+    /* Fondo general de la vista de lista */
+    .fc-list {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    /* Encabezado de la lista (ej: fecha del día) */
+    .fc-list-day-cushion {
+        background-color: #2D9CDB; /* Azul suave */
+        color: #ffffff;
+        padding: 10px;
+        font-size: 1.2em;
+        font-weight: bold;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    /* Contenedor de eventos */
+    .fc-list {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        align-items: center;
+        gap: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    /* Cambiar el color de fondo al pasar el mouse sobre un evento */
+    .fc-list-event:hover {
+        background-color: #e6f7ff;
+    }
+
+    /* Ícono o marcador del evento */
+    .fc-list-event-dot {
+        width: 10px;
+        height: 10px;
+        background-color: #2D9CDB;
+        border-radius: 50%;
+    }
+
+    /* Texto de título del evento */
+    .fc-list-event-title {
+        font-size: 1em;
+        font-weight: 600;
+        color: #333;
+    }
+
+    /* Separador entre días */
+    .fc-list-day {
+        margin-top: 20px;
+    }
+
+    /* Ajuste de márgenes */
+    .fc-list-table {
+        margin-top: 0;
+    }
+
+    .fc-list-event-time,
+    .fc-list-event-graphic {
+        display: none; /* Oculta la hora y el punto azul */
+    }
+
+    /* Ajustes generales del modal */
+    .modal-content {
+        border-radius: 8px; /* Bordes redondeados */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra suave */
+        border: none; /* Elimina bordes */
+    }
+
+    .modal-header {
+        background-color: #2D9CDB; /* Color azul suave o personaliza */
+        color: #fff; /* Texto blanco */
+        padding: 1rem 2rem;
+        border-bottom: none; /* Elimina línea de separación */
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .modal-body {
+        padding: 1.5rem 2rem;
+        background-color: #f7f7f7; /* Fondo claro */
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .modal-footer {
+        padding: 1rem 2rem;
+        border-top: none; /* Elimina línea de separación */
+        background-color: #f1f1f1;
+    }
+
+    /* Botones personalizados */
+    .modal-footer .btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    .modal-footer .btn-primary {
+        background-color: #2D9CDB;
+        border: none;
+    }
+
+    .modal-footer .btn-secondary {
+        background-color: #ccc;
+        border: none;
+    }
+
+</style>

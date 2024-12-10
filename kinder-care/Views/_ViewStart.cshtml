@@ -1,3 +1,15 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     Layout = "_MainLayout";
+    ViewBag.RoleName = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault()!;
+    ViewBag.UserName = User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault()!;
+    ViewBag.UserEmail = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault()!;
+    // Obtener el ID del usuario y manejar posibles valores nulos
+    var UserLogID = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault();
+    int? ParseID = null;
+    if (!string.IsNullOrEmpty(UserLogID))
+    {
+        ParseID = int.Parse(UserLogID);
+    }
+    ViewBag.UserID = ParseID;
 }

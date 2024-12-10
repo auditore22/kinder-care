@@ -1,155 +1,137 @@
 ﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using kinder_care.Models;
+using kinder_care.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-namespace kinder_care.Controllers;
-
-[Authorize]
-public class UsersController : Controller
+namespace kinder_care.Controllers
 {
-    private readonly KinderCareContext _context;
-
-    public UsersController(KinderCareContext context)
+    [Authorize] // Ensure only authenticated users can access these actions
+    public class UsersController : Controller
     {
-        _context = context;
-    }
+        private readonly ExpedienteService _expedienteService;
+        private readonly ILogger<UsersController> _logger;
+        private readonly KinderCareContext _context;
 
-    public ActionResult ManageRoles()
-    {
-        ViewBag.CurrentSection = "ManageRoles";
-        return RedirectToAction("Index", "Usuarios"); //Redirigir al controller de Usuarios
-    }
-
-    public ActionResult ManageProfiles()
-    {
-        ViewBag.CurrentSection = "ManageProfiles";
-        return RedirectToAction("Index", "Docentes"); //Redirigir al controller de Usuarios
-    }
-
-    public async Task<IActionResult> ManageRecords()
-    {
-        ViewBag.CurrentSection = "ManageRecords";
-
-        // Consulta de la vista 'vw_ExpedienteCompletoNino'
-        var expedientes = await _context.VwExpedienteCompletoNino
-            .Select(e => new ExpedienteCompletoNino
-            {
-                IdNino = e.IdNino,
-                Cedula = e.Cedula,
-                NombreNino = e.NombreNino,
-                FechaNacimiento = e.FechaNacimiento,
-                Direccion = e.Direccion,
-                Poliza = e.Poliza,
-                NombreAlergia = e.NombreAlergia,
-                NombreCondicion = e.NombreCondicion,
-                NombreMedicamento = e.NombreMedicamento,
-                Dosis = e.Dosis,
-                NombreContacto = e.NombreContacto,
-                TelefonoContacto = e.TelefonoContacto,
-                RelacionContacto = e.RelacionContacto
-            })
-            .ToListAsync();
-
-        return View(expedientes);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> ActualizarExpedienteNino([FromBody] ExpedienteCompletoNino expediente)
-    {
-        try
+        
+        public UsersController(ExpedienteService expedienteService, ILogger<UsersController> logger, KinderCareContext context)
         {
-            if (string.IsNullOrEmpty(expediente.NombreNino) || string.IsNullOrEmpty(expediente.Direccion) || string.IsNullOrEmpty(expediente.Poliza))
+            _expedienteService = expedienteService;
+            _logger = logger;
+            _context = context;
+        }
+        
+        public async Task<IActionResult> ManageRecords()
+        {
+            ViewBag.CurrentSection = "ManageRecords";
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userRole = User.FindFirstValue(ClaimTypes.Role);
+            var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
+            ViewBag.DocenteId = docente?.IdDocente!;
+
+            if (userRole == "Docente" && docente != null)
             {
-                return BadRequest("Los campos obligatorios no pueden estar vacíos.");
+                var estudiantesIds = await _context.RelDocenteNinoMateria
+                    .Where(r => r.IdDocente == docente.IdDocente)
+                    .Select(r => r.IdNino)
+                    .ToListAsync();
+
+                if (!estudiantesIds.Any())
+                {
+                    ViewBag.Mensaje = "No hay expedientes relacionados con este docente.";
+                    return View(new List<ExpedienteCompletoNino>());
+                }
+
+                var expedientes = await _expedienteService.GetExpedientesByNinoIdsAsync(estudiantesIds);
+                return View(expedientes);
             }
-
-            await _context.Database.ExecuteSqlRawAsync(
-                "EXEC ActualizarExpedienteNino @id_nino, @nombre_nino, @direccion, @poliza",
-                new SqlParameter("@id_nino", expediente.IdNino),
-                new SqlParameter("@nombre_nino", expediente.NombreNino),
-                new SqlParameter("@direccion", expediente.Direccion),
-                new SqlParameter("@poliza", expediente.Poliza)
-            );
-            return Ok();
-        }
-        catch (SqlException ex)
-        {
-            // Manejo detallado de excepciones SQL
-            return BadRequest($"Error SQL: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest($"Error inesperado: {ex.Message}");
-        }
-    }
-    
-    [HttpPost]
-    public async Task<IActionResult> GestionarInformacionMedica([FromBody] InformacionMedicaRequest request)
-    {
-        try
-        {
-            if (request.IdAlergia.HasValue || request.IdCondicion.HasValue || request.IdMedicamento.HasValue)
+            else
             {
-                await _context.Database.ExecuteSqlRawAsync(
-                    "EXEC GestionarInformacionMedicaNino @id_nino, @id_alergia, @id_condicion, @id_medicamento, @accion",
-                    new SqlParameter("@id_nino", request.IdNino),
-                    new SqlParameter("@id_alergia", request.IdAlergia ?? (object)DBNull.Value),
-                    new SqlParameter("@id_condicion", request.IdCondicion ?? (object)DBNull.Value),
-                    new SqlParameter("@id_medicamento", request.IdMedicamento ?? (object)DBNull.Value),
-                    new SqlParameter("@accion", request.Accion)
-                );
+                var expedientes = await _expedienteService.GetExpedientesAsync();
+                return View(expedientes);
             }
-            return Ok();
         }
-        catch (SqlException ex)
+        
+        [HttpPost]
+        public async Task<IActionResult> ActualizarExpedienteNino([FromBody] ExpedienteCompletoNino expediente)
         {
-            // Manejo detallado de excepciones SQL
-            return BadRequest($"Error SQL: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest($"Error inesperado: {ex.Message}");
-        }
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> GestionarContactosEmergencia([FromBody] ContactoEmergenciaRequest request)
-    {
-        try
-        {
-            if (string.IsNullOrEmpty(request.NombreContacto) || request.Telefono == null || string.IsNullOrEmpty(request.Relacion))
+            try
             {
-                return BadRequest("Los datos de contacto son obligatorios.");
+                if (string.IsNullOrEmpty(expediente.NombreNino) || string.IsNullOrEmpty(expediente.Direccion) ||
+                    string.IsNullOrEmpty(expediente.Poliza))
+                {
+                    return BadRequest("Los campos obligatorios no pueden estar vacíos.");
+                }
+
+                await _expedienteService.UpdateExpedienteAsync(expediente);
+                return Ok(); 
             }
-
-            await _context.Database.ExecuteSqlRawAsync(
-                "EXEC GestionarContactosEmergencia @id_nino, @nombre_contacto, @telefono, @relacion, @id_contacto, @accion",
-                new SqlParameter("@id_nino", request.IdNino),
-                new SqlParameter("@nombre_contacto", request.NombreContacto ?? (object)DBNull.Value),
-                new SqlParameter("@telefono", request.Telefono ?? (object)DBNull.Value),
-                new SqlParameter("@relacion", request.Relacion ?? (object)DBNull.Value),
-                new SqlParameter("@id_contacto", request.IdContacto ?? (object)DBNull.Value),
-                new SqlParameter("@accion", request.Accion)
-            );
-            return Ok();
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "SQL error occurred while updating the expediente.");
+                return BadRequest($"Error SQL: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error occurred.");
+                return BadRequest($"Error inesperado: {ex.Message}");
+            }
         }
-        catch (SqlException ex)
+        
+        [HttpPost]
+        public async Task<IActionResult> GestionarInformacionMedica([FromBody] InformacionMedicaRequest request)
         {
-            // Manejo detallado de excepciones SQL
-            return BadRequest($"Error SQL: {ex.Message}");
+            try
+            {
+                await _expedienteService.GestionarInformacionMedicaAsync(request);
+                return Ok();
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "SQL error occurred while managing medical information.");
+                return BadRequest($"Error SQL: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error occurred.");
+                return BadRequest($"Error inesperado: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+        
+        [HttpPost]
+        public async Task<IActionResult> GestionarContactosEmergencia([FromBody] ContactoEmergenciaRequest request)
         {
-            return BadRequest($"Error inesperado: {ex.Message}");
-        }
-    }
+            try
+            {
+                if (string.IsNullOrEmpty(request.NombreContacto) || request.Telefono == null ||
+                    string.IsNullOrEmpty(request.Relacion))
+                {
+                    return BadRequest("Los datos de contacto son obligatorios.");
+                }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+                await _expedienteService.GestionarContactosEmergenciaAsync(request);
+                return Ok(); 
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "SQL error occurred while managing emergency contacts.");
+                return BadRequest($"Error SQL: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error occurred.");
+                return BadRequest($"Error inesperado: {ex.Message}");
+            }
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
 }

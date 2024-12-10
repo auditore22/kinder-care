@@ -4,7 +4,7 @@
 <div class="breadcrumb mb-24">
     <ul class="flex-align gap-4">
         <li>
-            <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Home</a>
+            <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Inicio</a>
         </li>
         <li>
             <span class="text-gray-500 fw-normal d-flex">
@@ -12,7 +12,7 @@
             </span>
         </li>
         <li>
-            <span class="text-main-600 fw-normal text-15">Setting</span>
+            <span class="text-main-600 fw-normal text-15">Detalles Usuario</span>
         </li>
     </ul>
 </div>
@@ -21,7 +21,7 @@
 <div class="card overflow-hidden">
     <div class="card-body p-0">
         <div class="cover-img position-relative">
-            <label for="coverImageUpload" class="btn border-gray-200 text-gray-200 fw-normal hover-bg-gray-400 rounded-pill py-4 px-14 position-absolute inset-block-start-0 inset-inline-end-0 mt-24 me-24">Edit Cover</label>
+            <label for="coverImageUpload" class="btn border-gray-200 text-gray-200 fw-normal hover-bg-gray-400 rounded-pill py-4 px-14 position-absolute inset-block-start-0 inset-inline-end-0 mt-24 me-24">Editar fondo</label>
             <div class="avatar-upload">
                 <input type="file" id="coverImageUpload" accept=".png, .jpg, .jpeg">
                 <div class="avatar-preview">
@@ -34,7 +34,7 @@
         <div class="setting-profile px-24">
             <div class="flex-between">
                 <div class="d-flex align-items-end flex-wrap mb-32 gap-24">
-                    <img src="~/images/icons/baby_1_icon.png" alt="" class="w-120 h-120 rounded-circle border border-white">
+                    <img src="~/images/icons/profile_icon_2.png" alt="" class="w-120 h-120 rounded-circle border border-white">
                     <div>
                         <h4 class="mb-8">@Model.Nombre</h4>
                         <div class="setting-profile__infos flex-align flex-wrap gap-16">
@@ -67,14 +67,6 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="pills-edit-tab" data-bs-toggle="pill" data-bs-target="#pills-edit" type="button" role="tab" aria-controls="pills-edit" aria-selected="false">Editar</button>
                 </li>
-                @*                 
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-Edit_Contacto_Emergencia-tab" data-bs-toggle="pill" data-bs-target="#pills-Edit_Contacto_Emergencia" type="button" role="tab" aria-controls="pills-Edit_Contacto_Emergencia" aria-selected="false">Contactos de Emergencia</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-Edit_Info_Medica-tab" data-bs-toggle="pill" data-bs-target="#pills-Edit_Info_Medica" type="button" role="tab" aria-controls="pills-Edit_Info_Medica" aria-selected="false">Informacion Medica</button>
-                </li> 
-*@
             </ul>
         </div>
 
@@ -91,28 +83,71 @@
             <div class="card-body">
                 <div class="row gy-4">
 
-                    <!-- Numero de Telefono -->
-                    <h6 class="mb-8">Numero de Telefono:</h6>
-                    <p>@Model.NumTelefono</p>
+                    <ul>
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                                        <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                            <img style="height: 20px; width: 20px"
+                                                 src="~/images/icons/Email_icon.svg"
+                                                 alt="Fecha_asignada_icono"/>
+                                        </span>
 
-                    <!-- Rol del Usuario -->
-                    <h6 class="mb-8">Tipo de Usuario:</h6>
-                    <p>@Model.IdRolNavigation.Nombre</p>
+                            <p><strong>Correo Electronico: </strong></p>
+                            @Model.CorreoElectronico
+                        </li>
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                            <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                <img style="height: 20px; width: 20px"
+                                     src="~/images/icons/Tel_icon.svg" alt="Fecha_entrega_icono"/>
+                            </span>
 
-                    <h6 class="mb-8">Estado del Usuario:</h6>
-                    @if (Model.Activo == true)
-                    {
-                        <p>Usuario Activo</p>
-                    }
-                    else
-                    {
-                        <p>Usuario Inactivo</p>
-                    }
+                            <p><strong>Telefono: </strong></p>
+                            @Model.NumTelefono
+                        </li>
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                            <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                <img style="height: 20px; width: 20px"
+                                     src="~/images/icons/Role_icon.svg" alt="Fecha_entrega_icono"/>
+                            </span>
+
+                            <p><strong>Rol: </strong></p>
+                            @Model.IdRolNavigation.Nombre
+                        </li>
+                        @if (ViewBag.RoleName == "Administrador")
+                        {
+                            <li class="flex-align gap-6 text-black text-15 mb-12">
+                                @if (Model.Activo == true)
+                                {
+                                    <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                        <img style="height: 20px; width: 20px"
+                                             src="~/images/icons/Active_icon.svg" alt="Fecha_entrega_icono"/>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                        <img style="height: 20px; width: 20px"
+                                             src="~/images/icons/Inactive_icon.svg" alt="Fecha_entrega_icono"/>
+                                    </span>
+                                }
+
+                                <p><strong>Estado: </strong></p>
+                                @if (Model.Activo == true)
+                                {
+                                    <p>Usuario Activo</p>
+                                }
+                                else
+                                {
+                                    <p>Usuario Inactivo</p>
+                                }
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
     <!-- My Details Tab End -->
+    
     <!-- Editar Tab Start -->
     <div class="tab-pane fade" id="pills-edit" role="tabpanel" aria-labelledby="pills-edit-tab" tabindex="0">
         <div class="card mt-24">
@@ -151,13 +186,22 @@
 
                                 <div class="form-group">
                                     <label asp-for="IdRol" class="control-label"></label>
-                                    <select asp-for="IdRol" class="form-control">
-                                        <option value="1">Administrador</option>
-                                        <option value="2">Docente</option>
-                                        <option value="3">Padre</option>
-                                    </select>
+                                    @if (ViewBag.verificarRol)
+                                    {
+                                        <!-- Mostrar un campo de solo lectura para el rol Administrador -->
+                                        <input type="text" class="form-control" value="Administrador" readonly />
+                                    }
+                                    else
+                                    {
+                                        <!-- Mostrar el campo select solo para roles editables -->
+                                        <select asp-for="IdRol" class="form-control">
+                                            <option value="2">Docente</option>
+                                            <option value="3">Padre</option>
+                                        </select>
+                                    }
                                     <span asp-validation-for="IdRol" class="text-danger"></span>
                                 </div>
+
                                 <!-- Botones de acción -->
                                 <div class="col-12">
                                     <div class="flex-align justify-content-end gap-8">

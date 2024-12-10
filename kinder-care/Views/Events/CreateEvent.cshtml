@@ -1,0 +1,62 @@
+@model kinder_care.Models.ViewModels.EventViewModel
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="mb-4">Registrar Nuevo Evento</h4>
+
+        <form asp-action="CreateEvent" method="post">
+            <div class="row mb-4">
+                <!-- Campo Fecha -->
+                <div class="col-md-6">
+                    <label for="Fecha" class="form-label">Fecha y Hora</label>
+                    <input asp-for="Fecha" type="datetime-local" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                    <span asp-validation-for="Fecha" class="text-danger"></span>
+                </div>
+
+
+                <!-- Campo Lugar -->
+                <div class="col-md-6">
+                    <label for="Lugar" class="form-label">Lugar</label>
+                    <input asp-for="Lugar" class="form-control" placeholder="Lugar del Evento" />
+                    <span asp-validation-for="Lugar" class="text-danger"></span>
+                </div>
+
+                <!-- Campo Tipo de Actividad -->
+                <div class="col-md-6 mt-3">
+                    <label for="IdTipoActividad" class="form-label">Tipo de Actividad</label>
+                    <select class="form-select" asp-for="IdTipoActividad" asp-items="ViewBag.TipoActividades">
+                        <option value="">Selecciona el tipo de evento</option>
+                    </select>
+                    <span asp-validation-for="IdTipoActividad" class="text-danger"></span>
+                </div>
+
+                <!-- Campo Descripción -->
+                <div class="col-md-12 mt-3">
+                    <label for="Descripcion" class="form-label">Descripción</label>
+                    <textarea asp-for="Descripcion" class="form-control" placeholder="Descripción del Evento" rows="3"></textarea>
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="d-flex justify-content-end gap-2">
+                <button type="submit" class="btn btn-main rounded-pill">Registrar Evento</button>
+                <a href="@Url.Action("ManageEvents", "Events")" class="btn btn-secondary rounded-pill">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .form-control, .form-select {
+        font-size: 16px;
+        background-color: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+</style>

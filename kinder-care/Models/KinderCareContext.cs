@@ -122,13 +122,8 @@ public partial class KinderCareContext : DbContext
             entity.HasIndex(e => e.IdNino, "idx_asistencia_nino");
 
             entity.Property(e => e.IdAsistencia).HasColumnName("id_Asistencia");
-            entity.Property(e => e.Estado)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("estado");
             entity.Property(e => e.Fecha).HasColumnName("fecha");
-            entity.Property(e => e.HoraEntrada).HasColumnName("hora_entrada");
-            entity.Property(e => e.HoraSalida).HasColumnName("hora_salida");
+            entity.Property(e => e.Presente).HasColumnName("presente").IsRequired();
             entity.Property(e => e.IdNino).HasColumnName("id_nino");
 
             entity.HasOne(d => d.IdNinoNavigation).WithMany(p => p.Asistencia)
@@ -504,10 +499,6 @@ public partial class KinderCareContext : DbContext
 
             entity.Property(e => e.IdDocente).HasColumnName("id_docente");
             entity.Property(e => e.IdNino).HasColumnName("id_nino");
-            entity.Property(e => e.Materia)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("materia");
 
             entity.HasOne(d => d.IdDocenteNavigation).WithMany(p => p.RelDocenteNinoMateria)
                 .HasForeignKey(d => d.IdDocente)
@@ -610,10 +601,6 @@ public partial class KinderCareContext : DbContext
 
             entity.Property(e => e.IdDocente).HasColumnName("id_docente");
             entity.Property(e => e.IdNino).HasColumnName("id_nino");
-            entity.Property(e => e.Materia)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("materia");
 
             entity.HasOne(d => d.IdDocenteNavigation).WithMany(p => p.RelDocenteNinoMateria)
                 .HasForeignKey(d => d.IdDocente)

@@ -1,158 +1,1025 @@
-﻿@using System.Security.Claims
-
-<div class="row gy-4">
-    <div class="col-lg-9">
-        <!-- Grettings Box Start -->
-        <div class="grettings-box position-relative rounded-16 bg-main-600 overflow-hidden gap-16 flex-wrap z-1">
-            <img src="~/images/bg/grettings-pattern.png" alt="" class="position-absolute inset-block-start-0 inset-inline-start-0 z-n1 w-100 h-100 opacity-6">
-            <div class="row gy-4">
-                <div class="col-sm-7">
-                    <div class="grettings-box__content py-xl-4">
-                        <h2 class="text-white mb-0">Hello, @User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault() !</h2>
-                        <p class="text-15 fw-light mt-4 text-white">Let’s learning something today</p>
-                        <p class="text-lg fw-light mt-24 text-white">Set your study plan and growth with community</p>
-                    </div>
-                </div>
-                <div class="col-sm-5 d-sm-block d-none">
-                    <div class="text-center h-100 d-flex justify-content-center align-items-end ">
-                        <img src="https://html.themeholy.com/edmate/assets/images/thumbs/auth-img1.png" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Grettings Box End -->
-
-        <!-- Hour Spent Card Start -->
-        <div class="card mt-24 overflow-hidden">
-            Content
-        </div>
-        <!-- Hour Spent Card End -->
-
-        <!-- Table Start -->
-        <div class="card mt-24 overflow-hidden">
-            <div class="card-header">
-                Content
-            </div>
-            <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
-
-                <!-- Table End -->
-
-            </div>
-            <div class="col-lg-3">
-
-                <!-- Calendar Start -->
-                <div class="card">
-                    <div class="card-body">
-                        <div class="calendar">
-                            <div class="calendar__header">
-                                <button type="button" class="calendar__arrow left">
-                                    <i class="ph ph-caret-left"></i>
-                                </button>
-                                <p class="display h6 mb-0">""</p>
-                                <button type="button" class="calendar__arrow right">
-                                    <i class="ph ph-caret-right"></i>
-                                </button>
-                            </div>
-
-                            <div class="calendar__week week">
-                                <div class="calendar__week-text">Su</div>
-                                <div class="calendar__week-text">Mo</div>
-                                <div class="calendar__week-text">Tu</div>
-                                <div class="calendar__week-text">We</div>
-                                <div class="calendar__week-text">Th</div>
-                                <div class="calendar__week-text">Fr</div>
-                                <div class="calendar__week-text">Sa</div>
-                            </div>
-                            <div class="days"></div>
+﻿<div class="dashboard-body">
+    <div class="row gy-4">
+        <div class="col-lg-9">
+            <!-- Grettings Box Start -->
+            <div class="grettings-box position-relative rounded-16 bg-main-600 overflow-hidden gap-16 flex-wrap z-1">
+                <img src="~/images/bg/grettings-pattern.png" alt="" class="position-absolute inset-block-start-0 inset-inline-start-0 z-n1 w-100 h-100 opacity-6">
+                <div class="row gy-4">
+                    <div class="col-sm-7">
+                        <div class="grettings-box__content py-xl-4">
+                            <h2 class="text-white mb-0">Hola, @ViewBag.UserName! </h2>
+                            <p class="text-15 fw-light mt-4 text-white"><strong>@ViewBag.RoleName</strong></p>
+                            <p class="text-lg fw-light mt-24 text-white">Bienvenid@s al sistema academico</p>
+                            <p class="text-lg fw-light mt-24 text-white"><strong>Centro Infantil Agroecológico La Granja!!</strong></p>
                         </div>
-
-                        <!-- Events start -->
-                        <div class="">
-
+                    </div>
+                    <div class="col-sm-5 d-sm-block d-none">
+                        <div class="text-center h-100 d-flex justify-content-center align-items-end ">
+                            <img src="https://html.themeholy.com/edmate/assets/images/thumbs/auth-img1.png" alt="">
                         </div>
-                        <a href="event.html" class="btn btn-main w-100 mt-24">All Events</a>
-                    </div>
-                    <!-- Events End -->
-
-                </div>
-            </div>
-            <!-- Calendar End -->
-
-            <!-- Donut Chart Start -->
-            <div class="card mt-24">
-                <div class="card-header border-bottom border-gray-100 flex-between gap-8 flex-wrap">
-                    <h5 class="mb-0">Most Activity</h5>
-                    <div class="dropdown flex-shrink-0">
-                        Content
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="flex-center">
-                        <div id="activityDonutChart" class="w-auto d-inline-block"></div>
-                    </div>
-
-                    <div class="flex-between gap-8 flex-wrap mt-24">
-                        Content
                     </div>
                 </div>
             </div>
-            <!-- Donut Chart End -->
+            <!-- Grettings Box End -->
 
-            <!-- Community Groups card Start -->
-            <div class="card mt-24">
-                <div class="card-body">
-                    <div class="mb-20 flex-between flex-wrap gap-8">
-                        <h4 class="mb-0">Community Groups</h4>
-                        <a href="student-courses.html" class="w-28 h-28 flex-center bg-gray-50 rounded-circle text-gray-600 hover-bg-gray-100">
-                            <i class="ph ph-plus"></i>
-                        </a>
-                    </div>
-                    <div class="p-xl-4 py-16 px-12 flex-between gap-8 rounded-8 border border-gray-100 hover-border-gray-200 transition-1 mb-16">
-                        <div class="flex-align flex-wrap gap-8">
-                                <span class="text-main-600 bg-main-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
-                                    <i class="ph-fill ph-graduation-cap"></i>
-                                </span>
-                            <div>
-                                <h6 class="mb-0">Design Community, USA</h6>
-                                <span class="text-13 text-gray-500 fw-medium">125k Members</span>
-                            </div>
+            <!-- Hour Spent Card Start -->
+            <!-- DASHBOARD ADMINISTRADOR -->
+            @if (ViewBag.RoleName == "Administrador") 
+            {
+                <div class="card mt-24 overflow-hidden"> <!-- Usuarios Inactivos -->
+                    <div class="card-header">
+                        <div class="mb-0 flex-between flex-wrap gap-8">
+                            <h4 class="mb-0">Usuarios Inactivos</h4>
+                            <a asp-action="Index" asp-controller="Usuarios" class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver todos los usuarios</a>
                         </div>
-                        <a href="assignment.html" class="text-gray-900 hover-text-main-600">
-                            <i class="ph ph-caret-right"></i>
-                        </a>
                     </div>
-                    <div class="p-xl-4 py-16 px-12 flex-between gap-8 rounded-8 border border-gray-100 hover-border-gray-200 transition-1 mb-16">
-                        <div class="flex-align flex-wrap gap-8">
-                                <span class="text-dribble-600 bg-dribble-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
-                                    <i class="ph ph-dribbble-logo"></i>
-                                </span>
-                            <div>
-                                <h6 class="mb-0">Dribbble Global Groups</h6>
-                                <span class="text-13 text-gray-500 fw-medium">28M Members</span>
-                            </div>
-                        </div>
-                        <a href="assignment.html" class="text-gray-900 hover-text-main-600">
-                            <i class="ph ph-caret-right"></i>
-                        </a>
-                    </div>
-                    <div class="p-xl-4 py-16 px-12 flex-between gap-8 rounded-8 border border-gray-100 hover-border-gray-200 transition-1">
-                        <div class="flex-align flex-wrap gap-8">
-                                <span class="text-purple-600 bg-purple-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
-                                    <i class="ph ph-chart-line-up"></i>
-                                </span>
-                            <div>
-                                <h6 class="mb-0">Marketing Support Group</h6>
-                                <span class="text-13 text-gray-500 fw-medium">125k Members</span>
-                            </div>
-                        </div>
-                        <a href="assignment.html" class="text-gray-900 hover-text-main-600">
-                            <i class="ph ph-caret-right"></i>
-                        </a>
+                    <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
+                        <table class="table style-two mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Rol</th>
+                                    <th class="text-center">Detalles</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewData["UsuariosInactivos"] is List<kinder_care.Models.Usuarios> usuariosInactivos && usuariosInactivos.Any())
+                                {
+                                    @foreach (var usuario in usuariosInactivos)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="flex-align gap-8">
+                                                    <span class="text-main-600 bg-main-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                                                        <i class="ph-fill ph-graduation-cap"></i>
+                                                    </span>
+                                                    <div>
+                                                        <h6 class="mb-0">@usuario.Nombre</h6>
+                                                        <div class="table-list">
+                                                            <span class="text-13 text-gray-600">@usuario.Cedula</span>
+                                                            <span class="text-13 text-gray-600">@usuario.CorreoElectronico</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="flex-align gap-8">
+                                                    <h6 class="mb-0">@usuario.IdRolNavigation.Nombre</h6>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="flex-align justify-content-center gap-16">
+                                                    <span class="text-13 py-2 px-8 bg-danger-50 text-danger-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                                                        <span class="w-6 h-6 bg-danger-600 rounded-circle flex-shrink-0"></span>
+                                                        Inactivo
+                                                    </span>
+                                                    <a asp-action="Details" asp-controller="Usuarios" asp-route-id="@usuario.IdUsuario" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                                                        <i class="ph ph-caret-right"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">Actualmente no hay Usuarios Inactivos.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </div>
-            <!-- Community Groups card End -->
 
-        </div>
+                <div class="card mt-24 overflow-hidden"> <!-- Pagos Recientes -->
+                    <div class="card-header">
+                        <div class="mb-0 flex-between flex-wrap gap-8">
+                            <h4 class="mb-0">Pagos Recientes</h4>
+                            <a asp-action="ManagePayments" asp-controller="Payments" class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver todos los Pagos</a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
+                        <table class="table style-two mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Fecha del Pago</th>
+                                    <th class="text-center">Detalles</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewData["UltimosPagos"] is List<kinder_care.Models.Pagos> ultimosPagos && ultimosPagos.Any())
+                                {
+                                    @foreach (var pagos in ultimosPagos)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="flex-align gap-8">
+                                                    <span class="text-purple-600 bg-purple-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                                                        <i class="ph ph-chart-line-up"></i>
+                                                    </span>
+                                                    <div>
+                                                        <h6 class="mb-0">@pagos.Padre.Nombre</h6>
+                                                        <div class="table-list">
+                                                            <span class="text-13 text-gray-600">@pagos.Padre.Cedula</span>
+                                                            <span class="text-13 text-gray-600">@pagos.ReferenciaFactura</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="flex-align gap-8">
+                                                    <h6 class="mb-0">@pagos.FechaPago.ToString("dd/MM/yyyy")</h6>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="flex-align justify-content-center gap-16">
+                                                    <span class="text-13 py-2 px-8 bg-success-50 text-success-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                                                        <span class="w-6 h-6 bg-success-600 rounded-circle flex-shrink-0"></span>
+                                                        Detalles
+                                                    </span>
+                                                    <a asp-action="Details" asp-controller="Payments" asp-route-id="@pagos.IdPago" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                                                        <i class="ph ph-caret-right"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">Actualmente no hay Pagos Registrados.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card mt-24 overflow-hidden"> <!-- Calendario -->
+                    <div class="card-header">
+                        <div class="mb-0 flex-between flex-wrap gap-8">
+                            <h4 class="mb-0">Próximas Actividades</h4>
+                            <a asp-action="ManageEvents" asp-controller="Events" class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver Calendario</a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
+                        <table class="table style-two mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Descripcion</th>
+                                    <th>Fecha</th>
+                                    <th class="text-center">Detalles</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewData["ActividadesProximas"] is List<kinder_care.Models.Actividades> actividadesProximas && actividadesProximas.Any())
+                                {
+                                    @foreach (var actividad in actividadesProximas)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="flex-align gap-8">
+                                                    <span class="text-dribble-600 bg-dribble-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                                                        <i class="ph ph-dribbble-logo"></i>
+                                                    </span>
+                                                    <div>
+                                                        <h6 class="mb-0">@actividad.Descripcion</h6>
+                                                        <div class="table-list">
+                                                            <span class="text-13 text-gray-600">@actividad.Lugar</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <h6 class="mb-0">@actividad.Fecha.ToString("dd/MM/yyyy")</h6>
+                                            </td>
+                                            <td>
+                                                <div class="flex-align justify-content-center gap-16">
+                                                    <span class="text-13 py-2 px-8 bg-success-50 text-success-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                                                        <span class="w-6 h-6 bg-success-600 rounded-circle flex-shrink-0"></span>
+                                                        Detalles
+                                                    </span>
+                                                    <a asp-action="EventDetails" asp-controller="Events" asp-route-id="@actividad.IdActividad" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                                                        <i class="ph ph-caret-right"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">No se encontraron actividades próximas.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            }
+            else if (ViewBag.RoleName == "Docente")
+            {
+                <div class="card mt-24 overflow-hidden"> <!-- Ausencias -->
+                    <div class="card-header">
+                        <div class="mb-0 flex-between flex-wrap gap-8">
+                            <h4 class="mb-0">Últimas Ausencias</h4>
+                            <a asp-action="ListaAsistencia" asp-controller="Asistencia" class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver Asistencias</a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
+                        <table class="table style-two mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Estudiante</th>
+                                    <th>Fecha</th>
+                                    <th class="text-center">Detalles</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewData["UltimasAusencias"] is List<kinder_care.Models.Asistencia> ultimasAusencias && ultimasAusencias.Any())
+                                {
+                                    @foreach (var ausencia in ultimasAusencias)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="flex-align gap-8">
+                                                    <div class="flex-align gap-8">
+                                                        <img src="~/images/icons/baby_2_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
+                                                    </div>
+                                                    <div class="">
+                                                        <h6 class="mb-0">@ausencia.IdNinoNavigation.NombreNino</h6>
+                                                        <div class="table-list">
+                                                            <span class="text-13 text-gray-600">@ausencia.IdNinoNavigation.Cedula</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <h6 class="mb-0">@ausencia.Fecha.ToString("dd/MM/yyyy")</h6>
+                                            </td>
+                                            <td>
+                                                <div class="flex-align justify-content-center gap-16">
+                                                    <span class="text-13 py-2 px-8 bg-warning-50 text-warning-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                                                        <span class="w-6 h-6 bg-warning-600 rounded-circle flex-shrink-0"></span>
+                                                        Detalles
+                                                    </span>
+                                                    <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@ausencia.IdNino" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                                                        <i class="ph ph-caret-right"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-center">No se encontraron Ausencias recientes.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card mt-24 overflow-hidden"> <!-- Calendario -->
+                    <div class="card-header">
+                        <div class="mb-0 flex-between flex-wrap gap-8">
+                            <h4 class="mb-0">Próximas Actividades</h4>
+                            <a asp-action="ManageEvents" asp-controller="Events" class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver Calendario</a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
+                        <table class="table style-two mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Descripcion</th>
+                                    <th>Fecha</th>
+                                    <th class="text-center">Detalles</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewData["ActividadesProximas"] is List<kinder_care.Models.Actividades> actividadesProximas && actividadesProximas.Any())
+                                {
+                                    @foreach (var actividad in actividadesProximas)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="flex-align gap-8">
+                                                    <span class="text-dribble-600 bg-dribble-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                                                        <i class="ph ph-dribbble-logo"></i>
+                                                    </span>
+                                                    <div>
+                                                        <h6 class="mb-0">@actividad.Descripcion</h6>
+                                                        <div class="table-list">
+                                                            <span class="text-13 text-gray-600">@actividad.Lugar</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <h6 class="mb-0">@actividad.Fecha.ToString("dd/MM/yyyy")</h6>
+                                            </td>
+                                            <td>
+                                                <div class="flex-align justify-content-center gap-16">
+                                                    <span class="text-13 py-2 px-8 bg-success-50 text-success-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                                                        <span class="w-6 h-6 bg-success-600 rounded-circle flex-shrink-0"></span>
+                                                        Detalles
+                                                    </span>
+                                                    <a asp-action="EventDetails" asp-controller="Events" asp-route-id="@actividad.IdActividad" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                                                        <i class="ph ph-caret-right"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">No se encontraron actividades próximas.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else if (ViewBag.RoleName == "Padre")
+            {
+                <div class="card mt-24 overflow-hidden"> <!-- Calendario -->
+                    <div class="card-header">
+                        <div class="mb-0 flex-between flex-wrap gap-8">
+                            <h4 class="mb-0">Próximas Actividades</h4>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
+                        <table class="table style-two mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Descripcion</th>
+                                    <th>Fecha</th>
+                                    <th class="text-center">Detalles</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewData["ActividadesProximas"] is List<kinder_care.Models.Actividades> actividadesProximas && actividadesProximas.Any())
+                                {
+                                    @foreach (var actividad in actividadesProximas)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="flex-align gap-8">
+                                                    <span class="text-dribble-600 bg-dribble-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                                                        <i class="ph ph-dribbble-logo"></i>
+                                                    </span>
+                                                    <div>
+                                                        <h6 class="mb-0">@actividad.Descripcion</h6>
+                                                        <div class="table-list">
+                                                            <span class="text-13 text-gray-600">@actividad.Lugar</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <h6 class="mb-0">@actividad.Fecha.ToString("dd/MM/yyyy")</h6>
+                                            </td>
+                                            <td>
+                                                <div class="flex-align justify-content-center gap-16">
+                                                    <span class="text-13 py-2 px-8 bg-success-50 text-success-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                                                        <span class="w-6 h-6 bg-success-600 rounded-circle flex-shrink-0"></span>
+                                                        Detalles
+                                                    </span>
+                                                    <a asp-action="EventDetails" asp-controller="Events" asp-route-id="@actividad.IdActividad" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                                                        <i class="ph ph-caret-right"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">No se encontraron actividades próximas.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+
+<!-- Hour Spent Card End -->
+
+<!-- Table Start -->
+@* <div class="card mt-24 overflow-hidden">
+<div class="card-header">
+    <div class="mb-0 flex-between flex-wrap gap-8">
+        <h4 class="mb-0">Your Assignments</h4>
+        <a href="student-courses.html" class="text-13 fw-medium text-main-600 hover-text-decoration-underline">See All</a>
     </div>
 </div>
+<div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
+<table class="table style-two mb-0">
+<thead>
+<tr>
+    <th>Course Name</th>
+    <th>Progress</th>
+    <th class="text-center">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <td>
+        <div class="flex-align gap-8">
+            <div class="w-40 h-40 rounded-circle bg-main-600 flex-center flex-shrink-0">
+                <img src="~/images/icons/course-name-icon1.png" alt="">
+            </div>
+            <div class="">
+                <h6 class="mb-0">Design Accesibility</h6>
+                <div class="table-list">
+                    <span class="text-13 text-gray-600">Advanced</span>
+                    <span class="text-13 text-gray-600">12 Hours</span>
+                </div>
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align gap-8 mt-12">
+            <div class="progress w-100px  bg-main-100 rounded-pill h-4" role="progressbar" aria-label="Basic example" aria-valuenow="32" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-main-600 rounded-pill" style="width: 32%"></div>
+            </div>
+            <span class="text-main-600 flex-shrink-0 text-13 fw-medium">32%</span>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align justify-content-center gap-16">
+            <span class="text-13 py-2 px-8 bg-warning-50 text-warning-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                <span class="w-6 h-6 bg-warning-600 rounded-circle flex-shrink-0"></span>
+                In Progress
+            </span>
+            <a href="assignment.html" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                <i class="ph ph-caret-right"></i>
+            </a>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="flex-align gap-8">
+            <div class="w-40 h-40 rounded-circle bg-purple-600 flex-center">
+                <img src="~/images/icons/course-name-icon2.png" alt="">
+            </div>
+            <div class="">
+                <h6 class="mb-0">Figma for Beginner</h6>
+                <div class="table-list">
+                    <span class="text-13 text-gray-600">Intermediate</span>
+                    <span class="text-13 text-gray-600">12 Hours</span>
+                </div>
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align gap-8 mt-12">
+            <div class="progress w-100px  bg-main-100 rounded-pill h-4" role="progressbar" aria-label="Basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-main-600 rounded-pill" style="width: 50%"></div>
+            </div>
+            <span class="text-main-600 flex-shrink-0 text-13 fw-medium">50%</span>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align justify-content-center gap-16">
+            <span class="text-13 py-2 px-8 bg-warning-50 text-warning-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                <span class="w-6 h-6 bg-warning-600 rounded-circle flex-shrink-0"></span>
+                In Progress
+            </span>
+            <a href="assignment.html" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                <i class="ph ph-caret-right"></i>
+            </a>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="flex-align gap-8">
+            <div class="w-40 h-40 rounded-circle bg-warning-600 flex-center">
+                <img src="~/images/icons/course-name-icon3.png" alt="">
+            </div>
+            <div class="">
+                <h6 class="mb-0">Framer Design</h6>
+                <div class="table-list">
+                    <span class="text-13 text-gray-600">Advanced</span>
+                    <span class="text-13 text-gray-600">12 Hours</span>
+                </div>
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align gap-8 mt-12">
+            <div class="progress w-100px  bg-main-100 rounded-pill h-4" role="progressbar" aria-label="Basic example" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-main-600 rounded-pill" style="width: 72%"></div>
+            </div>
+            <span class="text-main-600 flex-shrink-0 text-13 fw-medium">72%</span>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align justify-content-center gap-16">
+            <span class="text-13 py-2 px-8 bg-warning-50 text-warning-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                <span class="w-6 h-6 bg-warning-600 rounded-circle flex-shrink-0"></span>
+                In Progress
+            </span>
+            <a href="assignment.html" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                <i class="ph ph-caret-right"></i>
+            </a>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="flex-align gap-8">
+            <div class="w-40 h-40 rounded-circle bg-main-two-600 flex-center">
+                <img src="~/images/icons/course-name-icon4.png" alt="">
+            </div>
+            <div class="">
+                <h6 class="mb-0">Frontend Development</h6>
+                <div class="table-list">
+                    <span class="text-13 text-gray-600">Intermediate</span>
+                    <span class="text-13 text-gray-600">12 Hours</span>
+                </div>
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align gap-8 mt-12">
+            <div class="progress w-100px  bg-main-100 rounded-pill h-4" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-main-600 rounded-pill" style="width: 100%"></div>
+            </div>
+            <span class="text-main-600 flex-shrink-0 text-13 fw-medium">100%</span>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align justify-content-center gap-16">
+            <span class="text-13 py-2 px-8 bg-success-50 text-success-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                <span class="w-6 h-6 bg-success-600 rounded-circle flex-shrink-0"></span>
+                Completed
+            </span>
+            <a href="assignment.html" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                <i class="ph ph-caret-right"></i>
+            </a>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="flex-align gap-8">
+            <div class="w-40 h-40 rounded-circle bg-main-600 flex-center flex-shrink-0">
+                <img src="~/images/icons/course-name-icon1.png" alt="">
+            </div>
+            <div class="">
+                <h6 class="mb-0">Design Accesibility</h6>
+                <div class="table-list">
+                    <span class="text-13 text-gray-600">Advanced</span>
+                    <span class="text-13 text-gray-600">12 Hours</span>
+                </div>
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align gap-8 mt-12">
+            <div class="progress w-100px  bg-main-100 rounded-pill h-4" role="progressbar" aria-label="Basic example" aria-valuenow="32" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-main-600 rounded-pill" style="width: 32%"></div>
+            </div>
+            <span class="text-main-600 flex-shrink-0 text-13 fw-medium">32%</span>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align justify-content-center gap-16">
+            <span class="text-13 py-2 px-8 bg-warning-50 text-warning-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                <span class="w-6 h-6 bg-warning-600 rounded-circle flex-shrink-0"></span>
+                In Progress
+            </span>
+            <a href="assignment.html" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                <i class="ph ph-caret-right"></i>
+            </a>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="flex-align gap-8">
+            <div class="w-40 h-40 rounded-circle bg-purple-600 flex-center">
+                <img src="~/images/icons/course-name-icon2.png" alt="">
+            </div>
+            <div class="">
+                <h6 class="mb-0">Figma for Beginner</h6>
+                <div class="table-list">
+                    <span class="text-13 text-gray-600">Intermediate</span>
+                    <span class="text-13 text-gray-600">12 Hours</span>
+                </div>
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align gap-8 mt-12">
+            <div class="progress w-100px  bg-main-100 rounded-pill h-4" role="progressbar" aria-label="Basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-main-600 rounded-pill" style="width: 50%"></div>
+            </div>
+            <span class="text-main-600 flex-shrink-0 text-13 fw-medium">50%</span>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align justify-content-center gap-16">
+            <span class="text-13 py-2 px-8 bg-warning-50 text-warning-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                <span class="w-6 h-6 bg-warning-600 rounded-circle flex-shrink-0"></span>
+                In Progress
+            </span>
+            <a href="assignment.html" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                <i class="ph ph-caret-right"></i>
+            </a>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="flex-align gap-8">
+            <div class="w-40 h-40 rounded-circle bg-warning-600 flex-center">
+                <img src="~/images/icons/course-name-icon3.png" alt="">
+            </div>
+            <div class="">
+                <h6 class="mb-0">Framer Design</h6>
+                <div class="table-list">
+                    <span class="text-13 text-gray-600">Advanced</span>
+                    <span class="text-13 text-gray-600">12 Hours</span>
+                </div>
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align gap-8 mt-12">
+            <div class="progress w-100px  bg-main-100 rounded-pill h-4" role="progressbar" aria-label="Basic example" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-main-600 rounded-pill" style="width: 72%"></div>
+            </div>
+            <span class="text-main-600 flex-shrink-0 text-13 fw-medium">72%</span>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align justify-content-center gap-16">
+            <span class="text-13 py-2 px-8 bg-warning-50 text-warning-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                <span class="w-6 h-6 bg-warning-600 rounded-circle flex-shrink-0"></span>
+                In Progress
+            </span>
+            <a href="assignment.html" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                <i class="ph ph-caret-right"></i>
+            </a>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="flex-align gap-8">
+            <div class="w-40 h-40 rounded-circle bg-main-two-600 flex-center">
+                <img src="~/images/icons/course-name-icon4.png" alt="">
+            </div>
+            <div class="">
+                <h6 class="mb-0">Frontend Development</h6>
+                <div class="table-list">
+                    <span class="text-13 text-gray-600">Intermediate</span>
+                    <span class="text-13 text-gray-600">12 Hours</span>
+                </div>
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align gap-8 mt-12">
+            <div class="progress w-100px  bg-main-100 rounded-pill h-4" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-main-600 rounded-pill" style="width: 100%"></div>
+            </div>
+            <span class="text-main-600 flex-shrink-0 text-13 fw-medium">100%</span>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align justify-content-center gap-16">
+            <span class="text-13 py-2 px-8 bg-success-50 text-success-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                <span class="w-6 h-6 bg-success-600 rounded-circle flex-shrink-0"></span>
+                Completed
+            </span>
+            <a href="assignment.html" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                <i class="ph ph-caret-right"></i>
+            </a>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class="flex-align gap-8">
+            <div class="w-40 h-40 rounded-circle bg-purple-600 flex-center">
+                <img src="~/images/icons/course-name-icon2.png" alt="">
+            </div>
+            <div class="">
+                <h6 class="mb-0">Figma for Beginner</h6>
+                <div class="table-list">
+                    <span class="text-13 text-gray-600">Intermediate</span>
+                    <span class="text-13 text-gray-600">12 Hours</span>
+                </div>
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align gap-8 mt-12">
+            <div class="progress w-100px  bg-main-100 rounded-pill h-4" role="progressbar" aria-label="Basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-main-600 rounded-pill" style="width: 50%"></div>
+            </div>
+            <span class="text-main-600 flex-shrink-0 text-13 fw-medium">50%</span>
+        </div>
+    </td>
+    <td>
+        <div class="flex-align justify-content-center gap-16">
+            <span class="text-13 py-2 px-8 bg-warning-50 text-warning-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                <span class="w-6 h-6 bg-warning-600 rounded-circle flex-shrink-0"></span>
+                In Progress
+            </span>
+            <a href="assignment.html" class="text-gray-900 hover-text-main-600 text-md d-flex">
+                <i class="ph ph-caret-right"></i>
+            </a>
+        </div>
+    </td>
+</tr>
+</tbody>
+</table>
+</div>
+</div> *@
+<!-- Table End -->
+
+</div>
+<div class="col-lg-3">
+
+<!-- Calendar Start -->
+<div class="card">
+    <div class="card-body">
+        <div class="calendar">
+            <div class="calendar__header">
+                <button type="button" class="calendar__arrow left">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <p class="display h6 mb-0">""</p>
+                <button type="button" class="calendar__arrow right">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+            </div>
+
+            <div class="calendar__week week">
+                <div class="calendar__week-text">Dom</div>
+                <div class="calendar__week-text">Lun</div>
+                <div class="calendar__week-text">Mar</div>
+                <div class="calendar__week-text">Mie</div>
+                <div class="calendar__week-text">Jue</div>
+                <div class="calendar__week-text">Vie</div>
+                <div class="calendar__week-text">Sab</div>
+            </div>
+            <div class="days"></div>
+        </div>
+
+        <!-- Events start -->
+        @* <div class="">
+            <div class="mt-24 mb-24">
+                <div class="flex-align mb-8 gap-16">
+                    <span class="text-sm text-gray-300 flex-shrink-0">Hoy</span>
+                    <span class="border border-gray-50 border-dashed flex-grow-1"></span>
+                </div>
+                <div class="event-item bg-gray-50 rounded-8 p-16">
+                    <div class=" flex-between gap-4">
+                        <div class="flex-align gap-8">
+                            <span class="icon d-flex w-44 h-44 bg-white rounded-8 flex-center text-2xl">
+                                <i class="ph ph-squares-four"></i>
+                            </span>
+                            <div class="">
+                                <h6 class="mb-2">Element of design test</h6>
+                                <span class="">10:00 - 11:00 AM</span>
+                            </div>
+                        </div>
+                        <div class="dropdown flex-shrink-0">
+                            <button class="text-gray-400 text-xl d-flex rounded-4" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="ph-fill ph-dots-three-outline"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu--md border-0 bg-transparent p-0">
+                                <div class="card border border-gray-100 rounded-12 box-shadow-custom">
+                                    <div class="card-body p-12">
+                                        <div class="max-h-200 overflow-y-auto scroll-sm pe-8">
+                                            <ul>
+                                                <li class="mb-0">
+                                                    <button type="button" class="delete-btn py-6 text-15 px-8 hover-bg-gray-50 text-gray-300 w-100 rounded-8 fw-normal text-xs d-block text-start hover-text-gray-600">
+                                                        <span class="text d-flex align-items-center gap-8"> <i class="ph ph-trash"></i> Remove</span>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="">
+            <div class="mt-24">
+                <div class="flex-align mb-8 gap-16">
+                    <span class="text-sm text-gray-300 flex-shrink-0">Sat, Aug 24</span>
+                    <span class="border border-gray-50 border-dashed flex-grow-1"></span>
+                </div>
+                <div class="event-item bg-gray-50 rounded-8 p-16">
+                    <div class=" flex-between gap-4">
+                        <div class="flex-align gap-8">
+                            <span class="icon d-flex w-44 h-44 bg-white rounded-8 flex-center text-2xl">
+                                <i class="ph ph-magic-wand"></i>
+                            </span>
+                            <div class="">
+                                <h6 class="mb-2">Design Principles test</h6>
+                                <span class="">10:00 - 11:00 AM</span>
+                            </div>
+                        </div>
+                        <div class="dropdown flex-shrink-0">
+                            <button class="text-gray-400 text-xl d-flex rounded-4" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="ph-fill ph-dots-three-outline"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu--md border-0 bg-transparent p-0">
+                                <div class="card border border-gray-100 rounded-12 box-shadow-custom">
+                                    <div class="card-body p-12">
+                                        <div class="max-h-200 overflow-y-auto scroll-sm pe-8">
+                                            <ul>
+                                                <li class="mb-0">
+                                                    <button type="button" class="delete-btn py-6 text-15 px-8 hover-bg-gray-50 text-gray-300 w-100 rounded-8 fw-normal text-xs d-block text-start hover-text-gray-600">
+                                                        <span class="text d-flex align-items-center gap-8"> <i class="ph ph-trash"></i> Remove</span>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="event-item bg-gray-50 rounded-8 p-16 mt-16">
+                    <div class=" flex-between gap-4">
+                        <div class="flex-align gap-8">
+                            <span class="icon d-flex w-44 h-44 bg-white rounded-8 flex-center text-2xl">
+                                <i class="ph ph-briefcase"></i>
+                            </span>
+                            <div class="">
+                                <h6 class="mb-2">Prepare Job Interview</h6>
+                                <span class="">09:00 - 10:00 AM</span>
+                            </div>
+                        </div>
+                        <div class="dropdown flex-shrink-0">
+                            <button class="text-gray-400 text-xl d-flex rounded-4" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="ph-fill ph-dots-three-outline"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu--md border-0 bg-transparent p-0">
+                                <div class="card border border-gray-100 rounded-12 box-shadow-custom">
+                                    <div class="card-body p-12">
+                                        <div class="max-h-200 overflow-y-auto scroll-sm pe-8">
+                                            <ul>
+                                                <li class="mb-0">
+                                                    <button type="button" class="delete-btn py-6 text-15 px-8 hover-bg-gray-50 text-gray-300 w-100 rounded-8 fw-normal text-xs d-block text-start hover-text-gray-600">
+                                                        <span class="text d-flex align-items-center gap-8"> <i class="ph ph-trash"></i> Remove</span>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="event.html" class="btn btn-main w-100 mt-24">All Events</a>
+        </div> *@
+        <!-- Events End -->
+
+    </div>
+</div>
+<!-- Calendar End -->
+
+<!-- Donut Chart Start -->
+@* <div class="card mt-24">
+    <div class="card-header border-bottom border-gray-100 flex-between gap-8 flex-wrap">
+        <h5 class="mb-0">Most Activity</h5>
+        <div class="dropdown flex-shrink-0">
+            <button class="text-gray-400 text-xl d-flex rounded-4" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="ph-fill ph-dots-three-outline"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu--md border-0 bg-transparent p-0">
+                <div class="card border border-gray-100 rounded-12 box-shadow-custom">
+                    <div class="card-body p-12">
+                        <div class="max-h-200 overflow-y-auto scroll-sm pe-8">
+                            <ul>
+                                <li class="mb-0">
+                                    <a href="students.html" class="py-6 text-15 px-8 hover-bg-gray-50 text-gray-300 w-100 rounded-8 fw-normal text-xs d-block text-start">
+                                        <span class="text"> <i class="ph ph-user me-4"></i> View</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="flex-center">
+            <div id="activityDonutChart" class="w-auto d-inline-block"></div>
+        </div>
+
+        <div class="flex-between gap-8 flex-wrap mt-24">
+            <div class="flex-align flex-column">
+                <span class="w-12 h-12 bg-white border border-3 border-main-600 rounded-circle"></span>
+                <span class="text-13 my-4 text-main-600">Mentoring</span>
+                <h6 class="mb-0">65.2%</h6>
+            </div>
+            <div class="flex-align flex-column">
+                <span class="w-12 h-12 bg-white border border-3 border-main-two-600 rounded-circle"></span>
+                <span class="text-13 my-4 text-main-two-600">Organization</span>
+                <h6 class="mb-0">25.0%</h6>
+            </div>
+            <div class="flex-align flex-column">
+                <span class="w-12 h-12 bg-white border border-3 border-warning-600 rounded-circle"></span>
+                <span class="text-13 my-4 text-warning-600">Planning</span>
+                <h6 class="mb-0">9.8%</h6>
+            </div>
+        </div>
+    </div>
+</div> *@
+<!-- Donut Chart End -->
+
+<!-- Community Groups card Start -->
+@* <div class="card mt-24">
+    <div class="card-body">
+        <div class="mb-20 flex-between flex-wrap gap-8">
+            <h4 class="mb-0">Community Groups</h4>
+            <a href="student-courses.html" class="w-28 h-28 flex-center bg-gray-50 rounded-circle text-gray-600 hover-bg-gray-100">
+                <i class="ph ph-plus"></i>
+            </a>
+        </div>
+        <div class="p-xl-4 py-16 px-12 flex-between gap-8 rounded-8 border border-gray-100 hover-border-gray-200 transition-1 mb-16">
+            <div class="flex-align flex-wrap gap-8">
+                <span class="text-main-600 bg-main-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                    <i class="ph-fill ph-graduation-cap"></i>
+                </span>
+                <div>
+                    <h6 class="mb-0">Design Community, USA</h6>
+                    <span class="text-13 text-gray-500 fw-medium">125k Members</span>
+                </div>
+            </div>
+            <a href="assignment.html" class="text-gray-900 hover-text-main-600">
+                <i class="ph ph-caret-right"></i>
+            </a>
+        </div>
+        <div class="p-xl-4 py-16 px-12 flex-between gap-8 rounded-8 border border-gray-100 hover-border-gray-200 transition-1 mb-16">
+            <div class="flex-align flex-wrap gap-8">
+                <span class="text-dribble-600 bg-dribble-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                    <i class="ph ph-dribbble-logo"></i>
+                </span>
+                <div>
+                    <h6 class="mb-0">Dribbble Global Groups</h6>
+                    <span class="text-13 text-gray-500 fw-medium">28M Members</span>
+                </div>
+            </div>
+            <a href="assignment.html" class="text-gray-900 hover-text-main-600">
+                <i class="ph ph-caret-right"></i>
+            </a>
+        </div>
+        <div class="p-xl-4 py-16 px-12 flex-between gap-8 rounded-8 border border-gray-100 hover-border-gray-200 transition-1">
+            <div class="flex-align flex-wrap gap-8">
+                <span class="text-purple-600 bg-purple-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                    <i class="ph ph-chart-line-up"></i>
+                </span>
+                <div>
+                    <h6 class="mb-0">Marketing Support Group</h6>
+                    <span class="text-13 text-gray-500 fw-medium">125k Members</span>
+                </div>
+            </div>
+            <a href="assignment.html" class="text-gray-900 hover-text-main-600">
+                <i class="ph ph-caret-right"></i>
+            </a>
+        </div>
+    </div>
+</div> *@
+<!-- Community Groups card End -->
+
+</div>
+</div>
+</div>
+
+
+<script src="~/js/index_scripts/donutChart.js"></script>
+<script src="~/js/index_scripts/hourSpentChart.js"></script>
+<script src="~/js/index_scripts/eventActions.js"></script>

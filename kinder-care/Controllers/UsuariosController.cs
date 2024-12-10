@@ -13,9 +13,11 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using Dapper;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace kinder_care.Controllers
 {
+    [Authorize]
     public class UsuariosController : Controller
     {
         private readonly KinderCareContext _context;
@@ -37,8 +39,6 @@ namespace kinder_care.Controllers
             return View(usuarios);
         }
 
-
-
         //======================================================[VISTA DETAILS]==========================================================================================
         public async Task<IActionResult> Details(int? id)
         {
@@ -55,45 +55,54 @@ namespace kinder_care.Controllers
                 return NotFound();
             }
 
+            ViewBag.verificarRol = usuarios.IdRol == 1; 
+
             return View(usuarios);
         }
 
         //======================================================[VISTA CREATE]==========================================================================================
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["IdRol"] = new SelectList(_context.Roles, "IdRol", "Nombre");
+            ViewData["IdRol"] = new SelectList(await _context.Roles.ToListAsync(), "IdRol", "Nombre");
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Usuarios usuarios)
+        public async Task<IActionResult> Create(Usuarios usuario)
         {
+            usuario.ContrasenaHash = _passwordHasher.HashPassword(usuario, usuario.ContrasenaHash);
 
-            usuarios.ContrasenaHash = _passwordHasher.HashPassword(usuarios, usuarios.ContrasenaHash);
-            usuarios.TokenRecovery = usuarios.TokenRecovery ?? Guid.NewGuid().ToString(); // Generar un token si es null
-
-            await _context.Usuarios.AddAsync(usuarios);
-            await _context.SaveChangesAsync();
-
-            if (usuarios.IdUsuario != 0)
+            if (usuario.IdRol == 0)
             {
-                return RedirectToAction(nameof(Index));
+                var sinRol = await _context.Roles.FirstOrDefaultAsync(r => r.Nombre == "Padre");
+                if (sinRol != null)
+                {
+                    usuario.IdRol = sinRol.IdRol;
+                }
             }
-            else
-            {
-                ViewData["Mensaje"] = "No se pudo crear el usuario";
-                return View(usuarios);
-            }
+
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC UsuariosCrear @Cedula = {0}, @Nombre = {1}, @ContrasenaHash = {2}, @NumTelefono = {3}, @Direccion = {4}, @CorreoElectronico = {5}, @IdRol = {6}, @Activo = {7}",
+                usuario.Cedula,
+                usuario.Nombre,
+                usuario.ContrasenaHash,
+                usuario.NumTelefono,
+                usuario.Direccion,
+                usuario.CorreoElectronico,
+                usuario.IdRol,
+                usuario.Activo
+            );
+
+
+            return RedirectToAction("Index", "Usuarios");
         }
 
-        //======================================================[VISTA EDIT]==========================================================================================
+
+        //======================================================[FUNCION EDIT]==========================================================================================
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var usuarios = await _context.Usuarios
                 .Include(u => u.IdRolNavigation)
@@ -103,7 +112,6 @@ namespace kinder_care.Controllers
             return View(usuarios);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Edit(int id, string Nombre, string Direccion, string CorreoElectronico, bool Activo, int IdRol)
         {
@@ -112,7 +120,6 @@ namespace kinder_care.Controllers
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario == null) return NotFound();
 
-            // Llamada al procedimiento almacenado para actualizar los datos principales del niño (Dirección y Poliza)
             var result = await _context.Database.ExecuteSqlRawAsync(
                 "EXEC UsuariosActualizar @id_usuario = {0}, @nombre = {1}, @correo_electronico = {2}, @direccion = {3}, @activo = {4}, @id_rol = {5}",
                 id, Nombre, CorreoElectronico, Direccion, Activo, IdRol);
@@ -124,7 +131,7 @@ namespace kinder_care.Controllers
             return RedirectToAction("Index", "Usuarios");
         }
 
-        //======================================================[VISTA DELETE]==========================================================================================
+        //======================================================[FUNCION DELETE]==========================================================================================
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -141,36 +148,6 @@ namespace kinder_care.Controllers
             }
 
             return View(usuarios);
-        }
-
-        // POST: Usuarios/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            // Encuentra el usuario a eliminar
-            var usuarios = await _context.Usuarios.FindAsync(id);
-            if (usuarios != null)
-            {
-                // Elimina los docentes relacionados
-                var docentes = await _context.Docentes.Where(d => d.IdUsuario == id).ToListAsync(); //Esto es que busca usuarios relacionados a docentes
-                if (docentes.Any())
-                {
-                    _context.Docentes.RemoveRange(docentes); //Esto es para eliminar los docentes para luego eliminar los usuarios
-                }
-
-
-                _context.Usuarios.Remove(usuarios); //Eliminamos el usuario
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        //======================================================[PROBAR QUE UN USUARIO EXISTE]==========================================================================================
-        private bool UsuariosExists(int id)
-        {
-            return _context.Usuarios.Any(e => e.IdUsuario == id);
-        }
+        } 
     }
 }

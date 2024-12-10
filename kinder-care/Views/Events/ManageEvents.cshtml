@@ -4,12 +4,12 @@
     ViewBag.Title = "Gestión de Eventos";
 }
 
-<div class="dashboard-body">
-    <!-- Breadcrumb Start -->
+<!-- Breadcrumb con opciones -->
+<div class="breadcrumb-with-buttons mb-24 flex-between flex-wrap gap-8">
     <div class="breadcrumb mb-24">
         <ul class="flex-align gap-4">
             <li>
-                <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Home</a>
+                <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Inicio</a>
             </li>
             <li>
                 <span class="text-gray-500 fw-normal d-flex">
@@ -17,129 +17,194 @@
                 </span>
             </li>
             <li>
-                <span class="text-main-600 fw-normal text-15">Eventos</span>
+                <span class="text-main-600 fw-normal text-15">Gestión de Eventos</span>
             </li>
         </ul>
     </div>
-    <!-- Breadcrumb End -->
-    @if (TempData["SuccessMessage"] != null)
-    {
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-    }
-    @if (TempData["ErrorMessage"] != null)
-    {
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
-    </div>
-    }
 
-    <!-- Recommended Start -->
-    <div class="card mt-24 bg-transparent">
-        <div class="card-body p-0">
-            <div id='wrap'>
-                <div id='calendar' class="position-relative">
-                    <button type="button" class="add-event btn btn-main text-sm btn-sm px-24 rounded-pill py-12 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <i class="ph ph-plus me-4"></i>
-                        Agregar
-                    </button>
-                </div>
-                <div style='clear:both'></div>
-            </div>
+    <div class="flex-align gap-8 flex-wrap">
+        <div class="position-relative text-gray-500 flex-align gap-4 text-13">
+            <span class="text-inherit">Descargar datos: </span>
         </div>
-    </div>
-    <!-- Recommended End -->
-</div>
-
-
-<!-- Modal Add Event -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content radius-16 bg-base">
-            <div class="modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo Evento</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-24">
-                <!-- Formulario para agregar evento -->
-                <form id="createEventForm" asp-action="CreateEvent" asp-controller="Events" method="post">
-                    <div class="row">
-                        <div class="col-12 mb-20">
-                            <label class="form-label fw-semibold text-primary-light text-sm mb-8">Título del Evento:</label>
-                            <input type="text" name="title" class="form-control radius-8" placeholder="Ingresa el título del evento" required>
-                        </div>
-                        <div class="col-md-6 mb-20">
-                            <label class="form-label fw-semibold text-primary-light text-sm mb-8">Fecha del Evento:</label>
-                            <input type="date" name="date" class="form-control radius-8 bg-base" required>
-                        </div>
-                        <div class="col-md-6 mb-20">
-                            <label class="form-label fw-semibold text-primary-light text-sm mb-8">Tipo de Actividad:</label>
-                            <select name="typeId" class="form-control radius-8" required>
-                                @foreach (var tipo in ViewBag.TiposActividad)
-                                {
-                                <option value="@tipo.IdTipoActividad">@tipo.NombreTipoActividad</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="col-12 mb-20">
-                            <label class="form-label fw-semibold text-primary-light text-sm mb-8">Descripción:</label>
-                            <textarea name="description" class="form-control radius-8" rows="4" placeholder="Ingresa la descripción del evento"></textarea>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-center gap-8 mt-24">
-                            <button type="reset" class="btn bg-danger-600 hover-bg-danger-800 text-md px-24 py-12 radius-8">Cancelar</button>
-                            <button type="submit" class="btn bg-main-600 hover-bg-main-800 text-md px-24 py-12 radius-8">Guardar</button>
-                        </div>
-                    </div>
-                </form>
-
-            </div>
+        <div class="flex-align text-gray-500 text-13 border border-gray-100 rounded-4 ps-20 focus-border-main-600 bg-white">
+            <span class="text-lg">
+                <i class="ph ph-layout"></i>
+            </span>
+            <select class="form-control ps-8 pe-20 py-16 border-0 text-inherit rounded-4 text-center" id="exportOptions">
+                <option value="" selected disabled>Export</option>
+                <option value="csv">CSV</option>
+                <option value="json">JSON</option>
+            </select>
         </div>
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        // Manejar el envío del formulario de creación de evento
-        $('#createEventForm').on('submit', function (e) {
-            e.preventDefault();
-
-            const title = $('#eventTitle').val();
-            const typeId = $('#eventType').val();
-            const date = $('#eventDate').val();
-            const description = $('#eventDesc').val();
-
-            // Validar los campos
-            if (!title || !typeId || !date) {
-                alert("Por favor completa todos los campos obligatorios.");
-                return;
-            }
-
-            // Enviar la solicitud AJAX
-            $.ajax({
-                url: '/Events/CreateEvent',
-                type: 'POST',
-                data: {
-                    title: title,
-                    typeId: typeId,
-                    date: date,
-                    description: description
-                },
-                success: function (response) {
-                    if (response.success) {
-                        alert(response.message);
-                        location.reload(); // Recargar la página para actualizar el calendario
-                    } else {
-                        alert("Error: " + response.message);
+<!-- Tabla de eventos -->
+<div class="card overflow-hidden">
+    <div class="card-body p-0 overflow-x-auto">
+        <table id="studentTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="column-fecha h6 text-gray-300">Fecha y Hora</th>
+                    <th class="column-lugar h6 text-gray-300">Lugar</th>
+                    <th class="column-tipo-actividad h6 text-gray-300">Tipo de Actividad</th>
+                    <th class="column-descripcion h6 text-gray-300">Descripción</th>
+                    <th class="column-acciones h6 text-gray-300">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    @foreach (var evento in Model)
+                    {
+                        <tr>
+                            <td>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@evento.Fecha.ToString("yyyy-MM-dd  ||  HH:mm tt")</span>
+                            </td>
+                            <td>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@evento.Lugar</span>
+                            </td>
+                            <td>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@evento.IdTipoActividadNavigation?.NombreTipoActividad</span>
+                            </td>
+                            <td>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@evento.Descripcion</span>
+                            </td>
+                            <td>
+                                <a asp-action="EventDetails" asp-route-id="@evento.IdActividad" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
+                            </td>
+                        </tr>
                     }
-                },
-                error: function () {
-                    alert("Error al enviar la solicitud. Intenta nuevamente.");
                 }
-            });
-        });
-    });
-</script>
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-gray-500">No se han registrado eventos.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/es.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.3/jquery-ui.min.js"></script>
+<!-- Botón para agregar un nuevo evento -->
+<div class="mb-4 mt-15 text-end">
+    <a href="@Url.Action("Calendar", "Events")" class="btn btn-secondary rounded-pill">
+        <i class="ph ph-calendar"></i> Ver Calendario
+    </a>
+    <a href="@Url.Action("CreateEvent", "Events")" class="btn btn-main rounded-pill">
+        <i class="ph ph-plus"></i> Registrar Nuevo Evento
+    </a>
+</div>
+
+<!-- Paginación y detalles del footer -->
+<div class="card-footer flex-between flex-wrap mt-15">
+    <span class="text-gray-900">
+        Mostrando @((ViewBag.CurrentPage - 1) * 10 + 1) a
+        @((ViewBag.CurrentPage * 10) > @Model.Count() ? @Model.Count() : ViewBag.CurrentPage * 10)
+        de @ViewBag.TotalEventos eventos
+    </span>
+
+    <!-- Mostrar paginación solo si hay más de una página -->
+    @if (ViewBag.TotalEventos > 10)
+    {
+    <ul class="pagination flex-align flex-wrap">
+        <!-- Página Anterior -->
+        @if (ViewBag.CurrentPage > 1)
+        {
+        <li class="page-item">
+            <a class="page-link" href="@Url.Action("ManageEvents", "Events", new { pageNumber = ViewBag.CurrentPage - 1 })">Anterior</a>
+        </li>
+        }
+
+        <!-- Páginas -->
+        @for (var i = 1; i <= ViewBag.TotalPages; i++)
+        {
+        <li class="page-item @((i == ViewBag.CurrentPage) ? "active" : "")">
+            <a class="page-link" href="@Url.Action("ManageEvents", "Events", new { pageNumber = i })">@i</a>
+        </li>
+        }
+
+        <!-- Página Siguiente -->
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+        {
+        <li class="page-item">
+            <a class="page-link" href="@Url.Action("ManageEvents", "Events", new { pageNumber = ViewBag.CurrentPage + 1 })">Siguiente</a>
+        </li>
+        }
+    </ul>
+    }
+</div>
+
+<!-- Estilos -->
+<style>
+    .btn-search {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        border-radius: 50%;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    .form-control {
+        font-size: 16px;
+        background-color: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .rounded-pill {
+        border-radius: 50px !important;
+    }
+
+    .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+    }
+
+    .card-footer {
+        padding: 16px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .pagination .page-item {
+        margin-right: 5px; /* Espacio entre los botones */
+    }
+
+    .pagination .page-item .page-link {
+        padding: 8px 15px; /* Aumenta el tamaño de los botones */
+    }
+
+    /* Alineación fija para cada columna */
+    .column-fecha {
+        width: 21%;
+    }
+
+    .column-lugar {
+        width: 21%;
+    }
+
+    .column-tipo-actividad {
+        width: 21%;
+    }
+
+    .column-descripcion {
+        width: 27%;
+    }
+
+    .column-acciones {
+        width: 10%;
+        text-align: center;
+    }
+
+    .manage-events-actions button {
+        margin-right: 5px;
+    }
+
+</style>
