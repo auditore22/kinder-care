@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using kinder_care.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace kinder_care.Controllers;
@@ -17,7 +18,7 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
     public IActionResult Index()
     {
         var currentUserId = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault();
-        int parsedCurrentUserId = int.TryParse(currentUserId, out int result) ? result : -1; // Convierte a entero o usa un valor no válido (-1) si falla
+        var parsedCurrentUserId = int.TryParse(currentUserId, out int result) ? result : -1; // Convierte a entero o usa un valor no válido (-1) si falla
         var roles = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
 
         if (roles.Contains("Administrador"))
@@ -27,7 +28,7 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
                 .Where(u => !u.Activo) 
                 .ToList();
 
-            if (usuariosInactivos == null || !usuariosInactivos.Any()) 
+            if (!usuariosInactivos.Any()) 
             {
                 ViewData["Mensaje"] = "Actualmente no hay Usuarios Inactivos.";
             }
@@ -42,7 +43,7 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
                 .Take(5)
                 .ToList();
 
-            if (ultimosPagos == null || !ultimosPagos.Any())
+            if (!ultimosPagos.Any())
             {
                 ViewData["Mensaje"] = "No hay pagos registrados.";
             }
@@ -58,7 +59,7 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
                 .OrderBy(a => a.Fecha)
                 .ToList();
 
-            if (actividadesProximas == null || !actividadesProximas.Any())
+            if (!actividadesProximas.Any())
             {
                 ViewData["Mensaje"] = "No hay Actividades.";
             }
@@ -71,7 +72,7 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
         }
         else if (roles.Contains("Docente"))
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var docente = _context.Docentes.FirstOrDefault(d => d.IdUsuario == userId);
 
             var ultimasAusencias = _context.Asistencia
@@ -82,7 +83,7 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
                 .Take(10) 
                 .ToList();
 
-            if (ultimasAusencias == null || !ultimasAusencias.Any())
+            if (!ultimasAusencias.Any())
             {
                 ViewData["Mensaje"] = "Actualmente no hay Ausencias registradas.";
             }
@@ -98,7 +99,7 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
                 .OrderBy(a => a.Fecha)
                 .ToList();
 
-            if (actividadesProximas == null || !actividadesProximas.Any())
+            if (!actividadesProximas.Any())
             {
                 ViewData["Mensaje"] = "No hay Actividades.";
             }
@@ -118,7 +119,7 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
                 .OrderBy(a => a.Fecha)
                 .ToList();
 
-            if (actividadesProximas == null || !actividadesProximas.Any())
+            if (!actividadesProximas.Any())
             {
                 ViewData["Mensaje"] = "No hay Actividades.";
             }
@@ -138,5 +139,4 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
-
 }
