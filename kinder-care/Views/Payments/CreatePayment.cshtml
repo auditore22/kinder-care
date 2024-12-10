@@ -41,8 +41,20 @@
                 </div>
 
                 <div class="col-md-6 mt-3">
-                    <label for="Monto" class="form-label">Monto</label>
-                    <input asp-for="Monto" class="form-control" placeholder="0.00" />
+                    <label for="MontoFinal" class="form-label">Monto Inicial (₡)</label>
+                    <input class="form-control" placeholder="0" id="initialMonto" />
+                    <span class="text-danger"></span>
+                </div>
+                
+                <div class="col-md-6 mt-3">
+                    <label for="Descuento" class="form-label">Descuento (%)</label>
+                    <input class="form-control" placeholder="0" id="discount" />
+                    <span class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="Monto" class="form-label">Monto Final (₡)</label>
+                    <input asp-for="Monto" class="form-control" placeholder="0" id="finalMonto" readonly/>
                     <span asp-validation-for="Monto" class="text-danger"></span>
                 </div>
 
@@ -72,3 +84,22 @@
         </form>
     </div>
 </div>
+
+<script>
+        function roundToNearestFive(value) {
+            return Math.round(value / 5) * 5;
+        }
+
+        document.addEventListener("input", function () {
+            const initialMonto = parseFloat(document.getElementById("initialMonto").value) || 0;
+            const discount = parseFloat(document.getElementById("discount").value) || 0;
+
+            if (discount >= 0 && discount <= 100) {
+                let finalMonto = initialMonto - (initialMonto * discount / 100);
+                finalMonto = roundToNearestFive(finalMonto);
+                document.getElementById("finalMonto").value = finalMonto;
+            } else {
+                document.getElementById("finalMonto").value = roundToNearestFive(initialMonto);
+            }
+        });
+    </script>

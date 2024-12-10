@@ -65,7 +65,7 @@
                         <th class="h6 text-gray-300">Cédula</th>
                         <th class="h6 text-gray-300">Estudiante</th>
                         <th class="h6 text-gray-300">Fecha de Nacimiento</th>
-                        <th class="h6 text-gray-300">Póliza</th>
+                        <th class="h6 text-gray-300">Estado</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -87,15 +87,17 @@
                             <td>
                                 <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.FechaNacimiento.ToString("dd/MM/yyyy")</span>
                             </td>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.Poliza</span>
-                            </td>
-                            <td>
-                                <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@estudiante.IdNino" asp-route-idDocente="@ViewBag.DocenteId" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
-                                <form asp-action="EliminarRelacion" asp-route-idNino="@estudiante.IdNino" method="post" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta relación?');">
-                                    <button type="submit" class="btn btn-danger py-2 px-14 rounded-pill">Eliminar</button>
-                                </form>
-                            </td>
+                            @if((bool)@estudiante.Activo!){
+                                <td>
+                                    <span class="h6 mb-0 fw-medium text-gray-300">Activo</span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <span class="h6 mb-0 fw-medium text-gray-300">Inactivo</span>
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>

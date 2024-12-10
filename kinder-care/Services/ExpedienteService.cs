@@ -26,6 +26,28 @@ namespace kinder_care.Services
                     RelacionContacto = e.RelacionContacto
                 }).ToListAsync();
         }
+        
+        public async Task<List<ExpedienteCompletoNino>> GetExpedientesByNinoIdsAsync(List<int> ninoIds)
+        {
+            return await context.VwExpedienteCompletoNino
+                .Where(e => ninoIds.Contains(e.IdNino))
+                .Select(e => new ExpedienteCompletoNino
+                {
+                    IdNino = e.IdNino,
+                    Cedula = e.Cedula,
+                    NombreNino = e.NombreNino,
+                    FechaNacimiento = e.FechaNacimiento,
+                    Direccion = e.Direccion,
+                    Poliza = e.Poliza,
+                    NombreAlergia = e.NombreAlergia,
+                    NombreCondicion = e.NombreCondicion,
+                    NombreMedicamento = e.NombreMedicamento,
+                    Dosis = e.Dosis,
+                    NombreContacto = e.NombreContacto,
+                    TelefonoContacto = e.TelefonoContacto,
+                    RelacionContacto = e.RelacionContacto
+                }).ToListAsync();
+        }
 
         public async Task UpdateExpedienteAsync(ExpedienteCompletoNino expediente)
         {
