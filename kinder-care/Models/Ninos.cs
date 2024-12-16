@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace kinder_care.Models;
 
@@ -7,12 +8,20 @@ public partial class Ninos
 {
     public int IdNino { get; set; }
 
+    [Display(Name = "Cédula")]
+    [MinLength(9, ErrorMessage = "El nombre de usuario debe contener minimo 9 caracteres")]
+    [MaxLength(9, ErrorMessage = "El nombre de usuario debe contener maximo 9 caracteres")]
     public string Cedula { get; set; } = null!;
 
+    [Display(Name = "Nombre Completo")]
+    [MinLength(5, ErrorMessage = "El nombre de usuario debe contener minimo 5 caracteres")]
+    [MaxLength(30, ErrorMessage = "El nombre de usuario debe contener maximo 30 caracteres")]
     public string NombreNino { get; set; } = null!;
 
     public DateTime FechaNacimiento { get; set; }
 
+    [Display(Name = "Dirección")]
+    [MaxLength(200, ErrorMessage = "Ingrese su direccion sin exeder los 200 caracteres")]
     public string Direccion { get; set; } = null!;
 
     public string? Poliza { get; set; }

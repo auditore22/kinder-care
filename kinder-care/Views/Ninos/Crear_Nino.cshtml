@@ -32,37 +32,37 @@
         <form asp-action="Crear_Nino" method="post">
             <div class="row mb-4">
                 <div class="col-md-6">
-                    <label for="Cedula" class="form-label">Cédula</label>
-                    <input asp-for="Cedula" class="form-control" placeholder="Cédula del niño" />
+                    <label asp-for="Cedula" class="form-label">Cédula</label>
+                    <input asp-for="Cedula" class="form-control" placeholder="Cédula del niño" required/>
                     <span asp-validation-for="Cedula" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="NombreNino" class="form-label">Nombre del Niño</label>
-                    <input asp-for="NombreNino" class="form-control" placeholder="Nombre completo" />
+                    <label asp-for="NombreNino" class="form-label">Nombre del Niño</label>
+                    <input asp-for="NombreNino" class="form-control" placeholder="Nombre completo" required/>
                     <span asp-validation-for="NombreNino" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-6 mt-3">
-                    <label for="FechaNacimiento" class="form-label">Fecha de Nacimiento</label>
-                    <input asp-for="FechaNacimiento" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    <label asp-for="FechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                    <input asp-for="FechaNacimiento" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" required/>
                     <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-6 mt-3">
-                    <label for="Direccion" class="form-label">Dirección</label>
-                    <input asp-for="Direccion" class="form-control" placeholder="Dirección completa" />
+                    <label asp-for="Direccion" class="form-label">Dirección</label>
+                    <input asp-for="Direccion" class="form-control" placeholder="Dirección completa" required/>
                     <span asp-validation-for="Direccion" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-6 mt-3">
-                    <label for="Poliza" class="form-label">Póliza</label>
-                    <input asp-for="Poliza" class="form-control" placeholder="Número de póliza o información relevante" />
+                    <label asp-for="Poliza" class="form-label">Póliza</label>
+                    <input asp-for="Poliza" class="form-control" placeholder="Número de póliza o información relevante" required/>
                     <span asp-validation-for="Poliza" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-6 mt-3">
-                    <label for="Activo" class="form-label">¿Activo?</label>
+                    <label asp-for="Activo" class="form-label">¿Activo?</label>
                     <select asp-for="Activo" class="form-select">
                         <option value="true">Sí</option>
                         <option value="false">No</option>

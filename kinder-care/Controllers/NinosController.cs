@@ -76,6 +76,14 @@ public class NinosController : Controller
             Activo = Activo
         };
 
+        var verificar_existencia = await _context.Ninos.FirstOrDefaultAsync(n => n.Cedula == Cedula);
+
+        if (verificar_existencia != null)
+        {
+            ViewBag.ErrorMessage = "El nino ya ha sido registrado o esta inactivo";
+            return View();
+        }
+
         try
         {
             var result = await _context.Database.ExecuteSqlRawAsync(
