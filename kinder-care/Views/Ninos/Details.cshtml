@@ -401,58 +401,6 @@
                             </div>
                         </div>
                     </div>
-
-                    @*<!-- Crear Tareas -->
-                    <div class="tab-pane fade" id="subPills-create" role="tabpanel"
-                         aria-labelledby="subPills-create-tab">
-                        <div class="card-body">
-                            <h5 class="mb-4">Crear Nueva Tarea</h5>
-                            <form asp-action="Crear_Tarea" asp-controller="Tarea" method="post">
-                                <div class="mb-3">
-                                    <label for="IdNino" class="form-label">IdNino</label>
-                                    <input type="text" class="form-control" id="IdNino" name="IdNino"
-                                           value="@Model.IdNino" required>
-                                </div>
-
-                                @if (ViewBag.RoleName == "Administrador")
-                                {
-                                    <div class="mb-3">
-                                        <label for="IdProfesor" class="form-label">IdProfesor</label>
-                                        <select for="IdProfesor" class="form-select"
-                                                asp-items="ViewBag.ListaProfesores">
-                                            <option value="">Selecciona el docente</option>
-                                        </select>
-                                    </div>
-                                }
-                                else if(ViewBag.RoleName == "Docente")
-                                {
-                                    <div class="mb-3">
-                                        <label for="IdProfesor" class="form-label">IdProfesor</label>
-                                        <input type="text" class="form-control" id="IdProfesor" name="IdProfesor"
-                                               value="@ViewBag.UserID" required>
-                                    </div>
-                                }
-
-                                <div class="mb-3">
-                                    <label for="NombreTarea" class="form-label">Nombre de la Tarea</label>
-                                    <input type="text" class="form-control" id="NombreTarea" name="Nombre" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="Descripcion" class="form-label">Descripción</label>
-                                    <textarea class="form-control" id="Descripcion" name="Descripcion" rows="3"
-                                              required></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="FechaEntrega" class="form-label">Fecha de Entrega</label>
-                                    <input type="date" class="form-control" required>
-                                </div>
-                                <input type="hidden" name="IdNino" value="@Model.IdNino">
-                                <button type="submit" class="btn btn-primary rounded-pill py-9 w-100 mt-24">Guardar
-                                    Tarea
-                                </button>
-                            </form>
-                        </div>
-                    </div>*@
                 </div>
             </div>
         </div>

@@ -1,0 +1,80 @@
+@model Ninos
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+}
+
+<!-- Breadcrumb con opciones -->
+<div class="breadcrumb-with-buttons mb-24 flex-between flex-wrap gap-8">
+    <div class="breadcrumb mb-24">
+        <ul class="flex-align gap-4">
+            <li>
+                <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Inicio</a>
+            </li>
+            <li>
+                <span class="text-gray-500 fw-normal d-flex">
+                    <i class="ph ph-caret-right"></i>
+                </span>
+            </li>
+            <li>
+                <span class="text-main-600 fw-normal text-15">Registrar Nino</span>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- Buscador de pagos -->
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="mb-4">Registrar Nuevo Niño</h4>
+
+        <form asp-action="Crear_Nino" method="post">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <label for="Cedula" class="form-label">Cédula</label>
+                    <input asp-for="Cedula" class="form-control" placeholder="Cédula del niño" />
+                    <span asp-validation-for="Cedula" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="NombreNino" class="form-label">Nombre del Niño</label>
+                    <input asp-for="NombreNino" class="form-control" placeholder="Nombre completo" />
+                    <span asp-validation-for="NombreNino" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="FechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                    <input asp-for="FechaNacimiento" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="Direccion" class="form-label">Dirección</label>
+                    <input asp-for="Direccion" class="form-control" placeholder="Dirección completa" />
+                    <span asp-validation-for="Direccion" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="Poliza" class="form-label">Póliza</label>
+                    <input asp-for="Poliza" class="form-control" placeholder="Número de póliza o información relevante" />
+                    <span asp-validation-for="Poliza" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mt-3">
+                    <label for="Activo" class="form-label">¿Activo?</label>
+                    <select asp-for="Activo" class="form-select">
+                        <option value="true">Sí</option>
+                        <option value="false">No</option>
+                    </select>
+                    <span asp-validation-for="Activo" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+                <button type="submit" class="btn btn-main rounded-pill">Registrar Niño</button>
+                <a asp-action="Crear_Nino" asp-controller="Ninos" class="btn btn-secondary rounded-pill">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

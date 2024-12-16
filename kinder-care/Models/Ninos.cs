@@ -11,7 +11,7 @@ public partial class Ninos
 
     public string NombreNino { get; set; } = null!;
 
-    public DateOnly FechaNacimiento { get; set; }
+    public DateTime FechaNacimiento { get; set; }
 
     public string Direccion { get; set; } = null!;
 
