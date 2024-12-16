@@ -156,37 +156,87 @@ END;
 GO
   
 -- SP para actualizar datos de niños (Listo)
-CREATE PROCEDURE GestionarNino @IdNino INT = NULL,
-                               @Cedula VARCHAR(20),
-                               @NombreNino VARCHAR(100),
-                               @FechaNacimiento DATE,
-                               @Direccion VARCHAR(256),
-                               @Poliza VARCHAR(100)
+CREATE PROCEDURE GestionarNino
+    @IdNino INT = NULL,
+    @Cedula VARCHAR(20) = NULL,
+    @NombreNino VARCHAR(100) = NULL,
+    @FechaNacimiento DATE = NULL,
+    @Direccion VARCHAR(256) = NULL,
+    @Poliza VARCHAR(100) = NULL,
+    @Activo BIT = 1,
+    @Accion NVARCHAR(10) = 'AGREGAR' -- 'AGREGAR', 'ACTUALIZAR', 'ELIMINAR'
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF @IdNino IS NULL
+    IF @Accion = 'AGREGAR'
         BEGIN
-            -- Inserción de nuevo niño
-            INSERT INTO ninos (Cedula, nombre_nino, fecha_nacimiento, direccion, poliza, fecha_creacion,
-                               ultima_actualizacion)
-            VALUES (@Cedula, @NombreNino, @FechaNacimiento, @Direccion, @Poliza, GETDATE(), GETDATE());
+            -- Validar que todos los campos requeridos estén presentes
+            IF @Cedula IS NULL OR @NombreNino IS NULL OR @FechaNacimiento IS NULL OR
+               @Direccion IS NULL OR @Poliza IS NULL
+                BEGIN
+                    RAISERROR ('Todos los campos son obligatorios para agregar un nuevo niño.', 16, 1);
+                    RETURN;
+                END
+
+            -- Validar si el niño ya existe con la misma cédula
+            IF EXISTS (SELECT 1 FROM ninos WHERE Cedula = @Cedula)
+                BEGIN
+                    RAISERROR ('Ya existe un niño con la misma cédula.', 16, 1);
+                    RETURN;
+                END
+
+            -- Inserción de un nuevo niño
+            INSERT INTO ninos (Cedula, nombre_nino, fecha_nacimiento, direccion, poliza,
+                               fecha_creacion, ultima_actualizacion, activo)
+            VALUES (@Cedula, @NombreNino, @FechaNacimiento, @Direccion, @Poliza,
+                    GETDATE(), GETDATE(), @Activo);
+
+            RETURN;
         END
-    ELSE
+
+    ELSE IF @Accion = 'ACTUALIZAR' AND @IdNino IS NOT NULL
         BEGIN
-            -- Actualización de niño existente
+            -- Validar que todos los campos requeridos estén presentes
+            IF @Cedula IS NULL OR @NombreNino IS NULL OR @FechaNacimiento IS NULL OR
+               @Direccion IS NULL OR @Poliza IS NULL
+                BEGIN
+                    RAISERROR ('Todos los campos son obligatorios para actualizar un niño.', 16, 1);
+                    RETURN;
+                END
+
+            -- Actualización de un niño existente
             UPDATE ninos
-            SET Cedula               = @Cedula,
-                nombre_nino          = @NombreNino,
-                fecha_nacimiento     = @FechaNacimiento,
-                direccion            = @Direccion,
-                poliza               = @Poliza,
+            SET Cedula = @Cedula,
+                nombre_nino = @NombreNino,
+                fecha_nacimiento = @FechaNacimiento,
+                direccion = @Direccion,
+                poliza = @Poliza,
+                ultima_actualizacion = GETDATE(),
+                activo = @Activo
+            WHERE id_Nino = @IdNino;
+
+            RETURN;
+        END
+
+    ELSE IF @Accion = 'ELIMINAR' AND @IdNino IS NOT NULL
+        BEGIN
+            -- Eliminación lógica: marcar al niño como inactivo
+            UPDATE ninos
+            SET activo = 0,
                 ultima_actualizacion = GETDATE()
             WHERE id_Nino = @IdNino;
+
+            RETURN;
+        END
+
+    ELSE
+        BEGIN
+            RAISERROR ('Acción no válida o parámetros incompletos.', 16, 1);
+            RETURN;
         END
 END;
-GO
+go
 
 -- SP para la actualización de perfil de docentes (Listo)
 CREATE PROCEDURE GestionarDocente @IdDocente INT = NULL,
