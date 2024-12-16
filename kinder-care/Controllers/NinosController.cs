@@ -49,6 +49,50 @@ public class NinosController : Controller
     }
 
     [HttpGet]
+    public async Task<IActionResult> Crear_Nino()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Crear_Nino(string Cedula, string NombreNino, DateTime FechaNacimiento,
+        string Direccion, string Poliza, bool Activo)
+    {
+        if (string.IsNullOrEmpty(Cedula) || string.IsNullOrEmpty(NombreNino) || FechaNacimiento == default ||
+            string.IsNullOrEmpty(Direccion) || string.IsNullOrEmpty(Poliza))
+        {
+            ViewBag.ErrorMessage = "Todos los campos son obligatorios.";
+            return View();
+        }
+
+        // Creación del objeto Nino
+        var nino = new Ninos
+        {
+            Cedula = Cedula,
+            NombreNino = NombreNino,
+            FechaNacimiento = FechaNacimiento,
+            Direccion = Direccion,
+            Poliza = Poliza,
+            Activo = Activo
+        };
+
+        try
+        {
+            var result = await _context.Database.ExecuteSqlRawAsync(
+                "EXEC GestionarNino @IdNino = {0}, @Cedula = {1}, @NombreNino = {2}, @FechaNacimiento = {3}, @Direccion = {4}, @Poliza = {5}",
+                null, // Para insertar un nuevo niño, el IdNino tiene que ser nulo
+                nino.Cedula, nino.NombreNino, nino.FechaNacimiento, nino.Direccion, nino.Poliza);
+
+            return RedirectToAction("Index", "Home");
+        }
+        catch (Exception ex)
+        {
+            ViewBag.ErrorMessage = $"Error al registrar el niño: {ex.Message}";
+            return View();
+        }
+    }
+
+    [HttpGet]
     public async Task<IActionResult> Details(int? id, DateTime? fechaInicio, DateTime? fechaFin)
     {
         if (id == null) return NotFound();
@@ -360,17 +404,16 @@ public class NinosController : Controller
         var nino = await _context.Ninos.FindAsync(id);
         if (nino == null) return NotFound();
 
-        // Llamada al procedimiento almacenado para actualizar los datos principales del niño (Dirección y Poliza)
         var result = await _context.Database.ExecuteSqlRawAsync(
-            "EXEC GestionarNino @IdNino = {0}, @Cedula = {1}, @NombreNino = {2}, @FechaNacimiento = {3}, @Direccion = {4}, @Poliza = {5}",
-            id, nino.Cedula, NombreNino, nino.FechaNacimiento, Direccion, Poliza);
+            "EXEC GestionarNino @IdNino = {0}, @Cedula = {1}, @NombreNino = {2}, @FechaNacimiento = {3}, @Direccion = {4}, @Poliza = {5}, @Activo = {6}, @Accion = {7}",
+            id, nino.Cedula, NombreNino, nino.FechaNacimiento, Direccion, Poliza, nino.Activo, "ACTUALIZAR");
 
         if (result == 0) return NotFound();
 
-        await _context.SaveChangesAsync();
-
-        var rolUsuarioLogueado =
-            User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
+        var rolUsuarioLogueado = User.Claims
+            .Where(c => c.Type == ClaimTypes.Role)
+            .Select(c => c.Value)
+            .SingleOrDefault();
 
         if (rolUsuarioLogueado == "Administrador")
         {

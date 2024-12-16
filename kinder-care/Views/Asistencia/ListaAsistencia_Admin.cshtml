@@ -86,7 +86,7 @@
 </div>
 
 <div class="card-footer flex-between flex-wrap">
-    <span class="text-gray-900">Showing 1 to 10 of @Model.Count() entries</span>
+    <span class="text-gray-900">Mostrando del 1 al 10 de @Model.Count() asistencias</span>
     <ul class="pagination flex-align flex-wrap">
         <form asp-action="GenerarReportePDF" asp-controller="Asistencia" method="get">
             <input type="hidden" name="fechaInicio" value="@ViewBag.FechaInicio" />
