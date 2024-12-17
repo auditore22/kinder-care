@@ -49,47 +49,69 @@
 <div class="side-overlay"></div>
 <!--==================== Sidebar Overlay End ====================-->
 
-    <section class="auth d-flex">
-        <div class="auth-left bg-main-50 flex-center p-24">
-            <img style="height: 400px; width: 400px" src="~/images/logo/logo-kinder.png" alt="">
-        </div>
-        <div class="auth-right py-40 px-24 flex-center flex-column">
-            <div class="auth-right__inner mx-auto w-100">
-                <h2 class="mb-8">Bienvenido de nuevo! &#128075;</h2>
-                <p class="text-gray-600 text-15 mb-32">Por favor incia sesión con una cuenta para poder ingresar</p>
+<section class="auth d-flex">
+    <div class="auth-left bg-main-50 flex-center p-24">
+        <img style="height: 400px; width: 400px" src="~/images/logo/logo-kinder.png" alt="">
+    </div>
+    <div class="auth-right py-40 px-24 flex-center flex-column">
+        <div class="auth-right__inner mx-auto w-100">
+            <h2 class="mb-8">Bienvenido de nuevo! &#128075;</h2>
+            <p class="text-gray-600 text-15 mb-32">Por favor incia sesión con una cuenta para poder ingresar</p>
 
-                <form asp-action="Login" method="post">
-                    <div class="mb-24">
-                        <label for="CorreoElectronico" class="form-label mb-8 h6">Email</label>
-                        <div class="position-relative">
-                            <input type="email" class="form-control py-11 ps-40" placeholder="Escribe tu correo" required asp-for="CorreoElectronico">
-                            <span class="position-absolute top-50 translate-middle-y ms-16 text-gray-600 d-flex"><i class="ph ph-user"></i></span>
-                        </div>
+            <form asp-action="Login" method="post">
+                <div class="mb-24">
+                    <label for="CorreoElectronico" class="form-label mb-8 h6">Email</label>
+                    <div class="position-relative">
+                        <input type="email" class="form-control py-11 ps-40" placeholder="Escribe tu correo" required asp-for="CorreoElectronico">
+                        <span class="position-absolute top-50 translate-middle-y ms-16 text-gray-600 d-flex"><i class="ph ph-user"></i></span>
                     </div>
-                    <div class="mb-24">
-                        <label for="ContrasenaHash" class="form-label mb-8 h6">Contraseña</label>
-                        <div class="position-relative">
-                            <input type="password" class="form-control py-11 ps-40" placeholder="Ingresa tu contraseña actual" required asp-for="ContrasenaHash">
-                            <span class="toggle-password position-absolute top-50 inset-inline-end-0 me-16 translate-middle-y ph ph-eye-slash" id="#current-password"></span>
-                            <span class="position-absolute top-50 translate-middle-y ms-16 text-gray-600 d-flex"><i class="ph ph-lock"></i></span>
-                        </div>
-                    </div>
-                    <div class="mb-32 flex-between flex-wrap gap-8">
-                        @if (ViewData["Mensaje"] != null)
-                        {
-                            <span class="text-danger">
-                                @ViewData["Mensaje"]
-                            </span>
-                        }
-                        <a asp-action="Recovery" class="text-main-600 hover-text-decoration-underline text-15 fw-medium">Olvidaste la contraseña?</a>
-                    </div>
-                    <button type="submit" class="btn btn-main rounded-pill w-100">Iniciar Sesión</button>
-                </form>
-            </div>
-        </div>
-    </section>
+                </div>
+                <div class="mb-24">
+                    <label for="ContrasenaHash" class="form-label mb-8 h6">Contraseña</label>
+                    <div class="position-relative">
+                        <input type="password" class="form-control py-11 ps-40" id="passwordInput" placeholder="Ingresa tu contraseña actual" required asp-for="ContrasenaHash">
 
-        <!-- Jquery js -->
+                        <!-- Ícono para alternar la visibilidad -->
+                        <span class="toggle-password position-absolute top-50 inset-inline-end-0 me-16 translate-middle-y ph ph-eye-slash" id="togglePassword"></span>
+
+                        <!-- Ícono de candado -->
+                        <span class="position-absolute top-50 translate-middle-y ms-16 text-gray-600 d-flex"><i class="ph ph-lock"></i></span>
+
+                    </div>
+                </div>
+                <div class="mb-32 flex-between flex-wrap gap-8">
+                    @if (ViewData["Mensaje"] != null)
+                    {
+                        <span class="text-danger">
+                            @ViewData["Mensaje"]
+                        </span>
+                    }
+                    <a asp-action="Recovery" class="text-main-600 hover-text-decoration-underline text-15 fw-medium">Olvidaste la contraseña?</a>
+                </div>
+                <button type="submit" class="btn btn-main rounded-pill w-100">Iniciar Sesión</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Selecciona el campo de entrada de la contraseña y el ícono del ojo
+    const passwordInput = document.getElementById('passwordInput');
+    const togglePassword = document.getElementById('togglePassword');
+
+    // Evento para alternar la visibilidad de la contraseña
+    togglePassword.addEventListener('click', function () {
+        // Alterna el tipo de entrada entre "password" y "text"
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+
+        // Cambia el ícono
+        this.classList.toggle('ph-eye');
+        this.classList.toggle('ph-eye-slash');
+    });
+</script>
+
+<!-- Jquery js -->
     <script src="~/js/jquery-3.7.1.min.js"></script>
     <!-- Bootstrap Bundle Js -->
     <script src="~/js/boostrap.bundle.min.js"></script>
