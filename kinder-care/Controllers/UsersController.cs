@@ -25,14 +25,18 @@ namespace kinder_care.Controllers
             _context = context;
         }
         
-        public async Task<IActionResult> ManageRecords()
+        public async Task<IActionResult> ManageRecords(int pageNumber = 1)
         {
+            const int pageSize = 10; // Tamaño de registros por página
             ViewBag.CurrentSection = "ManageRecords";
+            
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var userRole = User.FindFirstValue(ClaimTypes.Role);
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
             ViewBag.DocenteId = docente?.IdDocente!;
 
+            List<ExpedienteCompletoNino> expedientes;
+            
             if (userRole == "Docente" && docente != null)
             {
                 var estudiantesIds = await _context.RelDocenteNinoMateria
@@ -43,17 +47,25 @@ namespace kinder_care.Controllers
                 if (!estudiantesIds.Any())
                 {
                     ViewBag.Mensaje = "No hay expedientes relacionados con este docente.";
+                    ViewBag.CurrentPage = 1;
+                    ViewBag.TotalPages = 1;
                     return View(new List<ExpedienteCompletoNino>());
                 }
 
-                var expedientes = await _expedienteService.GetExpedientesByNinoIdsAsync(estudiantesIds);
-                return View(expedientes);
+                expedientes = await _expedienteService.GetExpedientesByNinoIdsAsync(estudiantesIds);
             }
             else
             {
-                var expedientes = await _expedienteService.GetExpedientesAsync();
-                return View(expedientes);
+                expedientes = await _expedienteService.GetExpedientesAsync();
             }
+
+            // Total de registros
+            var totalItems = expedientes.Count;
+
+            // Asignar valores a ViewBag
+            ViewBag.TotalItems = totalItems;
+            
+            return View(expedientes);
         }
         
         [HttpPost]
