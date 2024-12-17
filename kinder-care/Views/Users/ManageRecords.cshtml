@@ -27,7 +27,7 @@ var id = ViewBag.DocenteId as string;
         </div>
     </div>
 
-    <!-- Buscador -->
+    <!-- Buscadores -->
     <div class="mb-4 d-flex gap-3 flex-wrap">
         <!-- Input para buscar por nombre -->
         <div class="position-relative" style="margin-right: 10px;">
@@ -76,8 +76,7 @@ var id = ViewBag.DocenteId as string;
                         <span class="h6 mb-0 fw-medium text-gray-300">@expediente.Cedula</span>
                     </td>
                     <td>
-                        <span
-                            class="h6 mb-0 fw-medium text-gray-300">@expediente.FechaNacimiento.ToString("dd/MM/yyyy")</span>
+                        <span class="h6 mb-0 fw-medium text-gray-300">@expediente.FechaNacimiento.ToString("dd/MM/yyyy")</span>
                     </td>
                     <td>
                         <span class="h6 mb-0 fw-medium text-gray-300">@expediente.Direccion</span>
@@ -92,8 +91,8 @@ var id = ViewBag.DocenteId as string;
                     <td>
                         @if (roleName == "Administrador")
                         {
-                        <a asp-action="Details_Admin" asp-route-id="@expediente.IdNino" asp-controller="Ninos"
-                           class="btn btn-main rounded-pill hover-bg-main-600 hover-text-white">
+                            <a asp-action="Details_Admin" asp-route-id="@expediente.IdNino" asp-controller="Ninos"
+                               class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
                             Ver Más
                         </a>
                         }
@@ -101,7 +100,7 @@ var id = ViewBag.DocenteId as string;
                         {
                         <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@expediente.IdNino"
                            asp-route-idDocente="@ViewBag.DocenteId"
-                           class="btn btn-main rounded-pill hover-bg-main-600 hover-text-white">
+                           class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
                             Ver Más
                         </a>
                         <form asp-action="EliminarRelacion" asp-controller="Asistencia"
@@ -242,12 +241,13 @@ var id = ViewBag.DocenteId as string;
 
             const searchByName = document.getElementById('searchByName');
             const searchByCedula = document.getElementById('searchByCedula');
+            
             const paginationContainer = document.querySelector('.pagination');
             const infoContainer = document.querySelector('#infoContainer');
             const entriesSelect = document.getElementById('entriesSelect');
 
             const rows = Array.from(document.querySelectorAll('#studentTable tbody tr'));
-            let pageSize = 10;
+            let pageSize = parseInt(entriesSelect.value);
             let currentPage = 1;
             let filteredRows = rows.slice();
 

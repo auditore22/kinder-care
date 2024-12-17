@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<kinder_care.Models.Ninos>
 
 <div class="breadcrumb-with-buttons mb-24 flex-between flex-wrap gap-8">
-    <!-- Breadcrumb Start -->
+    <!-- Breadcrumb -->
     <div class="breadcrumb mb-24">
         <ul class="flex-align gap-4">
             <li>
@@ -17,33 +17,9 @@
             </li>
         </ul>
     </div>
-    <!-- Breadcrumb End -->
+
     <!-- Breadcrumb Right Start -->
     <div class="flex-align gap-8 flex-wrap">
-        <div class="position-relative text-gray-500 flex-align gap-4 text-13">
-            <span class="text-inherit">Buscar por: </span>
-            <div class="flex-align text-gray-500 text-13 border border-gray-100 rounded-4 ps-20 focus-border-main-600 bg-white">
-                <span class="text-lg">
-                    <i class="ph ph-funnel-simple"></i>
-                </span>
-                <select class="form-control ps-8 pe-20 py-16 border-0 text-inherit rounded-4 text-center">
-                    <option value="1" selected>Popular</option>
-                    <option value="1">Mas recientes</option>
-                    <option value="1">Mas buscados</option>
-                    <option value="1">Similares</option>
-                </select>
-            </div>
-        </div>
-        <div class="flex-align text-gray-500 text-13 border border-gray-100 rounded-4 ps-20 focus-border-main-600 bg-white">
-            <span class="text-lg">
-                <i class="ph ph-layout"></i>
-            </span>
-            <select class="form-control ps-8 pe-20 py-16 border-0 text-inherit rounded-4 text-center" id="exportOptions">
-                <option value="" selected disabled>Exportar</option>
-                <option value="csv">CSV</option>
-                <option value="json">JSON</option>
-            </select>
-        </div>
         <a asp-action="CrearGrupo" asp-controller="Asistencia" class="btn btn-main">
             Crear un Grupo
         </a>
@@ -54,69 +30,266 @@
     <!-- Breadcrumb Right End -->
 </div>
 
+<!-- Filtros -->
+<div class="mb-4 d-flex gap-3 flex-wrap">
+    <div class="position-relative">
+        <input type="text" id="searchByName" placeholder="Buscar por Nombre..." class="form-control ps-40 h-40 rounded-pill search-input" />
+        <i class="ph ph-magnifying-glass position-absolute" style="left: 10px; top: 10px; font-size: 20px; color: #aaa;"></i>
+    </div>
+    <div class="position-relative">
+        <input type="text" id="searchByID" placeholder="Buscar por ID..." class="form-control ps-40 h-40 rounded-pill search-input" />
+        <i class="ph ph-magnifying-glass position-absolute" style="left: 10px; top: 10px; font-size: 20px; color: #aaa;"></i>
+    </div>
+    <div class="position-relative">
+        <input type="text" id="searchByCedula" placeholder="Buscar por Cédula..." class="form-control ps-40 h-40 rounded-pill search-input" />
+        <i class="ph ph-magnifying-glass position-absolute" style="left: 10px; top: 10px; font-size: 20px; color: #aaa;"></i>
+    </div>
+</div>
+
 @if (Model.Any())
 {
-    <div class="card overflow-hidden">
-        <div class="card-body p-0 overflow-x-auto">
-            <table id="studentTable" class="table table-striped">
-                <thead>
-                <tr>
-                    <th class="h6 text-gray-300">ID</th>
-                    <th class="h6 text-gray-300">Cédula</th>
-                    <th class="h6 text-gray-300">Estudiante</th>
-                    <th class="h6 text-gray-300">Fecha de Nacimiento</th>
-                    <th class="h6 text-gray-300">Estado</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (var estudiante in Model)
-                {
-                    <tr>
-                        <td>
-                            <div class="flex-align gap-8">
-                                <img src="~/images/icons/baby_2_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.IdNino</span>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.Cedula</span>
-                        </td>
-                        <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.NombreNino</span>
-                        </td>
-                        <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.FechaNacimiento.ToString("dd/MM/yyyy")</span>
-                        </td>
-                        @if ((bool)@estudiante.Activo!)
-                        {
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">Activo</span>
-                            </td>
-                        }
-                        else
-                        {
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">Inactivo</span>
-                            </td>
-                        }
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
+<div class="card overflow-hidden">
+    <div class="card-body p-0 overflow-x-auto">
+        <table id="studentTable" class="table table-striped">
+            <thead>
+            <tr>
+                <th class="h6 text-gray-300">Estudiante</th>
+                <th class="h6 text-gray-300">ID</th>
+                <th class="h6 text-gray-300">Cédula</th>
+                <th class="h6 text-gray-300">Fecha de Nacimiento</th>
+                <th class="h6 text-gray-300">Estado</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var estudiante in Model)
+            {
+            <tr>
+                <td>
+                    <div class="flex-align gap-8">
+                        <img src="~/images/icons/baby_2_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
+                        <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.NombreNino</span>
+                    </div>
+                </td>
+                <td>
+                    <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.IdNino</span>
+                </td>
+                <td>
+                    <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.Cedula</span>
+                </td>
+                <td>
+                    <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.FechaNacimiento.ToString("dd/MM/yyyy")</span>
+                </td>
+                <td>
+                    <span class="h6 mb-0 fw-medium text-gray-300">@((bool)estudiante.Activo! ? "Activo" : "Inactivo")</span>
+                </td>
+            </tr>
+            }
+            </tbody>
+        </table>
     </div>
+</div>
 }
 else
 {
-    <div class="alert alert-info">
-        @ViewBag.Mensaje
-    </div>
+<div class="alert alert-info">No se encontraron registros.</div>
 }
 
-<div class="card-footer flex-between flex-wrap">
-    <span class="text-gray-900">Mostrando @Model!.Count() de un maximo de 10 entrantes</span>
-    <ul class="pagination flex-align flex-wrap">
-        <div class="card-footer flex-between flex-wrap">
-        </div>
-    </ul>
+<!-- Paginación -->
+<div class="d-flex justify-content-between mb-2">
+    <span id="infoContainer" class="text-gray-900"></span>
+    <select id="entriesSelect" class="form-select" style="width: 100px;">
+        <option value="5">5</option>
+        <option value="10" selected>10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+    </select>
+    <ul class="pagination mb-0"></ul>
 </div>
+
+<style>
+    .form-control {
+        font-size: 16px;
+        border: 1px solid #e0e0e0;
+        padding: 8px 16px;
+    }
+
+    .btn-main {
+        background-color: #007bff;
+        color: white;
+        padding: 6px 12px;
+        text-decoration: none;
+        border-radius: 50px;
+        font-size: 14px;
+    }
+
+    .btn-main:hover {
+        background-color: #0056b3;
+    }
+
+    .table th, .table td {
+        padding: 12px;
+        vertical-align: middle;
+        text-align: left;
+    }
+
+    .pagination .page-link {
+        color: #007bff;
+        margin: 0 3px;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #f8f9fa;
+    }
+
+    .pagination .active .page-link {
+        background-color: #007bff;
+        color: white;
+        border: 1px solid #007bff;
+    }
+
+    .btn-danger {
+        margin-left: 5px;
+    }
+
+    .search-input {
+        width: 300px;
+        max-width: 100%;
+    }
+
+    .mb-4 {
+        margin-bottom: 20px;
+    }
+
+    .d-flex.gap-3 > div {
+        margin-bottom: 10px;
+    }
+
+    .table-striped tbody tr {
+        margin-bottom: 10px;
+        display: table-row;
+    }
+
+    .pagination {
+        margin-top: 1rem;
+        justify-content: center;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .pagination .page-item {
+        margin: 0 4px;
+    }
+
+    .pagination .page-link {
+        color: #007bff;
+        border: 1px solid #dee2e6;
+        padding: 6px 12px;
+        font-size: 14px;
+        border-radius: 8px;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .pagination .active .page-link {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background-color: #f8f9fa;
+    }
+</style>
+
+<!-- Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchByID = document.getElementById('searchByID');
+        const searchByCedula = document.getElementById('searchByCedula');
+        const searchByName = document.getElementById('searchByName');
+        
+        const paginationContainer = document.querySelector('.pagination');
+        const infoContainer = document.getElementById('infoContainer');
+        const entriesSelect = document.getElementById('entriesSelect');
+
+        const rows = Array.from(document.querySelectorAll('#studentTable tbody tr'));
+        let pageSize = parseInt(entriesSelect.value);
+        let currentPage = 1;
+        let filteredRows = rows;
+
+        // Filtrado de filas
+        function filterRows() {
+            const idValue = searchByID.value.toLowerCase();
+            const cedulaValue = searchByCedula.value.toLowerCase();
+            const nameValue = searchByName.value.toLowerCase();
+
+            filteredRows = rows.filter(row => {
+                const id = row.children[0].textContent.toLowerCase();
+                const cedula = row.children[1].textContent.toLowerCase();
+                const name = row.children[2].textContent.toLowerCase();
+                return id.includes(idValue) && cedula.includes(cedulaValue) && name.includes(nameValue);
+            });
+
+            currentPage = 1;
+            renderTable();
+        }
+
+        // Renderizar la tabla con paginación
+        function renderTable() {
+            const total = filteredRows.length;
+            const totalPages = Math.ceil(total / pageSize);
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+
+            rows.forEach(row => row.style.display = 'none');
+            filteredRows.slice(start, end).forEach(row => row.style.display = '');
+
+            infoContainer.textContent = `Mostrando ${start + 1} a ${Math.min(end, total)} de ${total} registros`;
+            renderPagination(totalPages);
+        }
+
+        // Renderizar la paginación
+        function renderPagination(totalPages) {
+            paginationContainer.innerHTML = '';
+
+            if (currentPage > 1) {
+                paginationContainer.innerHTML += `<li class="page-item"><a href="#" data-page="${currentPage - 1}">Anterior</a></li>`;
+            }
+
+            for (let i = 1; i <= totalPages; i++) {
+                paginationContainer.innerHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+                <a href="#" data-page="${i}">${i}</a></li>`;
+            }
+
+            if (currentPage < totalPages) {
+                paginationContainer.innerHTML += `<li class="page-item"><a href="#" data-page="${currentPage + 1}">Siguiente</a></li>`;
+            }
+
+            paginationContainer.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    currentPage = parseInt(link.dataset.page);
+                    renderTable();
+                });
+            });
+        }
+
+        entriesSelect.addEventListener('change', () => {
+            pageSize = parseInt(entriesSelect.value);
+            currentPage = 1;
+            renderTable();
+        });
+
+        searchByID.addEventListener('keyup', filterRows);
+        searchByCedula.addEventListener('keyup', filterRows);
+        searchByName.addEventListener('keyup', filterRows);
+
+        renderTable();
+    });
+</script>
