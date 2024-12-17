@@ -85,10 +85,10 @@
     </div>
 </div>
 
-<div class="card-footer flex-between flex-wrap">
+<div class="card-footer flex-between flex-wrap mt-6">
     <span class="text-gray-900">Mostrando @Model.Count() de un maximo de 10 entrantes</span>
     <ul class="pagination flex-align flex-wrap">
-        <form asp-action="GenerarReportePDF" asp-controller="Asistencia" method="get">
+        <form asp-action="GenerarReportePDF" asp-controller="Asistencia" method="get" class="mb-3">
             <input type="hidden" name="fechaInicio" value="@ViewBag.FechaInicio" />
             <input type="hidden" name="fechaFin" value="@ViewBag.FechaFin" />
             <button type="submit" class="btn btn-primary">Generar PDF</button>
