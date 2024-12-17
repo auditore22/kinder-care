@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using kinder_care.Models;
-using kinder_care.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using Microsoft.Data.SqlClient;
-using System.Data;
-using Dapper;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
 namespace kinder_care.Controllers
@@ -55,7 +45,7 @@ namespace kinder_care.Controllers
                 return NotFound();
             }
 
-            ViewBag.verificarRol = usuarios.IdRol == 1; 
+            ViewBag.verificarRol = usuarios.IdRol == 1;
 
             return View(usuarios);
         }
@@ -108,12 +98,13 @@ namespace kinder_care.Controllers
                 .Include(u => u.IdRolNavigation)
                 .FirstOrDefaultAsync(m => m.IdUsuario == id);
 
-            ViewData["IdRol"] = new SelectList(_context.Roles, "IdRol", "Nombre", usuarios.IdRol);
+            ViewData["IdRol"] = new SelectList(_context.Roles, "IdRol", "Nombre", usuarios!.IdRol);
             return View(usuarios);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, string Nombre, string Direccion, string CorreoElectronico, bool Activo, int IdRol)
+        public async Task<IActionResult> Edit(int id, string nombre, string direccion, string correoElectronico,
+            bool activo, int idRol)
         {
             if (id == 0) return NotFound();
 
@@ -122,7 +113,7 @@ namespace kinder_care.Controllers
 
             var result = await _context.Database.ExecuteSqlRawAsync(
                 "EXEC UsuariosActualizar @id_usuario = {0}, @nombre = {1}, @correo_electronico = {2}, @direccion = {3}, @activo = {4}, @id_rol = {5}",
-                id, Nombre, CorreoElectronico, Direccion, Activo, IdRol);
+                id, nombre, correoElectronico, direccion, activo, idRol);
 
             if (result == 0) return NotFound();
 
@@ -148,6 +139,6 @@ namespace kinder_care.Controllers
             }
 
             return View(usuarios);
-        } 
+        }
     }
 }

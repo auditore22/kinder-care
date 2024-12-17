@@ -14,7 +14,7 @@
                 <!-- Campo Fecha -->
                 <div class="col-md-6">
                     <label for="Fecha" class="form-label">Fecha y Hora</label>
-                    <input asp-for="Fecha" type="datetime-local" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                    <input asp-for="Fecha" type="datetime-local" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")"/>
                     <span asp-validation-for="Fecha" class="text-danger"></span>
                 </div>
 
@@ -22,7 +22,7 @@
                 <!-- Campo Lugar -->
                 <div class="col-md-6">
                     <label for="Lugar" class="form-label">Lugar</label>
-                    <input asp-for="Lugar" class="form-control" placeholder="Lugar del Evento" />
+                    <input asp-for="Lugar" class="form-control" placeholder="Lugar del Evento"/>
                     <span asp-validation-for="Lugar" class="text-danger"></span>
                 </div>
 

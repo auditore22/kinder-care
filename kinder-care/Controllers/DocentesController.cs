@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using kinder_care.Models;
-using kinder_care.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -71,7 +65,8 @@ namespace kinder_care.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, string Nombre, string Direccion, string CorreoElectronico, string NumTelefono, DateTime FechaNacimiento, string GrupoAsignado, bool Activo)
+        public async Task<IActionResult> Edit(int id, string Nombre, string Direccion, string CorreoElectronico,
+            string NumTelefono, DateTime FechaNacimiento, string GrupoAsignado, bool Activo)
         {
             if (id == 0) return NotFound();
 
@@ -80,7 +75,8 @@ namespace kinder_care.Controllers
 
             var result = await _context.Database.ExecuteSqlRawAsync(
                 "EXEC DocentesActualizar @id_Docente = {0}, @id_usuario = {1}, @nombre = {2}, @direccion = {3}, @correo_electronico = {4}, @num_Telefono = {5}, @fecha_nacimiento = {6}, @grupo_asignado = {7}, @activo = {8}",
-                id, docentes.IdUsuario, Nombre, Direccion, CorreoElectronico, NumTelefono, FechaNacimiento, GrupoAsignado, Activo);
+                id, docentes.IdUsuario, Nombre, Direccion, CorreoElectronico, NumTelefono, FechaNacimiento,
+                GrupoAsignado, Activo);
 
             if (result == 0) return NotFound();
 

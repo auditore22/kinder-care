@@ -17,7 +17,7 @@ function displayCalendar() {
 
   const numberOfDays = lastDay.getDate(); //31
 
-  let formattedDate = date.toLocaleString("en-US", {
+  let formattedDate = date.toLocaleString("es-ES", {
     month: "long",
     year: "numeric"
   });

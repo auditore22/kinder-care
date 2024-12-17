@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace kinder_care.Models;
+﻿namespace kinder_care.Models;
 
 public partial class Alergias
 {

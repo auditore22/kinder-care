@@ -25,12 +25,12 @@
         <div class="col-md-4">
             <label for="fechaInicio" class="form-label">Fecha Inicio</label>
             <input type="date" name="fechaInicio" id="fechaInicio" class="form-control"
-                   value="@ViewBag.FechaInicio" />
+                   value="@ViewBag.FechaInicio"/>
         </div>
         <div class="col-md-4">
             <label for="fechaFin" class="form-label">Fecha Fin</label>
             <input type="date" name="fechaFin" id="fechaFin" class="form-control"
-                   value="@ViewBag.FechaFin" />
+                   value="@ViewBag.FechaFin"/>
         </div>
         <div class="col-md-4 d-flex align-items-end">
             <button type="submit" class="btn btn-main w-100">Filtrar</button>
@@ -43,42 +43,42 @@
     <div class="card-body p-0 overflow-x-auto">
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th class="h6 text-gray-300">ID Niño</th>
-                    <th class="h6 text-gray-300">Estudiante</th>
-                    <th class="h6 text-gray-300">Fecha</th>
-                    <th class="h6 text-gray-300">Presente</th>
-                </tr>
+            <tr>
+                <th class="h6 text-gray-300">ID Niño</th>
+                <th class="h6 text-gray-300">Estudiante</th>
+                <th class="h6 text-gray-300">Fecha</th>
+                <th class="h6 text-gray-300">Presente</th>
+            </tr>
             </thead>
             <tbody>
-                @if (!Model.Any())
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="4" class="text-center text-gray-500">No se encontraron registros.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var asistencia in Model)
                 {
                     <tr>
-                        <td colspan="4" class="text-center text-gray-500">No se encontraron registros.</td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.IdNino</span>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.IdNinoNavigation.NombreNino</span>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.Fecha.ToString("yyyy-MM-dd")</span>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium @(asistencia.Presente ? "text-success" : "text-danger")">
+                                @(asistencia.Presente ? "Presente" : "Ausente")
+                            </span>
+                        </td>
                     </tr>
                 }
-                else
-                {
-                    @foreach (var asistencia in Model)
-                    {
-                        <tr>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.IdNino</span>
-                            </td>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.IdNinoNavigation.NombreNino</span>
-                            </td>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.Fecha.ToString("yyyy-MM-dd")</span>
-                            </td>
-                            <td>
-                                <span class="h6 mb-0 fw-medium @(asistencia.Presente ? "text-success" : "text-danger")">
-                                    @(asistencia.Presente ? "Presente" : "Ausente")
-                                </span>
-                            </td>
-                        </tr>
-                    }
-                }
+            }
             </tbody>
         </table>
 
@@ -88,9 +88,9 @@
 <div class="card-footer flex-between flex-wrap mt-6">
     <span class="text-gray-900">Mostrando @Model.Count() de un maximo de 10 entrantes</span>
     <ul class="pagination flex-align flex-wrap">
-        <form asp-action="GenerarReportePDF" asp-controller="Asistencia" method="get" class="mb-3">
-            <input type="hidden" name="fechaInicio" value="@ViewBag.FechaInicio" />
-            <input type="hidden" name="fechaFin" value="@ViewBag.FechaFin" />
+        <form asp-action="GenerarReportePdf" asp-controller="Asistencia" method="get" class="mb-3">
+            <input type="hidden" name="fechaInicio" value="@ViewBag.FechaInicio"/>
+            <input type="hidden" name="fechaFin" value="@ViewBag.FechaFin"/>
             <button type="submit" class="btn btn-primary">Generar PDF</button>
         </form>
     </ul>

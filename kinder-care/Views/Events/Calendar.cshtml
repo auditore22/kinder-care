@@ -42,8 +42,8 @@
 <script>
     
     document.addEventListener('DOMContentLoaded', function () {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
+        let calendarEl = document.getElementById('calendar');
+        let calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             eventOverlap: false,         // Previene que se apilen unos sobre otros
             locale: 'es',
@@ -81,11 +81,11 @@
             views: {
                 listMonth: { // Personaliza solo la vista de lista
                     eventContent: function(info) {
-                        var container = document.createElement('div');
+                        let container = document.createElement('div');
                         container.classList.add('fc-list');
 
                         // Hora, actividad, ubicación y descripción en horizontal
-                        var time = document.createElement('div');
+                        let time = document.createElement('div');
                         time.classList.add('fc-event-time');
                         time.innerText = 'Hora: ' + info.event.start.toLocaleString('es-ES', {
                             hour: '2-digit',
@@ -93,15 +93,15 @@
                             hour12: true
                         });
 
-                        var title = document.createElement('div');
+                        let title = document.createElement('div');
                         title.classList.add('fc-list-event-title');
                         title.innerText = 'Actividad: ' + info.event.title;
 
-                        var location = document.createElement('div');
+                        let location = document.createElement('div');
                         location.classList.add('fc-list-event-location');
                         location.innerText = 'Ubicación: ' + (info.event.extendedProps.location || 'No disponible');
 
-                        var description = document.createElement('div');
+                        let description = document.createElement('div');
                         description.classList.add('fc-list-event-description');
                         description.innerText = 'Descripción: ' + (info.event.extendedProps.description || 'No disponible');
 
@@ -122,15 +122,15 @@
                 }
             },
             eventContent: function (info) {
-                var time = document.createElement('div');
+                let time = document.createElement('div');
                 time.classList.add('fc-event-time');
                 time.innerText = 'Hora: ' + info.timeText;
 
-                var title = document.createElement('div');
+                let title = document.createElement('div');
                 title.classList.add('fc-event-title');
                 title.innerText = 'Actividad: ' + info.event.title;
 
-                var container = document.createElement('div');
+                let container = document.createElement('div');
                 container.appendChild(time);
                 container.appendChild(title);
 
@@ -142,19 +142,21 @@
                 document.getElementById('eventLocation').innerText = 'Ubicación: ' + info.event.extendedProps.location;
                 document.getElementById('eventDescription').innerText = 'Descripción: ' + (info.event.extendedProps.description || 'No disponible');
 
-                var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
+                let myModal = new bootstrap.Modal(document.getElementById('eventModal'));
                 myModal.show();
             },
-            eventMouseEnter: function () {
+            eventMouseEnter: function (info) {
+                let calendarEl = document.getElementById('calendar');
                 calendarEl.style.cursor = 'pointer'; // Cambia el cursor cuando el mouse pasa sobre el evento
                 info.el.style.backgroundColor = '#2d9cdb'; // Cambiar color al pasar el mouse
                 info.el.style.color = 'white';
             },
-            eventMouseLeave: function () {
+            eventMouseLeave: function (info) {
+                let calendarEl = document.getElementById('calendar');
                 calendarEl.style.cursor = 'default'; // Restaurar el cursor
                 info.el.style.backgroundColor = ''; // Restaurar color original al salir
                 info.el.style.color = '';
-            },          
+            },         
             dateClick: function(info) {
                 calendar.changeView('timeGridDay', info.dateStr); // Cambiar a la vista de día
             }

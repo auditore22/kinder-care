@@ -26,7 +26,7 @@ public class EventsController : Controller
         // Obtener el total de eventos
         var totalEventos = await _context.Actividades
             .Where(a => a.Activo == true)
-            .CountAsync(); 
+            .CountAsync();
 
         // Obtener los eventos para la página actual
         var eventos = await _context.Actividades
@@ -47,7 +47,7 @@ public class EventsController : Controller
 
         return View(eventos);
     }
-    
+
     public async Task<IActionResult> Calendar()
     {
         var actividades = await _context.Actividades
@@ -166,7 +166,7 @@ public class EventsController : Controller
                 Text = t.NombreTipoActividad
             }).ToList();
 
-        return View(model); 
+        return View(model);
     }
 
     [HttpPost]

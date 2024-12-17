@@ -28,128 +28,130 @@
                     <!-- Submenu End -->
                 </li>
                 @{
-                if (ViewBag.RoleName == "Administrador")
-                {
-                <li class="sidebar-menu__item">
-                    <a asp-action="Index" asp-controller="Usuarios" class="sidebar-menu__link">
+                    if (ViewBag.RoleName == "Administrador")
+                    {
+                        <li class="sidebar-menu__item">
+                            <a asp-action="Index" asp-controller="Usuarios" class="sidebar-menu__link">
                                 <span class="icon">
                                     <i class="ph ph-users-three"></i>
                                 </span>
-                        <span class="text">Usuarios</span>
-                    </a>
-                </li>
+                                <span class="text">Usuarios</span>
+                            </a>
+                        </li>
 
-                <li class="sidebar-menu__item">
-                    <a asp-action="Index" asp-controller="Docentes" class="sidebar-menu__link">
+                        <li class="sidebar-menu__item">
+                            <a asp-action="Index" asp-controller="Docentes" class="sidebar-menu__link">
                                 <span class="icon">
                                     <i class="ph ph-users"></i>
                                 </span>
-                        <span class="text">Docentes</span>
-                    </a>
-                </li>
+                                <span class="text">Docentes</span>
+                            </a>
+                        </li>
 
-                <li class="sidebar-menu__item">
-                    <a asp-action="ListaNinos_Administracion" asp-controller="Asistencia" class="sidebar-menu__link">
+                        <li class="sidebar-menu__item">
+                            <a asp-action="ListaNinos_Administracion" asp-controller="Asistencia"
+                               class="sidebar-menu__link">
                                 <span class="icon">
                                     <i class="ph ph-users-three"></i>
                                 </span>
-                        <span class="text">Estudiantes</span>
-                    </a>
-                </li>
+                                <span class="text">Estudiantes</span>
+                            </a>
+                        </li>
 
-                <li class="sidebar-menu__item">
-                    <a asp-action="ListaAsistencia_Admin" asp-controller="Asistencia" class="sidebar-menu__link">
+                        <li class="sidebar-menu__item">
+                            <a asp-action="ListaAsistencia_Admin" asp-controller="Asistencia"
+                               class="sidebar-menu__link">
                                 <span class="icon">
                                     <i class="ph ph-chart-bar"></i>
                                 </span>
-                        <span class="text">Asistencias</span>
-                    </a>
-                </li>
-                }
+                                <span class="text">Asistencias</span>
+                            </a>
+                        </li>
+                    }
 
-                if (ViewBag.RoleName == "Docente")
-                {
-                <li class="sidebar-menu__item">
-                    <a asp-action="ListaNinos" asp-controller="Asistencia" class="sidebar-menu__link">
+                    if (ViewBag.RoleName == "Docente")
+                    {
+                        <li class="sidebar-menu__item">
+                            <a asp-action="ListaNinos" asp-controller="Asistencia" class="sidebar-menu__link">
                                 <span class="icon">
                                     <i class="ph ph-users-three"></i>
                                 </span>
-                        <span class="text">Estudiantes</span>
-                    </a>
-                </li>
+                                <span class="text">Estudiantes</span>
+                            </a>
+                        </li>
 
-                <li class="sidebar-menu__item">
-                    <a asp-action="ListaAsistencia" asp-controller="Asistencia" class="sidebar-menu__link">
+                        <li class="sidebar-menu__item">
+                            <a asp-action="ListaAsistencia" asp-controller="Asistencia" class="sidebar-menu__link">
                                 <span class="icon">
                                     <i class="ph ph-chart-bar"></i>
                                 </span>
-                        <span class="text">Asistencias</span>
-                    </a>
-                </li>
-                }
+                                <span class="text">Asistencias</span>
+                            </a>
+                        </li>
+                    }
 
-                if (ViewBag.RoleName == "Administrador" || ViewBag.RoleName == "Docente")
-                {
-
-
-                <li class="sidebar-menu__item">
-                    <a asp-action="ManageRecords" asp-controller="Users" class="sidebar-menu__link">
+                    if (ViewBag.RoleName == "Administrador" || ViewBag.RoleName == "Docente")
+                    {
+                        <li class="sidebar-menu__item">
+                            <a asp-action="ManageRecords" asp-controller="Users" class="sidebar-menu__link">
                                 <span class="icon">
                                     <i class="ph ph-clipboard-text"></i>
                                 </span>
-                        <span class="text">Expedientes</span>
-                    </a>
-                </li>
+                                <span class="text">Expedientes</span>
+                            </a>
+                        </li>
 
-
-
-                <li class="sidebar-menu__item">
-                    <a asp-action="ManagePayments" asp-controller="Payments" class="sidebar-menu__link">
-                                <span class="icon">
-                                    <i class="ph ph-coins"></i>
-                                </span>
-                        <span class="text">Pagos</span>
-                    </a>
-                </li>
-                }
-
-                if (ViewBag.RoleName == "Padre")
-                {
-                <li class="sidebar-menu__item">
-                    <a asp-action="Index" asp-controller="Ninos" class="sidebar-menu__link">
+                        <li class="sidebar-menu__item">
+                            <a asp-action="Crear_Nino" asp-controller="Ninos" class="sidebar-menu__link">
                                 <span class="icon">
                                     <i class="ph ph-users-three"></i>
                                 </span>
-                        <span class="text">Hijos</span>
-                    </a>
-                </li>
-                }
+                                <span class="text">Registrar Ninos</span>
+                            </a>
+                        </li>
 
-                <li class="sidebar-menu__item">
-                    <a asp-action="Calendar" asp-controller="Events" class="sidebar-menu__link">
-                        <span class="icon">
-                            <i class="ph ph-calendar-dots"></i>
-                        </span>
-                        <span class="text">Eventos</span>
-                    </a>
-                </li>
-                <li class="sidebar-menu__item">
-                    <a asp-action="GenerateReports" asp-controller="Reports" class="sidebar-menu__link">
-                        <span class="icon">
-                            <i class="ph ph-books"></i>
-                        </span>
-                        <span class="text">Reportes</span>
-                    </a>
-                </li>
+                        <li class="sidebar-menu__item">
+                            <a asp-action="ManagePayments" asp-controller="Payments" class="sidebar-menu__link">
+                                <span class="icon">
+                                    <i class="ph ph-coins"></i>
+                                </span>
+                                <span class="text">Pagos</span>
+                            </a>
+                        </li>
+                    }
+
+                    if (ViewBag.RoleName == "Padre")
+                    {
+                        <li class="sidebar-menu__item">
+                            <a asp-action="Index" asp-controller="Ninos" class="sidebar-menu__link">
+                                <span class="icon">
+                                    <i class="ph ph-users-three"></i>
+                                </span>
+                                <span class="text">Hijos</span>
+                            </a>
+                        </li>
+                    }
+
+                    <li class="sidebar-menu__item">
+                        <a asp-action="Calendar" asp-controller="Events" class="sidebar-menu__link">
+                            <span class="icon">
+                                <i class="ph ph-calendar-dots"></i>
+                            </span>
+                            <span class="text">Eventos</span>
+                        </a>
+                    </li>
                 }
 
 
                 <li class="sidebar-menu__item">
                     <span
-                        class="text-gray-300 text-sm px-20 pt-20 fw-semibold border-top border-gray-100 d-block text-uppercase">Ajustes</span>
+                        class="text-gray-300 text-sm px-20 pt-20 fw-semibold border-top border-gray-100 d-block text-uppercase">
+                        Ajustes
+                    </span>
                 </li>
                 <li class="sidebar-menu__item">
-                    <a asp-action="Index" asp-route-id="@ViewBag.UserId" asp-controller="UserProfile" class="sidebar-menu__link">
+                    <a asp-action="Index" asp-route-id="@ViewBag.UserId" asp-controller="UserProfile"
+                       class="sidebar-menu__link">
                         <span class="icon">
                             <i class="ph ph-gear"></i>
                         </span>
@@ -167,7 +169,7 @@
             </ul>
         </div>
         <div class="p-20 pt-80">
-            <div class="bg-main-50 p-20 pt-0 rounded-16 text-center mt-74">
+            <div class="p-20 pt-0 rounded-16 text-center mt-74">
             </div>
         </div>
     </div>

@@ -21,7 +21,7 @@ public class NinosController : Controller
     public async Task<IActionResult> Index()
     {
         // Obtener el ID del padre logueado desde las Claims
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
         // Verificar si el rol del usuario es 'Padre'
         var userRole = User.FindFirstValue(ClaimTypes.Role);
@@ -49,11 +49,63 @@ public class NinosController : Controller
     }
 
     [HttpGet]
+    public Task<IActionResult> Crear_Nino()
+    {
+        return Task.FromResult<IActionResult>(View());
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Crear_Nino(string cedula, string nombreNino, DateTime fechaNacimiento,
+        string direccion, string poliza, bool activo)
+    {
+        if (string.IsNullOrEmpty(cedula) || string.IsNullOrEmpty(nombreNino) || fechaNacimiento == default ||
+            string.IsNullOrEmpty(direccion) || string.IsNullOrEmpty(poliza))
+        {
+            ViewBag.ErrorMessage = "Todos los campos son obligatorios.";
+            return View();
+        }
+
+        // Creación del objeto Nino
+        var nino = new Ninos
+        {
+            Cedula = cedula,
+            NombreNino = nombreNino,
+            FechaNacimiento = fechaNacimiento,
+            Direccion = direccion,
+            Poliza = poliza,
+            Activo = activo
+        };
+
+        var verificarExistencia = await _context.Ninos.FirstOrDefaultAsync(n => n.Cedula == cedula);
+
+        if (verificarExistencia != null)
+        {
+            ViewBag.ErrorMessage = "El nino ya ha sido registrado o esta inactivo";
+            return View();
+        }
+
+        try
+        {
+            var result = await _context.Database.ExecuteSqlRawAsync(
+                "EXEC GestionarNino @IdNino = {0}, @Cedula = {1}, @NombreNino = {2}, @FechaNacimiento = {3}, @Direccion = {4}, @Poliza = {5}",
+                null!, // Para insertar un nuevo niño, el IdNino tiene que ser nulo
+                nino.Cedula, nino.NombreNino, nino.FechaNacimiento, nino.Direccion, nino.Poliza);
+
+            return RedirectToAction("Index", "Home");
+        }
+        catch (Exception ex)
+        {
+            ViewBag.ErrorMessage = $"Error al registrar el niño: {ex.Message}";
+            return View();
+        }
+    }
+
+    [HttpGet]
     public async Task<IActionResult> Details(int? id, DateTime? fechaInicio, DateTime? fechaFin)
     {
         if (id == null) return NotFound();
 
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
         // Verificar si el padre está asociado con este niño
         var isAssociated = await _context.RelPadresNinos
@@ -95,11 +147,11 @@ public class NinosController : Controller
             .Select(rt => rt.Tareas)
             .ToList() ?? new List<Tareas>();
 
-        var ListDocentes = await _context.Usuarios
+        var listDocentes = await _context.Usuarios
             .Where(d => d.Activo == true && d.IdRol == 2)
             .ToListAsync();
 
-        ViewBag.ListaProfesores = new SelectList(ListDocentes, "IdUsuario", "Nombre");
+        ViewBag.ListaProfesores = new SelectList(listDocentes, "IdUsuario", "Nombre");
 
         // Pasar las tareas al ViewBag      
         ViewBag.TareasEnProceso = tareasEnProceso;
@@ -131,12 +183,12 @@ public class NinosController : Controller
 
         nino.Asistencia = asistencias;
 
-        ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd");
-        ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd");
+        ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd")!;
+        ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd")!;
 
         // Inicializa ContactosExistentes como un diccionario vacío si no hay contactos
         ViewBag.ContactosExistentes = contactosRelacionados.Any()
-            ? contactosRelacionados.ToDictionary(c => c.IdContactoEmergencia)
+            ? contactosRelacionados.ToDictionary(c => c!.IdContactoEmergencia)!
             : new Dictionary<int, ContactosEmergencia>();
 
 
@@ -149,7 +201,7 @@ public class NinosController : Controller
         if (id == null) return NotFound();
 
         // Obtener el usuario actual y validar el docente
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
         if (docente == null) return NotFound();
 
@@ -193,7 +245,7 @@ public class NinosController : Controller
         }
         else
         {
-            var ListDocentes = await _context.Docentes
+            var listDocentes = await _context.Docentes
                 .Include(d => d.IdUsuarioNavigation)
                 .Where(d => d.Activo)
                 .Select(d => new
@@ -203,9 +255,9 @@ public class NinosController : Controller
                 })
                 .ToListAsync();
 
-            ViewBag.ListaDocentes = ListDocentes.Any()
-                ? new SelectList(ListDocentes, "IdDocente", "NombreDocente")
-                : null;
+            ViewBag.ListaDocentes = (listDocentes.Any()
+                ? new SelectList(listDocentes, "IdDocente", "NombreDocente")
+                : null)!;
         }
 
         // Filtrar asistencia
@@ -231,8 +283,8 @@ public class NinosController : Controller
             .Select(r => r.ContactoEmergencia)
             .ToList();
 
-        ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd");
-        ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd");
+        ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd")!;
+        ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd")!;
 
         return View(nino);
     }
@@ -256,7 +308,7 @@ public class NinosController : Controller
         if (nino == null) return NotFound();
 
         // Obtener lista de docentes activos
-        var ListDocentes = await _context.Docentes
+        var listDocentes = await _context.Docentes
             .Include(d => d.IdUsuarioNavigation)
             .Where(d => d.Activo)
             .Select(d => new
@@ -266,7 +318,7 @@ public class NinosController : Controller
             })
             .ToListAsync();
 
-        ViewBag.ListaDocentes = new SelectList(ListDocentes, "IdDocente", "NombreDocente");
+        ViewBag.ListaDocentes = new SelectList(listDocentes, "IdDocente", "NombreDocente");
 
         // Filtrar tareas por estado
         var tareas = nino.RelNinoTarea?
@@ -300,42 +352,42 @@ public class NinosController : Controller
             .Select(r => r.ContactoEmergencia)
             .ToList();
 
-        ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd");
-        ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd");
+        ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd")!;
+        ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd")!;
 
         return View(nino);
     }
 
     [HttpGet]
-    public async Task<IActionResult> Details_Tareas(int id_nino, int id_tarea)
+    public async Task<IActionResult> Details_Tareas(int idNino, int idTarea)
     {
-        if (id_nino <= 0 || id_tarea <= 0) return NotFound();
+        if (idNino <= 0 || idTarea <= 0) return NotFound();
 
         // Verificar existencia del niño y la tarea
-        var VerificarNino = await _context.Ninos.FindAsync(id_nino);
-        var VerificarTarea = await _context.Tareas.FindAsync(id_tarea);
-        var ListDocentes = await _context.Usuarios
+        var verificarNino = await _context.Ninos.FindAsync(idNino);
+        var verificarTarea = await _context.Tareas.FindAsync(idTarea);
+        var listDocentes = await _context.Usuarios
             .Where(d => d.Activo == true && d.IdRol == 2)
             .ToListAsync();
 
-        if (VerificarNino == null || VerificarTarea == null) return NotFound();
+        if (verificarNino == null || verificarTarea == null) return NotFound();
 
         // Verificar la relación entre niño y tarea
-        var VerificarRel = await _context.RelNinoTarea
+        var verificarRel = await _context.RelNinoTarea
             .Include(t => t.Tareas)
-            .FirstOrDefaultAsync(tn => tn.IdNino == id_nino && tn.IdTarea == id_tarea);
+            .FirstOrDefaultAsync(tn => tn.IdNino == idNino && tn.IdTarea == idTarea);
 
-        if (VerificarRel == null) return NotFound();
+        if (verificarRel == null) return NotFound();
 
         // Obtener detalles del profesor asignado
-        var profesorTarea = await _context.Docentes.FindAsync(VerificarRel.Tareas.IdProfesor);
+        var profesorTarea = await _context.Docentes.FindAsync(verificarRel.Tareas.IdProfesor);
 
-        var profUsuario = await _context.Usuarios.FindAsync(profesorTarea.IdUsuario);
+        var profUsuario = await _context.Usuarios.FindAsync(profesorTarea!.IdUsuario);
         // Pasar datos a la vista mediante ViewBag
-        ViewBag.Nino = VerificarNino;
-        ViewBag.Tarea = VerificarRel.Tareas;
-        ViewBag.Profesor = profUsuario;
-        ViewBag.ListaProfesores = new SelectList(ListDocentes, "IdUsuario", "Nombre");
+        ViewBag.Nino = verificarNino;
+        ViewBag.Tarea = verificarRel.Tareas;
+        ViewBag.Profesor = profUsuario!;
+        ViewBag.ListaProfesores = new SelectList(listDocentes, "IdUsuario", "Nombre");
 
         return View();
     }
@@ -353,24 +405,23 @@ public class NinosController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(int id, string NombreNino, string Direccion, string Poliza)
+    public async Task<IActionResult> Edit(int id, string nombreNino, string direccion, string poliza)
     {
         if (id == 0) return NotFound();
 
         var nino = await _context.Ninos.FindAsync(id);
         if (nino == null) return NotFound();
 
-        // Llamada al procedimiento almacenado para actualizar los datos principales del niño (Dirección y Poliza)
         var result = await _context.Database.ExecuteSqlRawAsync(
-            "EXEC GestionarNino @IdNino = {0}, @Cedula = {1}, @NombreNino = {2}, @FechaNacimiento = {3}, @Direccion = {4}, @Poliza = {5}",
-            id, nino.Cedula, NombreNino, nino.FechaNacimiento, Direccion, Poliza);
+            "EXEC GestionarNino @IdNino = {0}, @Cedula = {1}, @NombreNino = {2}, @FechaNacimiento = {3}, @Direccion = {4}, @Poliza = {5}, @Activo = {6}, @Accion = {7}",
+            id, nino.Cedula, nombreNino, nino.FechaNacimiento, direccion, poliza, nino.Activo!, "ACTUALIZAR");
 
         if (result == 0) return NotFound();
 
-        await _context.SaveChangesAsync();
-
-        var rolUsuarioLogueado =
-            User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
+        var rolUsuarioLogueado = User.Claims
+            .Where(c => c.Type == ClaimTypes.Role)
+            .Select(c => c.Value)
+            .SingleOrDefault();
 
         if (rolUsuarioLogueado == "Administrador")
         {
@@ -387,13 +438,13 @@ public class NinosController : Controller
     [HttpPost]
     public async Task<IActionResult> Edit_Info_Medica(
         int id,
-        int[] IdAlergia,
-        int[] IdCondicion,
-        int[] IdMedicamento,
-        string NewAlergia,
-        string NewCondicion,
-        string NewMedicamento,
-        string Dosis)
+        int[] idAlergia,
+        int[] idCondicion,
+        int[] idMedicamento,
+        string newAlergia,
+        string newCondicion,
+        string newMedicamento,
+        string dosis)
     {
         if (id == 0) return NotFound();
 
@@ -406,72 +457,72 @@ public class NinosController : Controller
             .Select(rm => rm.IdMedicamento).ToList();
 
         // Agregar nuevas alergias, condiciones y medicamentos si no existen en la base de datos
-        if (!string.IsNullOrWhiteSpace(NewAlergia))
+        if (!string.IsNullOrWhiteSpace(newAlergia))
         {
-            var alergiaExistente = await _context.Alergias.FirstOrDefaultAsync(a => a.NombreAlergia == NewAlergia);
+            var alergiaExistente = await _context.Alergias.FirstOrDefaultAsync(a => a.NombreAlergia == newAlergia);
             if (alergiaExistente == null)
             {
-                alergiaExistente = new Alergias { NombreAlergia = NewAlergia };
+                alergiaExistente = new Alergias { NombreAlergia = newAlergia };
                 _context.Alergias.Add(alergiaExistente);
                 await _context.SaveChangesAsync();
             }
 
-            IdAlergia = IdAlergia.Append(alergiaExistente.IdAlergia).ToArray();
+            idAlergia = idAlergia.Append(alergiaExistente.IdAlergia).ToArray();
         }
 
-        if (!string.IsNullOrWhiteSpace(NewCondicion))
+        if (!string.IsNullOrWhiteSpace(newCondicion))
         {
             var condicionExistente =
-                await _context.CondicionesMedicas.FirstOrDefaultAsync(c => c.NombreCondicion == NewCondicion);
+                await _context.CondicionesMedicas.FirstOrDefaultAsync(c => c.NombreCondicion == newCondicion);
             if (condicionExistente == null)
             {
-                condicionExistente = new CondicionesMedicas { NombreCondicion = NewCondicion };
+                condicionExistente = new CondicionesMedicas { NombreCondicion = newCondicion };
                 _context.CondicionesMedicas.Add(condicionExistente);
                 await _context.SaveChangesAsync();
             }
 
-            IdCondicion = IdCondicion.Append(condicionExistente.IdCondicionMedica).ToArray();
+            idCondicion = idCondicion.Append(condicionExistente.IdCondicionMedica).ToArray();
         }
 
-        if (!string.IsNullOrWhiteSpace(NewMedicamento))
+        if (!string.IsNullOrWhiteSpace(newMedicamento))
         {
             var medicamentoExistente =
-                await _context.Medicamentos.FirstOrDefaultAsync(m => m.NombreMedicamento == NewMedicamento);
+                await _context.Medicamentos.FirstOrDefaultAsync(m => m.NombreMedicamento == newMedicamento);
             if (medicamentoExistente == null)
             {
                 medicamentoExistente = new Medicamentos
-                    { NombreMedicamento = NewMedicamento, Dosis = Dosis ?? "No especificada" };
+                    { NombreMedicamento = newMedicamento, Dosis = dosis ?? "No especificada" };
                 _context.Medicamentos.Add(medicamentoExistente);
                 await _context.SaveChangesAsync();
             }
 
-            IdMedicamento = IdMedicamento.Append(medicamentoExistente.IdMedicamento).ToArray();
+            idMedicamento = idMedicamento.Append(medicamentoExistente.IdMedicamento).ToArray();
         }
 
         // Eliminar relaciones desmarcadas por el usuario
-        foreach (var alergiaId in alergiasExistentes.Except(IdAlergia))
+        foreach (var alergiaId in alergiasExistentes.Except(idAlergia))
             await _context.Database.ExecuteSqlRawAsync(
                 "EXEC GestionarInformacionMedicaNino @id_nino = {0}, @id_alergia = {1}, @accion = 'ELIMINAR'", id,
                 alergiaId);
-        foreach (var condicionId in condicionesExistentes.Except(IdCondicion))
+        foreach (var condicionId in condicionesExistentes.Except(idCondicion))
             await _context.Database.ExecuteSqlRawAsync(
                 "EXEC GestionarInformacionMedicaNino @id_nino = {0}, @id_condicion = {1}, @accion = 'ELIMINAR'", id,
                 condicionId);
-        foreach (var medicamentoId in medicamentosExistentes.Except(IdMedicamento))
+        foreach (var medicamentoId in medicamentosExistentes.Except(idMedicamento))
             await _context.Database.ExecuteSqlRawAsync(
                 "EXEC GestionarInformacionMedicaNino @id_nino = {0}, @id_medicamento = {1}, @accion = 'ELIMINAR'", id,
                 medicamentoId);
 
         // Agregar relaciones nuevas seleccionadas por el usuario
-        foreach (var alergiaId in IdAlergia.Except(alergiasExistentes))
+        foreach (var alergiaId in idAlergia.Except(alergiasExistentes))
             await _context.Database.ExecuteSqlRawAsync(
                 "EXEC GestionarInformacionMedicaNino @id_nino = {0}, @id_alergia = {1}, @accion = 'AGREGAR'", id,
                 alergiaId);
-        foreach (var condicionId in IdCondicion.Except(condicionesExistentes))
+        foreach (var condicionId in idCondicion.Except(condicionesExistentes))
             await _context.Database.ExecuteSqlRawAsync(
                 "EXEC GestionarInformacionMedicaNino @id_nino = {0}, @id_condicion = {1}, @accion = 'AGREGAR'", id,
                 condicionId);
-        foreach (var medicamentoId in IdMedicamento.Except(medicamentosExistentes))
+        foreach (var medicamentoId in idMedicamento.Except(medicamentosExistentes))
             await _context.Database.ExecuteSqlRawAsync(
                 "EXEC GestionarInformacionMedicaNino @id_nino = {0}, @id_medicamento = {1}, @accion = 'AGREGAR'", id,
                 medicamentoId);
@@ -494,26 +545,26 @@ public class NinosController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit_Contacto_Emergencia(int IdNino,
-        Dictionary<int, ContactosEmergencia> ContactosExistentes, string NewNombre, string NewRelacion, int NewTelefono,
-        string NewDireccion, int? EliminarContactoId)
+    public async Task<IActionResult> Edit_Contacto_Emergencia(int idNino,
+        Dictionary<int, ContactosEmergencia> contactosExistentes, string newNombre, string newRelacion, int newTelefono,
+        string newDireccion, int? eliminarContactoId)
     {
-        if (IdNino == 0) return NotFound();
+        if (idNino == 0) return NotFound();
 
         // Eliminar contactos existentes
-        if (EliminarContactoId.HasValue)
+        if (eliminarContactoId.HasValue)
             await _context.Database.ExecuteSqlRawAsync(
                 "EXEC GestionarContactosEmergencia @id_nino = {0}, @id_contacto = {1}, @accion = {2}",
-                IdNino, EliminarContactoId.Value, "ELIMINAR");
+                idNino, eliminarContactoId.Value, "ELIMINAR");
 
 
         // Actualizar contactos existentes
-        foreach (var contacto in ContactosExistentes.Values)
+        foreach (var contacto in contactosExistentes.Values)
             if (contacto.IdContactoEmergencia != 0)
                 await _context.Database.ExecuteSqlRawAsync(
                     "EXEC GestionarContactosEmergencia @id_nino = {0}, @nombre_contacto = {1}, @telefono = {2}, @relacion = {3}, @direccion = {4}, @id_contacto = {5}, @accion = {6}",
-                    IdNino, contacto.NombreContacto, contacto.Telefono, contacto.Relacion,
-                    contacto.Direccion, contacto.IdContactoEmergencia, "ACTUALIZAR");
+                    idNino, contacto.NombreContacto, contacto.Telefono!, contacto.Relacion!,
+                    contacto.Direccion!, contacto.IdContactoEmergencia, "ACTUALIZAR");
 
         await _context.SaveChangesAsync();
 
@@ -522,27 +573,27 @@ public class NinosController : Controller
 
         if (rolUsuarioLogueado == "Administrador")
         {
-            return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
+            return RedirectToAction("Details_Admin", "Ninos", new { id = idNino });
         }
         else if (rolUsuarioLogueado == "Docente")
         {
-            return RedirectToAction("Details_Docente", "Ninos", new { id = IdNino });
+            return RedirectToAction("Details_Docente", "Ninos", new { id = idNino });
         }
 
-        return RedirectToAction("Details", "Ninos", new { id = IdNino });
+        return RedirectToAction("Details", "Ninos", new { id = idNino });
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit_Contacto_Emergencia_2(int IdNino,
-        string NewNombre, string NewRelacion, int NewTelefono,
-        string NewDireccion, int? EliminarContactoId)
+    public async Task<IActionResult> Edit_Contacto_Emergencia_2(int idNino,
+        string newNombre, string newRelacion, int newTelefono,
+        string newDireccion, int? eliminarContactoId)
     {
         // Agregar nuevo contacto si se ha ingresado información válida
-        if (!string.IsNullOrWhiteSpace(NewNombre) && !string.IsNullOrWhiteSpace(NewRelacion) && NewTelefono != 0 &&
-            !string.IsNullOrWhiteSpace(NewDireccion))
+        if (!string.IsNullOrWhiteSpace(newNombre) && !string.IsNullOrWhiteSpace(newRelacion) && newTelefono != 0 &&
+            !string.IsNullOrWhiteSpace(newDireccion))
             await _context.Database.ExecuteSqlRawAsync(
                 "EXEC GestionarContactosEmergencia @id_nino = {0}, @nombre_contacto = {1}, @telefono = {2}, @relacion = {3}, @direccion = {4}, @id_contacto = {5}, @accion = {6}",
-                IdNino, NewNombre, NewTelefono, NewRelacion, NewDireccion, null, "AGREGAR");
+                idNino, newNombre, newTelefono, newRelacion, newDireccion, null!, "AGREGAR");
 
         await _context.SaveChangesAsync();
 
@@ -551,13 +602,13 @@ public class NinosController : Controller
 
         if (rolUsuarioLogueado == "Administrador")
         {
-            return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
+            return RedirectToAction("Details_Admin", "Ninos", new { id = idNino });
         }
         else if (rolUsuarioLogueado == "Docente")
         {
-            return RedirectToAction("Details_Docente", "Ninos", new { id = IdNino });
+            return RedirectToAction("Details_Docente", "Ninos", new { id = idNino });
         }
 
-        return RedirectToAction("Details", "Ninos", new { id = IdNino });
+        return RedirectToAction("Details", "Ninos", new { id = idNino });
     }
 }

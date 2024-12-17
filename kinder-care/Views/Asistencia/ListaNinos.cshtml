@@ -54,52 +54,53 @@
     <!-- Breadcrumb Right End -->
 </div>
 
-@if (Model != null && Model.Any())
+@if (Model.Any())
 {
     <div class="card overflow-hidden">
         <div class="card-body p-0 overflow-x-auto">
             <table id="studentTable" class="table table-striped">
                 <thead>
-                    <tr>
-                        <th class="h6 text-gray-300">ID</th>
-                        <th class="h6 text-gray-300">Cédula</th>
-                        <th class="h6 text-gray-300">Estudiante</th>
-                        <th class="h6 text-gray-300">Fecha de Nacimiento</th>
-                        <th class="h6 text-gray-300">Estado</th>
-                    </tr>
+                <tr>
+                    <th class="h6 text-gray-300">ID</th>
+                    <th class="h6 text-gray-300">Cédula</th>
+                    <th class="h6 text-gray-300">Estudiante</th>
+                    <th class="h6 text-gray-300">Fecha de Nacimiento</th>
+                    <th class="h6 text-gray-300">Estado</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (var estudiante in Model)
-                    {
-                        <tr>
+                @foreach (var estudiante in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="flex-align gap-8">
+                                <img src="~/images/icons/baby_2_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
+                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.IdNino</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.Cedula</span>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.NombreNino</span>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.FechaNacimiento.ToString("dd/MM/yyyy")</span>
+                        </td>
+                        @if ((bool)@estudiante.Activo!)
+                        {
                             <td>
-                                <div class="flex-align gap-8">
-                                    <img src="~/images/icons/baby_2_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
-                                    <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.IdNino</span>
-                                </div>
+                                <span class="h6 mb-0 fw-medium text-gray-300">Activo</span>
                             </td>
+                        }
+                        else
+                        {
                             <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.Cedula</span>
+                                <span class="h6 mb-0 fw-medium text-gray-300">Inactivo</span>
                             </td>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.NombreNino</span>
-                            </td>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.FechaNacimiento.ToString("dd/MM/yyyy")</span>
-                            </td>
-                            @if((bool)@estudiante.Activo!){
-                                <td>
-                                    <span class="h6 mb-0 fw-medium text-gray-300">Activo</span>
-                                </td>
-                            }
-                            else
-                            {
-                                <td>
-                                    <span class="h6 mb-0 fw-medium text-gray-300">Inactivo</span>
-                                </td>
-                            }
-                        </tr>
-                    }
+                        }
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>
@@ -108,12 +109,12 @@
 else
 {
     <div class="alert alert-info">
-        @ViewBag.Mensaje 
+        @ViewBag.Mensaje
     </div>
 }
 
 <div class="card-footer flex-between flex-wrap">
-    <span class="text-gray-900">Mostrando @Model.Count() de un maximo de 10 entrantes</span>
+    <span class="text-gray-900">Mostrando @Model!.Count() de un maximo de 10 entrantes</span>
     <ul class="pagination flex-align flex-wrap">
         <div class="card-footer flex-between flex-wrap">
         </div>

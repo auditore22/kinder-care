@@ -21,14 +21,11 @@
 <div class="card overflow-hidden">
     <div class="card-body p-0">
         <div class="cover-img position-relative">
-            <label for="coverImageUpload"
-                   class="btn border-gray-200 text-gray-200 fw-normal hover-bg-gray-400 rounded-pill py-4 px-14 position-absolute inset-block-start-0 inset-inline-end-0 mt-24 me-24">Edit
-                Cover</label>
             <div class="avatar-upload">
                 <input type="file" id="coverImageUpload" accept=".png, .jpg, .jpeg">
                 <div class="avatar-preview">
                     <div id="coverImagePreview"
-                         style="background: rgb(219,162,0); background: linear-gradient(180deg, rgba(219,162,0,0.5041666324733018) 0%, rgba(219,162,0,0) 70%);">
+                         style="background: rgb(0,141,219); background: linear-gradient(180deg, rgba(0,141,219,0.5041666324733018) 0%, rgba(0,170,219,0) 76%);">
                     </div>
                 </div>
             </div>
@@ -59,7 +56,9 @@
                                     <i class="ph ph-calendar-dots"></i>
                                 </span>
                                 <span
-                                    class="text-gray-600 d-flex text-15">@Model.FechaCreacion.ToString("dd/MM/yyyy")</span>
+                                    class="text-gray-600 d-flex text-15">
+                                    @Model.FechaCreacion.ToString("dd/MM/yyyy")
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -69,12 +68,14 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="pills-details-tab" data-bs-toggle="pill"
                             data-bs-target="#pills-details" type="button" role="tab" aria-controls="pills-details"
-                            aria-selected="true">Detalles
+                            aria-selected="true">
+                        Detalles
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="pills-edit-tab" data-bs-toggle="pill" data-bs-target="#pills-edit"
-                            type="button" role="tab" aria-controls="pills-edit" aria-selected="false">Editar
+                            type="button" role="tab" aria-controls="pills-edit" aria-selected="false">
+                        Editar
                     </button>
                 </li>
             </ul>
@@ -95,13 +96,15 @@
                 <div class="row gy-4">
                     <ul>
                         <li class="flex-align gap-6 text-black text-15 mb-12">
-                                        <span class="flex-shrink-0 text-22 d-flex text-main-600">
-                                            <img style="height: 20px; width: 20px"
-                                                 src="~/images/icons/Email_icon.svg"
-                                                 alt="Fecha_asignada_icono"/>
-                                        </span>
+                            <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                <img style="height: 20px; width: 20px"
+                                     src="~/images/icons/Email_icon.svg"
+                                     alt="Fecha_asignada_icono"/>
+                            </span>
 
-                            <p><strong>Correo Electronico: </strong></p>
+                            <p>
+                                <strong>Correo Electronico: </strong>
+                            </p>
                             @Model.CorreoElectronico
                         </li>
                         <li class="flex-align gap-6 text-black text-15 mb-12">
@@ -110,7 +113,9 @@
                                      src="~/images/icons/Tel_icon.svg" alt="Fecha_entrega_icono"/>
                             </span>
 
-                            <p><strong>Telefono: </strong></p>
+                            <p>
+                                <strong>Telefono: </strong>
+                            </p>
                             @Model.NumTelefono
                         </li>
                         <li class="flex-align gap-6 text-black text-15 mb-12">
@@ -119,7 +124,9 @@
                                      src="~/images/icons/Role_icon.svg" alt="Fecha_entrega_icono"/>
                             </span>
 
-                            <p><strong>Rol: </strong></p>
+                            <p>
+                                <strong>Rol: </strong>
+                            </p>
                             @Model.IdRolNavigation.Nombre
                         </li>
                         @if (ViewBag.RoleName == "Administrador")
@@ -140,7 +147,9 @@
                                     </span>
                                 }
 
-                                <p><strong>Estado: </strong></p>
+                                <p>
+                                    <strong>Estado: </strong>
+                                </p>
                                 @if (Model.Activo == true)
                                 {
                                     <p>Usuario Activo</p>
@@ -188,8 +197,10 @@
 
                                 <!-- Campo de texto para el correo -->
                                 <div class="col-sm-6 col-xs-6">
-                                    <label asp-for="CorreoElectronico" class="form-label mb-8 h6">Correo
-                                        Electronico</label>
+                                    <label asp-for="CorreoElectronico" class="form-label mb-8 h6">
+                                        Correo
+                                        Electronico
+                                    </label>
                                     <input asp-for="CorreoElectronico" type="text" class="form-control py-11"
                                            placeholder="Correo" required>
                                 </div>
@@ -203,7 +214,9 @@
                                 <div class="col-12">
                                     <div class="flex-align justify-content-end gap-8">
                                         <a asp-action="Index" asp-route-id="@Model.IdUsuario"
-                                           class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancelar</a>
+                                           class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">
+                                            Cancelar
+                                        </a>
                                         <button type="submit" class="btn btn-main rounded-pill py-9">Guardar</button>
                                     </div>
                                 </div>

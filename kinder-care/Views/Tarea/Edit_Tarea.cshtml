@@ -7,22 +7,37 @@
         {
             <li>
                 <a asp-action="Details_Admin" asp-controller="Ninos" asp-route-id="@ViewBag.IdNino"
-                   class="text-gray-200 fw-normal text-15 hover-text-main-600">Niño</a></li>
+                   class="text-gray-200 fw-normal text-15 hover-text-main-600">
+                    Niño
+                </a>
+            </li>
         }
         else if (ViewBag.RoleName == "Docente")
         {
             <li>
                 <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@ViewBag.IdNino"
-                   class="text-gray-200 fw-normal text-15 hover-text-main-600">Niño</a></li>
+                   class="text-gray-200 fw-normal text-15 hover-text-main-600">
+                    Niño
+                </a>
+            </li>
         }
         else if (ViewBag.RoleName == "Padre")
         {
             <li>
                 <a asp-action="Details" asp-controller="Ninos" asp-route-id="@ViewBag.IdNino"
-                   class="text-gray-200 fw-normal text-15 hover-text-main-600">Hijo</a></li>
+                   class="text-gray-200 fw-normal text-15 hover-text-main-600">
+                    Hijo
+                </a>
+            </li>
         }
-        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
-        <li><span class="text-main-600 fw-normal text-15">Editar Tarea</span></li>
+        <li>
+            <span class="text-gray-500 fw-normal d-flex">
+                <i class="ph ph-caret-right"></i>
+            </span>
+        </li>
+        <li>
+            <span class="text-main-600 fw-normal text-15">Editar Tarea</span>
+        </li>
     </ul>
 </div>
 <!-- Breadcrumb End -->
@@ -118,4 +133,3 @@
         <!-- Editar Tarea Card End -->
     </div>
 </div>
-

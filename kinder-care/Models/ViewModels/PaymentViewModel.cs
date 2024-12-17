@@ -6,9 +6,10 @@ public class PaymentViewModel
 {
     [Required(ErrorMessage = "El campo 'IdPago' es requerido.")]
     public int IdPago { get; set; }
-    
+
     [Required(ErrorMessage = "El campo 'IdNino' es requerido.")]
     public int IdNino { get; set; }
+
     [Required(ErrorMessage = "El campo 'IdPadre' es requerido.")]
     public int IdPadre { get; set; }
 
