@@ -27,60 +27,60 @@
     <div class="card-body p-0 overflow-x-auto">
         <table id="studentTable" class="table table-striped">
             <thead>
-                <tr>
-                    <th class="h6 text-gray-300">ID</th>
-                    <th class="h6 text-gray-300">Cedula</th>
-                    <th class="h6 text-gray-300">Nombre</th>
-                    <th class="h6 text-gray-300">Telefono</th>
-                    <th class="h6 text-gray-300">Dirección</th>
-                    <th class="h6 text-gray-300">Coreo Electronico</th>
-                    <th class="h6 text-gray-300">Tipo de Usuario</th>
-                    <th class="h6 text-gray-300">Actions</th>
-                </tr>
+            <tr>
+                <th class="h6 text-gray-300">ID</th>
+                <th class="h6 text-gray-300">Cedula</th>
+                <th class="h6 text-gray-300">Nombre</th>
+                <th class="h6 text-gray-300">Telefono</th>
+                <th class="h6 text-gray-300">Dirección</th>
+                <th class="h6 text-gray-300">Coreo Electronico</th>
+                <th class="h6 text-gray-300">Tipo de Usuario</th>
+                <th class="h6 text-gray-300">Actions</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var usuario in Model)
-                {
-                    <tr>
-                        <td>
-                            <div class="flex-align gap-8">
-                                <img src="~/images/icons/profile_icon_2.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
-                                <span class="h6 mb-0 fw-medium text-gray-300">@usuario.IdUsuario</span>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@usuario.Cedula</span>
-                        </td>
-                        <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@usuario.Nombre</span> 
-                        </td>
-                        <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@usuario.NumTelefono</span>
-                        </td>
-                        <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@usuario.Direccion</span>
-                        </td>
-                        <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@usuario.CorreoElectronico</span> 
-                        </td>
-                        <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">
-                                @if (usuario.IdRolNavigation != null)
-                                {
-                                    @usuario.IdRolNavigation.Nombre
-                                }
-                                else
-                                {
-                                    <span class="text-danger">Sin rol</span>
-                                }
-                            </span>
-                        </td>
+            @foreach (var usuario in Model)
+            {
+                <tr>
+                    <td>
+                        <div class="flex-align gap-8">
+                            <img src="~/images/icons/profile_icon_2.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
+                            <span class="h6 mb-0 fw-medium text-gray-300">@usuario.IdUsuario</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="h6 mb-0 fw-medium text-gray-300">@usuario.Cedula</span>
+                    </td>
+                    <td>
+                        <span class="h6 mb-0 fw-medium text-gray-300">@usuario.Nombre</span>
+                    </td>
+                    <td>
+                        <span class="h6 mb-0 fw-medium text-gray-300">@usuario.NumTelefono</span>
+                    </td>
+                    <td>
+                        <span class="h6 mb-0 fw-medium text-gray-300">@usuario.Direccion</span>
+                    </td>
+                    <td>
+                        <span class="h6 mb-0 fw-medium text-gray-300">@usuario.CorreoElectronico</span>
+                    </td>
+                    <td>
+                        <span class="h6 mb-0 fw-medium text-gray-300">
+                            @if (usuario.IdRolNavigation != null)
+                            {
+                                @usuario.IdRolNavigation.Nombre
+                            }
+                            else
+                            {
+                                <span class="text-danger">Sin rol</span>
+                            }
+                        </span>
+                    </td>
 
-                        <td>
-                            <a asp-action="Details" asp-route-id="@usuario.IdUsuario" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
-                        </td>
-                    </tr>
-                }
+                    <td>
+                        <a asp-action="Details" asp-route-id="@usuario.IdUsuario" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
+                    </td>
+                </tr>
+            }
             </tbody>
         </table>
     </div>

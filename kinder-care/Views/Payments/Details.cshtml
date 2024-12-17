@@ -94,7 +94,7 @@
 </div>
 
 <div class="tab-content" id="pills-tabContent">
-    
+
     <!-- Detalles del Pago -->
     <div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab">
         <div class="card mt-24">
@@ -102,11 +102,21 @@
                 <h4 class="mb-4">Información Adicional</h4>
             </div>
             <div class="card-body">
-                <p><strong>Monto del pago:</strong> @Model.Monto</p>
-                <p><strong>Método de Pago:</strong> @Model.MetodoPago</p>
-                <p><strong>Referencia de factura:</strong> @Model.ReferenciaFactura</p>
-                <p><strong>Fecha de Creación:</strong> @Model.FechaCreacion?.ToString("dd/MM/yyyy")</p>
-                <p><strong>Última Actualización:</strong> @Model.UltimaActualizacion?.ToString("dd/MM/yyyy")</p>
+                <p>
+                    <strong>Monto del pago:</strong> @Model.Monto
+                </p>
+                <p>
+                    <strong>Método de Pago:</strong> @Model.MetodoPago
+                </p>
+                <p>
+                    <strong>Referencia de factura:</strong> @Model.ReferenciaFactura
+                </p>
+                <p>
+                    <strong>Fecha de Creación:</strong> @Model.FechaCreacion?.ToString("dd/MM/yyyy")
+                </p>
+                <p>
+                    <strong>Última Actualización:</strong> @Model.UltimaActualizacion?.ToString("dd/MM/yyyy")
+                </p>
             </div>
         </div>
     </div>
@@ -119,38 +129,38 @@
 
                 @if (ViewBag.ErrorMessage != null)
                 {
-                <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+                    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
                 }
 
                 <form asp-action="Edit" asp-controller="Payments" method="post">
                     @Html.AntiForgeryToken()
-                    <input type="hidden" asp-for="IdPago" />
+                    <input type="hidden" asp-for="IdPago"/>
 
                     <!-- Campo de Fecha de Pago -->
                     <div class="mb-4">
                         <label for="FechaPago" class="form-label">Fecha de Pago</label>
-                        <input type="date" class="form-control" asp-for="FechaPago" value="@Model.FechaPago.ToString("yyyy-MM-dd")" />
+                        <input type="date" class="form-control" asp-for="FechaPago" value="@Model.FechaPago.ToString("yyyy-MM-dd")"/>
                         <span asp-validation-for="FechaPago" class="text-danger"></span>
                     </div>
 
                     <!-- Campo de Monto -->
                     <div class="mb-4">
                         <label for="Monto" class="form-label">Monto</label>
-                        <input type="text" class="form-control" asp-for="Monto" placeholder="0.00" />
+                        <input type="text" class="form-control" asp-for="Monto" placeholder="0.00"/>
                         <span asp-validation-for="Monto" class="text-danger"></span>
                     </div>
 
                     <!-- Campo de Método de Pago -->
                     <div class="mb-4">
                         <label for="MetodoPago" class="form-label">Método de Pago</label>
-                        <input type="text" class="form-control" asp-for="MetodoPago" placeholder="E.g., Transferencia, Efectivo" />
+                        <input type="text" class="form-control" asp-for="MetodoPago" placeholder="E.g., Transferencia, Efectivo"/>
                         <span asp-validation-for="MetodoPago" class="text-danger"></span>
                     </div>
 
                     <!-- Campo de Referencia de Factura -->
                     <div class="mb-4">
                         <label for="ReferenciaFactura" class="form-label">Referencia de Factura</label>
-                        <input type="text" class="form-control" asp-for="ReferenciaFactura" placeholder="Número de Factura" />
+                        <input type="text" class="form-control" asp-for="ReferenciaFactura" placeholder="Número de Factura"/>
                         <span asp-validation-for="ReferenciaFactura" class="text-danger"></span>
                     </div>
 
@@ -163,7 +173,6 @@
             </div>
         </div>
     </div>
-
 
 
     <!-- Eliminar Pago -->
@@ -188,4 +197,3 @@
         <i class="fas fa-arrow-left me-2"></i> Volver a la Gestión de Pagos
     </a>
 </div>
-

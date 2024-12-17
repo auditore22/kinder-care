@@ -20,61 +20,61 @@
     <!-- Breadcrumb End -->
 </div>
 
-@if (Model != null && Model.Any())
+@if (Model.Any())
 {
     <div class="card overflow-hidden">
         <div class="card-body p-0 overflow-x-auto">
             <table id="studentTable" class="table table-striped">
                 <thead>
-                    <tr>
-                        <th class="h6 text-gray-300">ID</th>
-                        <th class="h6 text-gray-300">Cédula</th>
-                        <th class="h6 text-gray-300">Estudiante</th>
-                        <th class="h6 text-gray-300">Fecha de Nacimiento</th>
-                        <th class="h6 text-gray-300">Póliza</th>
-                        <th class="h6 text-gray-300">Docente</th>
-                    </tr>
+                <tr>
+                    <th class="h6 text-gray-300">ID</th>
+                    <th class="h6 text-gray-300">Cédula</th>
+                    <th class="h6 text-gray-300">Estudiante</th>
+                    <th class="h6 text-gray-300">Fecha de Nacimiento</th>
+                    <th class="h6 text-gray-300">Póliza</th>
+                    <th class="h6 text-gray-300">Docente</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (var nino in Model)
-                    {
-                        <tr>
-                            <td>
-                                <div class="flex-align gap-8">
-                                    <img src="~/images/icons/baby_1_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
-                                    <span class="h6 mb-0 fw-medium text-gray-300">@nino.IdNino</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@nino.Cedula</span>
-                            </td>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@nino.NombreNino</span>
-                            </td>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@nino.FechaNacimiento.ToString("dd/MM/yyyy")</span>
-                            </td>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@nino.Poliza</span>
-                            </td>
-                            <td>
-                                @foreach (var relacion in nino.RelDocenteNinoMateria)
+                @foreach (var nino in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="flex-align gap-8">
+                                <img src="~/images/icons/baby_1_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
+                                <span class="h6 mb-0 fw-medium text-gray-300">@nino.IdNino</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@nino.Cedula</span>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@nino.NombreNino</span>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@nino.FechaNacimiento.ToString("dd/MM/yyyy")</span>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@nino.Poliza</span>
+                        </td>
+                        <td>
+                            @foreach (var relacion in nino.RelDocenteNinoMateria)
+                            {
+                                @if (@relacion.IdDocenteNavigation.IdUsuarioNavigation.Nombre == null)
                                 {
-                                    @if (@relacion.IdDocenteNavigation.IdUsuarioNavigation.Nombre == null)
-                                    {
-                                        <span class="h6 mb-0 fw-medium text-gray-300">Sin docente</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="h6 mb-0 fw-medium text-gray-300">@relacion.IdDocenteNavigation.IdUsuarioNavigation.Nombre</span>
-                                    }
+                                    <span class="h6 mb-0 fw-medium text-gray-300">Sin docente</span>
                                 }
-                            </td>
-                            <td>
-                                <a asp-action="Details_Admin" asp-controller="Ninos" asp-route-id="@nino.IdNino" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
-                            </td>
-                        </tr>
-                    }
+                                else
+                                {
+                                    <span class="h6 mb-0 fw-medium text-gray-300">@relacion.IdDocenteNavigation.IdUsuarioNavigation.Nombre</span>
+                                }
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Details_Admin" asp-controller="Ninos" asp-route-id="@nino.IdNino" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
+                        </td>
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>
@@ -88,7 +88,7 @@ else
 }
 
 <div class="card-footer flex-between flex-wrap">
-    <span class="text-gray-900">Mostrando @Model.Count() de un maximo de 10 entrantes</span>
+    <span class="text-gray-900">Mostrando @Model!.Count() de un maximo de 10 entrantes</span>
     <ul class="pagination flex-align flex-wrap">
         <div class="card-footer flex-between flex-wrap">
         </div>

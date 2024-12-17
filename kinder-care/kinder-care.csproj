@@ -166,6 +166,7 @@
       <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_StudyStatistics.cshtml" />
       <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_TopCourses.cshtml" />
       <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_TopNavbar.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\newViews\Dashboard\index.cshtml" />
     </ItemGroup>
 
     <ItemGroup>

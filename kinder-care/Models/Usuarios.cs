@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace kinder_care.Models;
 
@@ -35,7 +33,7 @@ public partial class Usuarios
     [EmailAddress(ErrorMessage = "Ingrese un email valido")]
     public string CorreoElectronico { get; set; } = null!;
 
-    public string TokenRecovery { get; set; }
+    public string? TokenRecovery { get; set; }
 
     public int IdRol { get; set; }
 

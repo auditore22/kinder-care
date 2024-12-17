@@ -26,7 +26,7 @@ namespace kinder_care.Services
                     RelacionContacto = e.RelacionContacto
                 }).ToListAsync();
         }
-        
+
         public async Task<List<ExpedienteCompletoNino>> GetExpedientesByNinoIdsAsync(List<int> ninoIds)
         {
             return await context.VwExpedienteCompletoNino
