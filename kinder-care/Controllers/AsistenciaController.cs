@@ -54,6 +54,7 @@ namespace kinder_care.Controllers
             var ninos = await _context.Ninos
                 .Include(r => r.RelDocenteNinoMateria)
                 .ThenInclude(d => d.IdDocenteNavigation)
+                .ThenInclude(u => u.IdUsuarioNavigation)
                 .ToListAsync();
             return View(ninos);
         }

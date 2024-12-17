@@ -60,7 +60,7 @@
                         <th class="h6 text-gray-300">Estudiante</th>
                         <th class="h6 text-gray-300">Fecha de Nacimiento</th>
                         <th class="h6 text-gray-300">Póliza</th>
-                        <th class="h6 text-gray-300">Grupo</th>
+                        <th class="h6 text-gray-300">Docente</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -88,13 +88,13 @@
                             <td>
                                 @foreach (var relacion in nino.RelDocenteNinoMateria)
                                 {
-                                    @if (@relacion.IdDocenteNavigation.GrupoAsignado == null)
+                                    @if (@relacion.IdDocenteNavigation.IdUsuarioNavigation.Nombre == null)
                                     {
-                                        <span class="h6 mb-0 fw-medium text-gray-300">Sin grupo</span>
+                                        <span class="h6 mb-0 fw-medium text-gray-300">Sin docente</span>
                                     }
                                     else
                                     {
-                                        <span class="h6 mb-0 fw-medium text-gray-300">@relacion.IdDocenteNavigation.GrupoAsignado</span>
+                                        <span class="h6 mb-0 fw-medium text-gray-300">@relacion.IdDocenteNavigation.IdUsuarioNavigation.Nombre</span>
                                     }
                                 }
                             </td>
@@ -116,7 +116,7 @@ else
 }
 
 <div class="card-footer flex-between flex-wrap">
-    <span class="text-gray-900">Mostrando del 1 al 10 de @Model.Count() entrantes</span>
+    <span class="text-gray-900">Mostrando @Model.Count() de un maximo de 10 entrantes</span>
     <ul class="pagination flex-align flex-wrap">
         <div class="card-footer flex-between flex-wrap">
         </div>
