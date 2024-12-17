@@ -22,14 +22,11 @@
 <div class="card overflow-hidden">
     <div class="card-body p-0">
         <div class="cover-img position-relative">
-            <label for="coverImageUpload"
-                   class="btn border-gray-200 text-gray-200 fw-normal hover-bg-gray-400 rounded-pill py-4 px-14 position-absolute inset-block-start-0 inset-inline-end-0 mt-24 me-24">Editar
-                fondo</label>
             <div class="avatar-upload">
                 <input type="file" id="coverImageUpload" accept=".png, .jpg, .jpeg">
                 <div class="avatar-preview">
                     <div id="coverImagePreview"
-                         style="background: rgb(219,162,0); background: linear-gradient(180deg, rgba(219,162,0,0.5041666324733018) 0%, rgba(219,162,0,0) 70%);">
+                         style="background: rgb(0,141,219); background: linear-gradient(180deg, rgba(0,141,219,0.5041666324733018) 0%, rgba(0,170,219,0) 76%);">
                     </div>
                 </div>
             </div>
@@ -401,58 +398,6 @@
                             </div>
                         </div>
                     </div>
-
-                    @*<!-- Crear Tareas -->
-                    <div class="tab-pane fade" id="subPills-create" role="tabpanel"
-                         aria-labelledby="subPills-create-tab">
-                        <div class="card-body">
-                            <h5 class="mb-4">Crear Nueva Tarea</h5>
-                            <form asp-action="Crear_Tarea" asp-controller="Tarea" method="post">
-                                <div class="mb-3">
-                                    <label for="IdNino" class="form-label">IdNino</label>
-                                    <input type="text" class="form-control" id="IdNino" name="IdNino"
-                                           value="@Model.IdNino" required>
-                                </div>
-
-                                @if (ViewBag.RoleName == "Administrador")
-                                {
-                                    <div class="mb-3">
-                                        <label for="IdProfesor" class="form-label">IdProfesor</label>
-                                        <select for="IdProfesor" class="form-select"
-                                                asp-items="ViewBag.ListaProfesores">
-                                            <option value="">Selecciona el docente</option>
-                                        </select>
-                                    </div>
-                                }
-                                else if(ViewBag.RoleName == "Docente")
-                                {
-                                    <div class="mb-3">
-                                        <label for="IdProfesor" class="form-label">IdProfesor</label>
-                                        <input type="text" class="form-control" id="IdProfesor" name="IdProfesor"
-                                               value="@ViewBag.UserID" required>
-                                    </div>
-                                }
-
-                                <div class="mb-3">
-                                    <label for="NombreTarea" class="form-label">Nombre de la Tarea</label>
-                                    <input type="text" class="form-control" id="NombreTarea" name="Nombre" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="Descripcion" class="form-label">Descripción</label>
-                                    <textarea class="form-control" id="Descripcion" name="Descripcion" rows="3"
-                                              required></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="FechaEntrega" class="form-label">Fecha de Entrega</label>
-                                    <input type="date" class="form-control" required>
-                                </div>
-                                <input type="hidden" name="IdNino" value="@Model.IdNino">
-                                <button type="submit" class="btn btn-primary rounded-pill py-9 w-100 mt-24">Guardar
-                                    Tarea
-                                </button>
-                            </form>
-                        </div>
-                    </div>*@
                 </div>
             </div>
         </div>
