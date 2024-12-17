@@ -34,6 +34,7 @@ GO
 -- Insertar registros en Usuarios con roles (Padre, Docente, Administrador)
 INSERT INTO usuarios (cedula, nombre, contrasena_hash, num_Telefono, direccion, correo_electronico, id_rol, fecha_creacion, ultima_actualizacion, activo)
 VALUES
+    ('121212121', 'Maribel Solis', 'AQAAAAIAAYagAAAAENizrGED/9hel72EeDtNo2830KEPSgmqF0nB4o/+DfN1ws1KlwZR563qQMNW+QJbgA==', 88881221, 'Calle 15, San Jose', 'msolis90362@ufide.ac.cr', 1, GETDATE(), GETDATE(), 1),
     ('111111111', 'Juan Morales', 'AQAAAAIAAYagAAAAENizrGED/9hel72EeDtNo2830KEPSgmqF0nB4o/+DfN1ws1KlwZR563qQMNW+QJbgA==', 88881111, 'Calle 12, San Jose', 'juan.morales@example.com', 3, GETDATE(), GETDATE(), 1),
     ('222222222', 'Carla Perez', 'AQAAAAIAAYagAAAAENizrGED/9hel72EeDtNo2830KEPSgmqF0nB4o/+DfN1ws1KlwZR563qQMNW+QJbgA==', 88882222, 'Calle 45, Alajuela', 'carla.perez@example.com', 3, GETDATE(), GETDATE(), 1),
     ('333333333', 'Mario Rodriguez', 'AQAAAAIAAYagAAAAENizrGED/9hel72EeDtNo2830KEPSgmqF0nB4o/+DfN1ws1KlwZR563qQMNW+QJbgA==', 88883333, 'Avenida Central, Heredia', 'mario.rodriguez@example.com', 3, GETDATE(), GETDATE(), 1),
