@@ -28,6 +28,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
 });
 
+builder.WebHost.UseUrls("http://0.0.0.0:80");
 
 var app = builder.Build();
 
