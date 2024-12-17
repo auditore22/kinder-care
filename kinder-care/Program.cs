@@ -11,20 +11,25 @@ QuestPDF.Settings.License = LicenseType.Community;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Configure DbContext with SQL Server
+// Replace the connection string placeholder with the environment variable
+var connectionString = builder.Configuration.GetConnectionString("KinderCareConnection")
+    ?.Replace("{DB_PASSWORD}", Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "");
+
+if (builder.Environment.IsProduction() && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DB_PASSWORD")))
+{
+    throw new InvalidOperationException("The DB_PASSWORD environment variable is not set.");
+}
+
 builder.Services.AddDbContext<KinderCareContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("KinderCareConnection")));
+    options.UseSqlServer(connectionString));
 
 // Register ExpedienteService
-builder.Services.AddScoped<ExpedienteService>(); // 
+builder.Services.AddScoped<ExpedienteService>();
 
-//Configurar la autenticacion
+// Configure authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
-    // Diciendole que la ruta de login es:
     options.LoginPath = "/Access/Login";
-
-    // Aquí podemos indicarle el tiempo que puede durar una sesión de usuario:
     options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
 });
 
@@ -32,11 +37,10 @@ builder.WebHost.UseUrls("http://0.0.0.0:80");
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -44,10 +48,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-// Indicarle que use la autenticación:
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllerRoute(
