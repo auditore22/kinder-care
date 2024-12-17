@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace kinder_care.Controllers
 {
@@ -17,21 +16,25 @@ namespace kinder_care.Controllers
         private readonly ILogger<UsersController> _logger;
         private readonly KinderCareContext _context;
 
-        
-        public UsersController(ExpedienteService expedienteService, ILogger<UsersController> logger, KinderCareContext context)
+
+        public UsersController(ExpedienteService expedienteService, ILogger<UsersController> logger,
+            KinderCareContext context)
         {
             _expedienteService = expedienteService;
             _logger = logger;
             _context = context;
         }
-        
-        public async Task<IActionResult> ManageRecords()
+
+        public async Task<IActionResult> ManageRecords(int pageNumber = 1)
         {
             ViewBag.CurrentSection = "ManageRecords";
+
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var userRole = User.FindFirstValue(ClaimTypes.Role);
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
             ViewBag.DocenteId = docente?.IdDocente!;
+
+            List<ExpedienteCompletoNino> expedientes;
 
             if (userRole == "Docente" && docente != null)
             {
@@ -46,16 +49,22 @@ namespace kinder_care.Controllers
                     return View(new List<ExpedienteCompletoNino>());
                 }
 
-                var expedientes = await _expedienteService.GetExpedientesByNinoIdsAsync(estudiantesIds);
-                return View(expedientes);
+                expedientes = await _expedienteService.GetExpedientesByNinoIdsAsync(estudiantesIds);
             }
             else
             {
-                var expedientes = await _expedienteService.GetExpedientesAsync();
-                return View(expedientes);
+                expedientes = await _expedienteService.GetExpedientesAsync();
             }
+
+            // Total de registros
+            var totalItems = expedientes.Count;
+
+            // Asignar valores a ViewBag
+            ViewBag.TotalItems = totalItems;
+
+            return View(expedientes);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> ActualizarExpedienteNino([FromBody] ExpedienteCompletoNino expediente)
         {
@@ -68,7 +77,7 @@ namespace kinder_care.Controllers
                 }
 
                 await _expedienteService.UpdateExpedienteAsync(expediente);
-                return Ok(); 
+                return Ok();
             }
             catch (SqlException ex)
             {
@@ -81,7 +90,7 @@ namespace kinder_care.Controllers
                 return BadRequest($"Error inesperado: {ex.Message}");
             }
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> GestionarInformacionMedica([FromBody] InformacionMedicaRequest request)
         {
@@ -101,7 +110,7 @@ namespace kinder_care.Controllers
                 return BadRequest($"Error inesperado: {ex.Message}");
             }
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> GestionarContactosEmergencia([FromBody] ContactoEmergenciaRequest request)
         {
@@ -114,7 +123,7 @@ namespace kinder_care.Controllers
                 }
 
                 await _expedienteService.GestionarContactosEmergenciaAsync(request);
-                return Ok(); 
+                return Ok();
             }
             catch (SqlException ex)
             {

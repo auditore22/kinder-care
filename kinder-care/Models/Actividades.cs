@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace kinder_care.Models;
+﻿namespace kinder_care.Models;
 
 public partial class Actividades
 {
@@ -12,7 +9,7 @@ public partial class Actividades
     public DateTime Fecha { get; set; }
 
     public string? Lugar { get; set; }
-    
+
     public string? Descripcion { get; set; } // Nueva propiedad Descripcion
 
     public bool? Activo { get; set; }

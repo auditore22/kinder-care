@@ -26,7 +26,7 @@ namespace kinder_care.Controllers
             var userRole = User.FindFirstValue(ClaimTypes.Role);
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
 
-            ViewBag.DocenteId = docente.IdDocente;
+            ViewBag.DocenteId = docente!.IdDocente;
             
             if (userRole == "Docente")
             {
@@ -54,6 +54,7 @@ namespace kinder_care.Controllers
             var ninos = await _context.Ninos
                 .Include(r => r.RelDocenteNinoMateria)
                 .ThenInclude(d => d.IdDocenteNavigation)
+                .ThenInclude(u => u.IdUsuarioNavigation)
                 .ToListAsync();
             return View(ninos);
         }
@@ -61,7 +62,7 @@ namespace kinder_care.Controllers
         [HttpGet]
         public async Task<IActionResult> CrearGrupo()
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
             var docente = await _context.Docentes
                 .Include(d => d.IdUsuarioNavigation)
@@ -74,7 +75,7 @@ namespace kinder_care.Controllers
 
             var vm = new RelacionDocenteNinosVM
             {
-                IdDocente = docente.IdDocente,
+                IdDocente = docente!.IdDocente,
                 UsuarioNombre = docente.IdUsuarioNavigation.Nombre,
                 UsuarioCedula = docente.IdUsuarioNavigation.Cedula,
                 Ninos = estudiantesDisponibles
@@ -84,18 +85,18 @@ namespace kinder_care.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CrearGrupo(List<int> Ninos)
+        public async Task<IActionResult> CrearGrupo(List<int> ninos)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
 
-            foreach (var ninoId in Ninos)
+            foreach (var ninoId in ninos)
             {
-                if (!_context.RelDocenteNinoMateria.Any(r => r.IdDocente == docente.IdDocente && r.IdNino == ninoId))
+                if (!_context.RelDocenteNinoMateria.Any(r => r.IdDocente == docente!.IdDocente && r.IdNino == ninoId))
                 {
                     _context.RelDocenteNinoMateria.Add(new RelDocenteNinoMateria
                     {
-                        IdDocente = docente.IdDocente,
+                        IdDocente = docente!.IdDocente,
                         IdNino = ninoId
                     });
                 }
@@ -108,14 +109,14 @@ namespace kinder_care.Controllers
         //===========================[Asistencia de Estudiantes]===========================
         public async Task<IActionResult> ControlAsistencias()
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var userRole = User.FindFirstValue(ClaimTypes.Role);
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
 
             if (userRole == "Docente")
             {
                 var estudiantes = await _context.RelDocenteNinoMateria
-                    .Where(r => r.IdDocente == docente.IdDocente)
+                    .Where(r => r.IdDocente == docente!.IdDocente)
                     .Select(r => r.IdNino)
                     .Join(_context.Ninos,
                         rel => rel,
@@ -136,12 +137,12 @@ namespace kinder_care.Controllers
         [HttpPost]
         public async Task<IActionResult> ControlAsistencias(List<int> estudiantesPresentes)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var fechaActual = DateTime.Now;
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
 
             var estudiantes = await _context.RelDocenteNinoMateria
-                .Where(r => r.IdDocente == docente.IdDocente)
+                .Where(r => r.IdDocente == docente!.IdDocente)
                 .Select(r => r.IdNino)
                 .ToListAsync();
 
@@ -164,11 +165,11 @@ namespace kinder_care.Controllers
 
         public IActionResult ListaAsistencia(DateTime? fechaInicio, DateTime? fechaFin)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var docente = _context.Docentes.FirstOrDefault(d => d.IdUsuario == userId);
             
             var estudiantes = _context.RelDocenteNinoMateria
-                .Where(r => r.IdDocente == docente.IdDocente)
+                .Where(r => r.IdDocente == docente!.IdDocente)
                 .Select(r => r.IdNino)
                 .ToList();
 
@@ -187,8 +188,8 @@ namespace kinder_care.Controllers
                 .OrderByDescending(a => a.Fecha)
                 .ToList();
 
-            ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd");
-            ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd");
+            ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd")!;
+            ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd")!;
 
             return View(asistencias);
         }
@@ -209,23 +210,23 @@ namespace kinder_care.Controllers
                 .OrderByDescending(a => a.Fecha)
                 .ToList();
 
-            ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd");
-            ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd");
+            ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd")!;
+            ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd")!;
 
             return View(asistencias);
         }
 
         //=============================[Reporte de Asistencia]=============================
-        public IActionResult GenerarReportePDF(DateTime? fechaInicio, DateTime? fechaFin)
+        public IActionResult GenerarReportePdf(DateTime? fechaInicio, DateTime? fechaFin)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
             var docente = _context.Docentes
                 .Include(d => d.IdUsuarioNavigation)
                 .FirstOrDefault(d => d.IdUsuario == userId);
 
             var estudiantes = _context.RelDocenteNinoMateria
-                .Where(r => r.IdDocente == docente.IdDocente)
+                .Where(r => r.IdDocente == docente!.IdDocente)
                 .Select(r => r.IdNino)
                 .ToList();
 
@@ -241,14 +242,18 @@ namespace kinder_care.Controllers
 
             var asistencias = query.OrderByDescending(a => a.Fecha).ToList();
 
-            var PdfDoc = Document.Create(container =>
+            var pdfDoc = Document.Create(container =>
             {
                 container.Page(page =>
                 {
                     page.Size(PageSizes.A4);
                     page.Margin(2, Unit.Centimetre);
-                    page.DefaultTextStyle(TextStyle.Default.Size(12));
-                    page.Header().Text($"Reporte de Asistencias - {docente.IdUsuarioNavigation.Nombre}").Bold().FontSize(18).AlignCenter();
+                    page.DefaultTextStyle(TextStyle.Default.FontSize(12));
+                    page.Header()
+                        .Text($"Reporte de Asistencias - {docente!.IdUsuarioNavigation.Nombre}")
+                        .Bold()
+                        .FontSize(18)
+                        .AlignCenter();
                     page.Content().Table(table =>
                     {
                         table.ColumnsDefinition(columns =>
@@ -284,7 +289,7 @@ namespace kinder_care.Controllers
                 });
             });
 
-            var pdfBytes = PdfDoc.GeneratePdf();
+            var pdfBytes = pdfDoc.GeneratePdf();
             return File(pdfBytes, "application/pdf", "Reporte_Asistencia.pdf");
         }
 
@@ -292,13 +297,13 @@ namespace kinder_care.Controllers
         [HttpPost]
         public async Task<IActionResult> EliminarRelacion(int idNino)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
 
             var relacion = await _context.RelDocenteNinoMateria
-                .FirstOrDefaultAsync(r => r.IdDocente == docente.IdDocente && r.IdNino == idNino);
+                .FirstOrDefaultAsync(r => r.IdDocente == docente!.IdDocente && r.IdNino == idNino);
 
-            _context.RelDocenteNinoMateria.Remove(relacion);
+            _context.RelDocenteNinoMateria.Remove(relacion!);
             await _context.SaveChangesAsync();
 
             ViewBag.Mensaje = "El estudiante fue eliminado del grupo.";

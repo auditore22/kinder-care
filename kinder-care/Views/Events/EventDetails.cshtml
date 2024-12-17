@@ -21,7 +21,7 @@
 <div class="card overflow-hidden">
     <div class="card-body p-0">
         <div class="cover-img position-relative">
-           <div class="avatar-upload">
+            <div class="avatar-upload">
                 <input type="file" id="coverImageUpload" accept=".png, .jpg, .jpeg">
                 <div class="avatar-preview">
                     <div id="coverImagePreview" style="background: rgb(45, 156, 219); background: linear-gradient(180deg, rgba(45, 156, 219, 0.5) 0%, rgba(45, 156, 219, 0) 70%);">
@@ -85,21 +85,21 @@
 
                 @if (ViewBag.ErrorMessage != null)
                 {
-                <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+                    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
                 }
-                
+
                 <form asp-action="EditEvent" asp-controller="Events" method="post">
-                    <input type="hidden" asp-for="IdActividad" />
+                    <input type="hidden" asp-for="IdActividad"/>
 
                     <div class="mb-4">
                         <label for="Fecha" class="form-label">Fecha y Hora</label>
-                        <input type="datetime-local" class="form-control" asp-for="Fecha" value="@Model.Fecha.ToString("yyyy-MM-ddTHH:mm")" />
+                        <input type="datetime-local" class="form-control" asp-for="Fecha" value="@Model.Fecha.ToString("yyyy-MM-ddTHH:mm")"/>
                         <span asp-validation-for="Fecha" class="text-danger"></span>
                     </div>
 
                     <div class="mb-4">
                         <label for="Lugar" class="form-label">Lugar</label>
-                        <input type="text" class="form-control" asp-for="Lugar" />
+                        <input type="text" class="form-control" asp-for="Lugar"/>
                         <span asp-validation-for="Lugar" class="text-danger"></span>
                     </div>
 

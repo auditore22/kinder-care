@@ -56,7 +56,7 @@
 </div>
 
 
-@if (Model.Ninos == null || !Model.Ninos.Any())
+@if (!Model.Ninos.Any())
 {
     <div class="alert alert-info">
         <strong>No hay estudiantes disponibles para asignar al grupo.</strong>
@@ -64,28 +64,28 @@
 }
 else
 {
-<div class="tab-content" id="pills-tabContent">
-    <!-- My Details Tab start -->
-    <div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab" tabindex="0">
-        <div class="card mt-24">
-            <div class="card-header border-bottom">
-                <h4 class="mb-4">Estudiantes sin grupo</h4>
-                <p class="text-gray-600 text-15">Seleccione los estudiantes para su grupo.</p>
-            </div>
-            <div class="card-body p-0 overflow-x-auto">
-                <form asp-action="CrearGrupo" method="post">
-                    <input type="hidden" asp-for="IdDocente" />
+    <div class="tab-content" id="pills-tabContent">
+        <!-- My Details Tab start -->
+        <div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab" tabindex="0">
+            <div class="card mt-24">
+                <div class="card-header border-bottom">
+                    <h4 class="mb-4">Estudiantes sin grupo</h4>
+                    <p class="text-gray-600 text-15">Seleccione los estudiantes para su grupo.</p>
+                </div>
+                <div class="card-body p-0 overflow-x-auto">
+                    <form asp-action="CrearGrupo" method="post">
+                        <input type="hidden" asp-for="IdDocente"/>
 
-                    <table id="studentTable" class="table table-striped">
-                        <thead>
+                        <table id="studentTable" class="table table-striped">
+                            <thead>
                             <tr>
                                 <th class="h6 text-gray-300">ID</th>
                                 <th class="h6 text-gray-300">Cédula</th>
                                 <th class="h6 text-gray-300">Estudiante</th>
                                 <th class="h6 text-gray-300">Seleccionar</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             @foreach (var nino in Model.Ninos)
                             {
                                 <tr>
@@ -102,20 +102,20 @@ else
                                         <span class="h6 mb-0 fw-medium text-gray-300">@nino.NombreNino</span>
                                     </td>
                                     <td>
-                                        <input type="checkbox" name="Ninos" value="@nino.IdNino" />
+                                        <input type="checkbox" name="Ninos" value="@nino.IdNino"/>
                                     </td>
                                 </tr>
                             }
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
 
-                    <div class="d-flex justify-content-end mt-3 gap-2">
-                        <a asp-action="ListaNinos" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancelar</a>
-                        <button type="submit" class="btn btn-main rounded-pill py-9">Confirmar</button>
-                    </div>
-                </form>
+                        <div class="d-flex justify-content-end mt-3 gap-2">
+                            <a asp-action="ListaNinos" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancelar</a>
+                            <button type="submit" class="btn btn-main rounded-pill py-9">Confirmar</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 }

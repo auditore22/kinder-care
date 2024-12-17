@@ -6,6 +6,6 @@ namespace kinder_care.Models.ViewModels
     {
         [Required(ErrorMessage = "El correo es obligatorio.")]
         [EmailAddress(ErrorMessage = "El formato del correo no es válido.")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
     }
 }

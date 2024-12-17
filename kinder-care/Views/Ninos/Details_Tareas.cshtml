@@ -5,22 +5,37 @@
         {
             <li>
                 <a asp-action="Details_Admin" asp-controller="Ninos" asp-route-id="@ViewBag.Nino.IdNino"
-                   class="text-gray-200 fw-normal text-15 hover-text-main-600">Niño</a></li>
+                   class="text-gray-200 fw-normal text-15 hover-text-main-600">
+                    Niño
+                </a>
+            </li>
         }
         else if (ViewBag.RoleName == "Docente")
         {
             <li>
                 <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@ViewBag.Nino.IdNino" asp-route-idDocente="@ViewBag.Tarea.IdProfesor"
-                   class="text-gray-200 fw-normal text-15 hover-text-main-600">Niño</a></li>
+                   class="text-gray-200 fw-normal text-15 hover-text-main-600">
+                    Niño
+                </a>
+            </li>
         }
         else if (ViewBag.RoleName == "Padre")
         {
             <li>
                 <a asp-action="Details" asp-controller="Ninos" asp-route-id="@ViewBag.Nino.IdNino"
-                   class="text-gray-200 fw-normal text-15 hover-text-main-600">Hijo</a></li>
+                   class="text-gray-200 fw-normal text-15 hover-text-main-600">
+                    Hijo
+                </a>
+            </li>
         }
-        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
-        <li><span class="text-main-600 fw-normal text-15">Detalles de Tarea</span></li>
+        <li>
+            <span class="text-gray-500 fw-normal d-flex">
+                <i class="ph ph-caret-right"></i>
+            </span>
+        </li>
+        <li>
+            <span class="text-main-600 fw-normal text-15">Detalles de Tarea</span>
+        </li>
     </ul>
 </div>
 <!-- Breadcrumb End -->
@@ -53,7 +68,9 @@
                                                  alt="Fecha_asignada_icono"/>
                                         </span>
 
-                                        <p><strong>Fecha Asignada: </strong></p>@ViewBag.Tarea.FechaAsignada
+                                        <p>
+                                            <strong>Fecha Asignada: </strong>
+                                        </p>@ViewBag.Tarea.FechaAsignada
                                     </li>
                                     <li class="flex-align gap-6 text-gray-300 text-15 mb-12">
                                         <span class="flex-shrink-0 text-22 d-flex text-main-600">
@@ -61,7 +78,9 @@
                                                  src="~/images/icons/Fecha_entrega_icon.png" alt="Fecha_entrega_icono"/>
                                         </span>
 
-                                        <p><strong>Fecha Entrega: </strong></p>@ViewBag.Tarea.FechaEntrega
+                                        <p>
+                                            <strong>Fecha Entrega: </strong>
+                                        </p>@ViewBag.Tarea.FechaEntrega
                                     </li>
                                 </ul>
                             </div>
@@ -77,8 +96,10 @@
                                         <span class="flex-shrink-0 text-22 d-flex text-main-600">
                                             <img style="height: 20px; width: 20px; margin-right: 6px"
                                                  src="~/images/icons/Calificacion_icon.png" alt="Calificacion_icono"/>
-                                            <p class="text-gray-300 text-15 mb-8"><strong>@ViewBag.Tarea.Calificacion%</strong></p>
-                                            
+                                            <p class="text-gray-300 text-15 mb-8">
+                                                <strong>@ViewBag.Tarea.Calificacion%</strong>
+                                            </p>
+
                                         </span>
                                     </li>
                                 </ul>

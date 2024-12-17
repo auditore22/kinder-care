@@ -15,7 +15,7 @@ public class ReportsController(ILogger<ReportsController> logger) : Controller
         ViewBag.CurrentSection = "GenerateReports";
         return View();
     }
-    
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

@@ -27,60 +27,60 @@
     <div class="card-body p-0 overflow-x-auto">
         <table id="studentTable" class="table table-striped">
             <thead>
-                <tr>
-                    <th class="h6 text-gray-300">ID</th>
-                    <th class="h6 text-gray-300">Cedula</th>
-                    <th class="h6 text-gray-300">Nombre</th>
-                    <th class="h6 text-gray-300">Coreo Electronico</th>
-                    <th class="h6 text-gray-300">Telefono</th>
-                    <th class="h6 text-gray-300">Grupo Asignado</th>
-                    <th class="h6 text-gray-300">Actions</th>
-                </tr>
+            <tr>
+                <th class="h6 text-gray-300">ID</th>
+                <th class="h6 text-gray-300">Cedula</th>
+                <th class="h6 text-gray-300">Nombre</th>
+                <th class="h6 text-gray-300">Coreo Electronico</th>
+                <th class="h6 text-gray-300">Telefono</th>
+                <th class="h6 text-gray-300">Grupo Asignado</th>
+                <th class="h6 text-gray-300">Actions</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var docentes in Model)
-                {
-                    <tr>
-                        <td>
-                            <div class="flex-align gap-8">
-                                <img src="~/images/icons/teacher_icon.svg" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
-                                <span class="h6 mb-0 fw-medium text-gray-300">@docentes.IdDocente</span>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@docentes.IdUsuarioNavigation.Cedula</span>
-                        </td>
-                        <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@docentes.IdUsuarioNavigation.Nombre</span> 
-                        </td>
-                        <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@docentes.IdUsuarioNavigation.CorreoElectronico</span> 
-                        </td>
-                        <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@docentes.IdUsuarioNavigation.NumTelefono</span>
-                        </td>
-                        <td>
-                            @if (docentes.GrupoAsignado == null)
-                            {
-                                <span class="h6 mb-0 fw-medium text-gray-300">Sin grupo asignado</span>
-                            } 
-                            else 
-                            {
-                                <span class="h6 mb-0 fw-medium text-gray-300">@docentes.GrupoAsignado</span>
-                            }
-                        </td>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@docentes.IdDocente" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
-                        </td>
-                    </tr>
-                }
+            @foreach (var docentes in Model)
+            {
+                <tr>
+                    <td>
+                        <div class="flex-align gap-8">
+                            <img src="~/images/icons/teacher_icon.svg" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
+                            <span class="h6 mb-0 fw-medium text-gray-300">@docentes.IdDocente</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="h6 mb-0 fw-medium text-gray-300">@docentes.IdUsuarioNavigation.Cedula</span>
+                    </td>
+                    <td>
+                        <span class="h6 mb-0 fw-medium text-gray-300">@docentes.IdUsuarioNavigation.Nombre</span>
+                    </td>
+                    <td>
+                        <span class="h6 mb-0 fw-medium text-gray-300">@docentes.IdUsuarioNavigation.CorreoElectronico</span>
+                    </td>
+                    <td>
+                        <span class="h6 mb-0 fw-medium text-gray-300">@docentes.IdUsuarioNavigation.NumTelefono</span>
+                    </td>
+                    <td>
+                        @if (docentes.GrupoAsignado == null)
+                        {
+                            <span class="h6 mb-0 fw-medium text-gray-300">Sin grupo asignado</span>
+                        }
+                        else
+                        {
+                            <span class="h6 mb-0 fw-medium text-gray-300">@docentes.GrupoAsignado</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@docentes.IdDocente" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
+                    </td>
+                </tr>
+            }
             </tbody>
         </table>
     </div>
 </div>
 
 <div class="card-footer flex-between flex-wrap">
-    <span class="text-gray-900">Mostrando del 1 al 10 de @Model.Count() entrantes</span>
+    <span class="text-gray-900">Mostrando @Model.Count() de un maximo de 10 entrantes</span>
     <ul class="pagination flex-align flex-wrap">
         <!-- Aquí puedes agregar la lógica de paginación si lo necesitas -->
     </ul>

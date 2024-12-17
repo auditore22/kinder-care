@@ -42,13 +42,13 @@
 
                 <div class="col-md-6 mt-3">
                     <label for="MontoFinal" class="form-label">Monto Inicial (₡)</label>
-                    <input class="form-control" placeholder="0" id="initialMonto" />
+                    <input class="form-control" placeholder="0" id="initialMonto"/>
                     <span class="text-danger"></span>
                 </div>
-                
+
                 <div class="col-md-6 mt-3">
                     <label for="Descuento" class="form-label">Descuento (%)</label>
-                    <input class="form-control" placeholder="0" id="discount" />
+                    <input class="form-control" placeholder="0" id="discount"/>
                     <span class="text-danger"></span>
                 </div>
 
@@ -60,19 +60,19 @@
 
                 <div class="col-md-6 mt-3">
                     <label for="FechaPago" class="form-label">Fecha de Pago</label>
-                    <input asp-for="FechaPago" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    <input asp-for="FechaPago" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")"/>
                     <span asp-validation-for="FechaPago" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-6 mt-3">
                     <label for="MetodoPago" class="form-label">Método de Pago</label>
-                    <input asp-for="MetodoPago" class="form-control" placeholder="E.g., Transferencia, Efectivo" />
+                    <input asp-for="MetodoPago" class="form-control" placeholder="E.g., Transferencia, Efectivo"/>
                     <span asp-validation-for="MetodoPago" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-12 mt-3">
                     <label for="ReferenciaFactura" class="form-label">Referencia de Factura</label>
-                    <input asp-for="ReferenciaFactura" class="form-control" placeholder="Número de Factura" />
+                    <input asp-for="ReferenciaFactura" class="form-control" placeholder="Número de Factura"/>
                     <span asp-validation-for="ReferenciaFactura" class="text-danger"></span>
                 </div>
             </div>

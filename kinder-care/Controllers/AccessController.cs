@@ -170,7 +170,7 @@ namespace kinder_care.Controllers
                     Request.Scheme);
 
                 // Enviar el correo de recuperación
-                var emailSent = await SendRecoveryEmail(model.Email, resetLink);
+                var emailSent = await SendRecoveryEmail(model.Email!, resetLink!);
 
                 if (emailSent)
                 {
@@ -222,7 +222,7 @@ namespace kinder_care.Controllers
                 }
 
                 // Usar PasswordHasher para hashear la nueva contraseña
-                user.ContrasenaHash = _passwordHasher.HashPassword(user, model.NewPassword);
+                user.ContrasenaHash = _passwordHasher.HashPassword(user, model.NewPassword!);
                 user.TokenRecovery = Guid.NewGuid().ToString() + "-" + new Random().Next(100000, 999999).ToString();
                 user.UltimaActualizacion = DateTime.Now;
 
