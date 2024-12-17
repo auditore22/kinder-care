@@ -28,7 +28,7 @@ CREATE TABLE tareas
     FOREIGN KEY (id_profesor) REFERENCES docentes (id_Docente)
 );
 GO
-    
+
 --------------------------------- Tabla de Usuarios ---------------------------------
 CREATE TABLE usuarios
 (
@@ -85,26 +85,6 @@ BEGIN
 END;
 GO
 
---------------------------------- Tabla de Relación Padre(Usuario)-Niño ---------------------------------
-CREATE TABLE rel_padres_ninos
-(
-    id_padre INT         NOT NULL,
-    id_nino  INT         NOT NULL,
-    relacion VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id_padre, id_nino),
-    CONSTRAINT fk_padres_ninos_padre FOREIGN KEY (id_padre) REFERENCES Usuarios (id_Usuario),
-    CONSTRAINT fk_padres_ninos_nino FOREIGN KEY (id_nino) REFERENCES ninos (id_Nino)
-);
-GO
-
---------------------------------- Tabla de Relación Tarea-Niño ---------------------------------
-CREATE TABLE rel_nino_tarea
-(
-    id_nino  INT NOT NULL REFERENCES Ninos (id_Nino),
-    id_tarea INT NOT NULL REFERENCES Tareas (id_tarea),
-    PRIMARY KEY (id_nino, id_tarea)
-);
-GO
 --------------------------------- Tabla de Docentes ---------------------------------
 CREATE TABLE docentes
 (
@@ -283,17 +263,6 @@ BEGIN
 END;
 GO
 
---------------------------------- Relación Docente-Niño-Materia ---------------------------------
-CREATE TABLE rel_docente_nino_materia
-(
-    id_docente INT          NOT NULL,
-    id_nino    INT          NOT NULL,
-    PRIMARY KEY (id_docente, id_nino),
-    FOREIGN KEY (id_docente) REFERENCES docentes (id_Docente),
-    FOREIGN KEY (id_nino) REFERENCES ninos (id_Nino)
-);
-GO
-
 --------------------------------- Tabla de Contactos de Emergencia ---------------------------------
 CREATE TABLE contactos_emergencia
 (
@@ -303,17 +272,6 @@ CREATE TABLE contactos_emergencia
     telefono               INT,
     direccion              VARCHAR(255),
     activo                 BIT DEFAULT 1
-);
-GO
-
---------------------------------- Relación Niño-Contacto de Emergencia ---------------------------------
-CREATE TABLE rel_nino_contacto_emergencia
-(
-    id_nino     INT NOT NULL,
-    id_contacto INT NOT NULL,
-    PRIMARY KEY (id_nino, id_contacto),
-    FOREIGN KEY (id_nino) REFERENCES ninos (id_nino),
-    FOREIGN KEY (id_contacto) REFERENCES contactos_emergencia (id_Contacto_Emergencia)
 );
 GO
 
@@ -342,6 +300,71 @@ CREATE TABLE medicamentos
     nombre_medicamento VARCHAR(100) NOT NULL,
     dosis              VARCHAR(50)  NOT NULL,
     activo             BIT DEFAULT 1
+);
+GO
+
+--------------------------------- Tablas de Actividades ---------------------------------
+CREATE TABLE tipo_actividad
+(
+    id_Tipo_Actividad     INT PRIMARY KEY IDENTITY (1,1),
+    nombre_tipo_actividad VARCHAR(50) NOT NULL UNIQUE,
+    activo                BIT DEFAULT 1
+);
+GO
+
+CREATE TABLE actividades
+(
+    id_Actividad      INT PRIMARY KEY IDENTITY (1,1),
+    id_tipo_actividad INT  NOT NULL,
+    fecha             DATETIME NOT NULL,
+    lugar             VARCHAR(100),
+    activo            BIT DEFAULT 1,
+    Descripcion       NVARCHAR(255),
+    FOREIGN KEY (id_tipo_actividad) REFERENCES tipo_actividad (id_Tipo_Actividad)
+);
+GO
+
+
+--------------------------------- Relación Docente-Niño-Materia ---------------------------------
+CREATE TABLE rel_docente_nino_materia
+(
+    id_docente INT          NOT NULL,
+    id_nino    INT          NOT NULL,
+    PRIMARY KEY (id_docente, id_nino),
+    FOREIGN KEY (id_docente) REFERENCES docentes (id_Docente),
+    FOREIGN KEY (id_nino) REFERENCES ninos (id_Nino)
+);
+GO
+
+--------------------------------- Relación Padre(Usuario)-Niño ---------------------------------
+CREATE TABLE rel_padres_ninos
+(
+    id_padre INT         NOT NULL,
+    id_nino  INT         NOT NULL,
+    relacion VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id_padre, id_nino),
+    CONSTRAINT fk_padres_ninos_padre FOREIGN KEY (id_padre) REFERENCES Usuarios (id_Usuario),
+    CONSTRAINT fk_padres_ninos_nino FOREIGN KEY (id_nino) REFERENCES ninos (id_Nino)
+);
+GO
+
+--------------------------------- Relación Tarea-Niño ---------------------------------
+CREATE TABLE rel_nino_tarea
+(
+    id_nino  INT NOT NULL REFERENCES Ninos (id_Nino),
+    id_tarea INT NOT NULL REFERENCES Tareas (id_tarea),
+    PRIMARY KEY (id_nino, id_tarea)
+);
+GO
+
+--------------------------------- Relación Niño-Contacto de Emergencia ---------------------------------
+CREATE TABLE rel_nino_contacto_emergencia
+(
+    id_nino     INT NOT NULL,
+    id_contacto INT NOT NULL,
+    PRIMARY KEY (id_nino, id_contacto),
+    FOREIGN KEY (id_nino) REFERENCES ninos (id_nino),
+    FOREIGN KEY (id_contacto) REFERENCES contactos_emergencia (id_Contacto_Emergencia)
 );
 GO
 
@@ -375,27 +398,6 @@ CREATE TABLE rel_nino_medicamento
     PRIMARY KEY (id_nino, id_medicamento),
     FOREIGN KEY (id_nino) REFERENCES ninos (id_Nino),
     FOREIGN KEY (id_medicamento) REFERENCES medicamentos (id_Medicamento)
-);
-GO
-
---------------------------------- Tablas de Actividades ---------------------------------
-CREATE TABLE tipo_actividad
-(
-    id_Tipo_Actividad     INT PRIMARY KEY IDENTITY (1,1),
-    nombre_tipo_actividad VARCHAR(50) NOT NULL UNIQUE,
-    activo                BIT DEFAULT 1
-);
-GO
-
-CREATE TABLE actividades
-(
-    id_Actividad      INT PRIMARY KEY IDENTITY (1,1),
-    id_tipo_actividad INT  NOT NULL,
-    fecha             DATETIME NOT NULL,
-    lugar             VARCHAR(100),
-    activo            BIT DEFAULT 1,
-    Descripcion       NVARCHAR(255),
-    FOREIGN KEY (id_tipo_actividad) REFERENCES tipo_actividad (id_Tipo_Actividad)
 );
 GO
 
