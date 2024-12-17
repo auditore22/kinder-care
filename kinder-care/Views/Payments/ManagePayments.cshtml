@@ -69,7 +69,10 @@
                             <span class="h6 mb-0 fw-medium text-gray-300">@pago.TipoPago?.NombreTipoPago</span>
                         </td>
                         <td>
-                            <a href="@Url.Action("Details", "Payments", new { id = pago.IdPago })" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
+                            <a href="@Url.Action("Details", "Payments", new { id = pago.IdPago })"
+                               class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
+                                Ver Más
+                            </a>
                         </td>
                     </tr>
                 }
