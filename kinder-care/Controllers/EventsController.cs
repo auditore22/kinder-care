@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 
 namespace kinder_care.Controllers;
 
-[Authorize]
 public class EventsController : Controller
 {
     private readonly KinderCareContext _context;
@@ -19,6 +18,7 @@ public class EventsController : Controller
     }
 
     // GET: ManageEvents
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> ManageEvents(int pageNumber = 1)
     {
         int pageSize = 10; // Definir la cantidad de registros por página
@@ -75,6 +75,7 @@ public class EventsController : Controller
     }
 
     // GET: CreateEvent
+    [Authorize(Roles = "Administrador")]
     public IActionResult CreateEvent()
     {
         ViewBag.TipoActividades = _context.TipoActividad
@@ -89,6 +90,7 @@ public class EventsController : Controller
 
 
     // POST: CreateEvent
+    [Authorize(Roles = "Administrador")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateEvent(EventViewModel model)
@@ -136,6 +138,7 @@ public class EventsController : Controller
         return View(actividad);
     }
 
+    [Authorize(Roles = "Administrador")]
     [HttpGet]
     public async Task<IActionResult> EditEvent(int id)
     {
@@ -169,6 +172,7 @@ public class EventsController : Controller
         return View(model);
     }
 
+    [Authorize(Roles = "Administrador")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> EditEvent(EventViewModel model)
@@ -208,6 +212,7 @@ public class EventsController : Controller
 
 
     // GET: DeleteEvent/{id}
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> DeleteEvent(int? id)
     {
         if (id == null)
@@ -224,6 +229,7 @@ public class EventsController : Controller
     }
 
     [HttpPost, ActionName("DeleteEvent")]
+    [Authorize(Roles = "Administrador")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {

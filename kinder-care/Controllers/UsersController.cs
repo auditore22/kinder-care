@@ -25,6 +25,7 @@ namespace kinder_care.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Administrador, Docente")]
         public async Task<IActionResult> ManageRecords(int pageNumber = 1)
         {
             ViewBag.CurrentSection = "ManageRecords";

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace kinder_care.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Administrador, Docente")]
 public class ReportsController(ILogger<ReportsController> logger) : Controller
 {
     private readonly ILogger<ReportsController> _logger = logger;

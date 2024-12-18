@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace kinder_care.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador, Docente")]
     public class TareaController : Controller
     {
         private readonly KinderCareContext _context;
