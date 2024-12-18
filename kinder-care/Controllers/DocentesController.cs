@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace kinder_care.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador")]
     public class DocentesController : Controller
     {
         private readonly KinderCareContext _context;

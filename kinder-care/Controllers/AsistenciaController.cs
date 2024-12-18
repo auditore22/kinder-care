@@ -6,10 +6,12 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace kinder_care.Controllers
 {
+    [Authorize(Roles = "Administrador, Docente")]
     public class AsistenciaController : Controller
     {
         private readonly KinderCareContext _context;
@@ -18,7 +20,7 @@ namespace kinder_care.Controllers
         {
             _context = context;
         }
-
+        
         //===========================[Relacion Ninos y Docentes]===========================
         public async Task<IActionResult> ListaNinos()
         {
@@ -51,6 +53,7 @@ namespace kinder_care.Controllers
             return View(new List<Ninos>());
         }
 
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> ListaNinos_Administracion()
         {
             var ninos = await _context.Ninos
@@ -60,7 +63,7 @@ namespace kinder_care.Controllers
                 .ToListAsync();
             return View(ninos);
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> CrearGrupo()
         {
@@ -85,7 +88,7 @@ namespace kinder_care.Controllers
 
             return View(vm);
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> CrearGrupo(List<int> ninos)
         {
@@ -107,7 +110,7 @@ namespace kinder_care.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("ListaNinos");
         }
-
+        
         //===========================[Asistencia de Estudiantes]===========================
         public async Task<IActionResult> ControlAsistencias()
         {
@@ -137,7 +140,7 @@ namespace kinder_care.Controllers
 
             return View(new List<Ninos>());
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> ControlAsistencias(List<int> estudiantesPresentes)
         {
@@ -198,7 +201,7 @@ namespace kinder_care.Controllers
 
             return View(asistencias);
         }
-
+        [Authorize(Roles = "Administrador")]
         public IActionResult ListaAsistencia_Admin(DateTime? fechaInicio, DateTime? fechaFin)
         {
             var query = _context.Asistencia
@@ -321,7 +324,7 @@ namespace kinder_care.Controllers
             var pdfBytes = pdfDoc.GeneratePdf();
             return File(pdfBytes, "application/pdf", "Reporte_Asistencia.pdf");
         }
-
+        
         //=============================[Eliminar de Grupos]=============================
         [HttpPost]
         public async Task<IActionResult> EliminarRelacion(int idNino)

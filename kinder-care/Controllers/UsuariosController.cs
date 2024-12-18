@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace kinder_care.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador")]
     public class UsuariosController : Controller
     {
         private readonly KinderCareContext _context;

@@ -49,12 +49,14 @@ public class NinosController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Administrador, Docente")]
     public Task<IActionResult> Crear_Nino()
     {
         return Task.FromResult<IActionResult>(View());
     }
 
     [HttpPost]
+    [Authorize(Roles = "Administrador, Docente")]
     public async Task<IActionResult> Crear_Nino(string cedula, string nombreNino, DateTime fechaNacimiento,
         string direccion, string poliza, bool activo)
     {
@@ -196,6 +198,7 @@ public class NinosController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Administrador, Docente")]
     public async Task<IActionResult> Details_Docente(int? id, int? idDocente, DateTime? fechaInicio, DateTime? fechaFin)
     {
         if (id == null) return NotFound();
@@ -290,6 +293,7 @@ public class NinosController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Details_Admin(int? id, DateTime? fechaInicio, DateTime? fechaFin)
     {
         if (id == null) return NotFound();
