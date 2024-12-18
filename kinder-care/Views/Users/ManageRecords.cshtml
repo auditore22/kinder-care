@@ -1,325 +1,135 @@
-﻿@model IEnumerable<ExpedienteCompletoNino>
+﻿@model IEnumerable<kinder_care.Models.ExpedienteCompletoNino>
 
 @{
-ViewBag.Title = "Gestión de Expedientes";
-var roleName = ViewBag.RoleName as string;
-var id = ViewBag.DocenteId as string;
+    ViewBag.Title = "Gestión de Expedientes";
+    var roleName = ViewBag.RoleName as string;
 }
 
-<div class="dashboard-body">
-    <!-- Breadcrumb -->
-    <div class="breadcrumb-with-buttons mb-24 flex-between flex-wrap gap-8">
-        <div class="breadcrumb mb-24">
-            <ul class="flex-align gap-4">
-                <li>
-                    <a asp-action="Index" asp-controller="Home"
-                       class="text-gray-200 fw-normal text-15 hover-text-main-600">Inicio</a>
-                </li>
-                <li>
-                    <span class="text-gray-500 fw-normal d-flex">
-                        <i class="ph ph-caret-right"></i>
-                    </span>
-                </li>
-                <li>
-                    <span class="text-main-600 fw-normal text-15">Gestión de Expedientes</span>
-                </li>
-            </ul>
-        </div>
+<link rel="stylesheet" href="~/css/tables/tables.css">
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-with-buttons mb-24 flex-between flex-wrap gap-8">
+    <div class="breadcrumb mb-24">
+        <ul class="flex-align gap-4">
+            <li>
+                <a asp-action="Index" asp-controller="Home"
+                   class="text-gray-200 fw-normal text-15 hover-text-main-600">
+                    Inicio
+                </a>
+            </li>
+            <li>
+                <span class="text-gray-500 fw-normal d-flex">
+                    <i class="ph ph-caret-right"></i>
+                </span>
+            </li>
+            <li>
+                <span class="text-main-600 fw-normal text-15">Gestión de Expedientes</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Buscadores -->
+<div class="mb-4 d-flex gap-3 flex-wrap">
+    <div class="position-relative">
+        <input type="text" id="searchByName" placeholder="Buscar por nombre..."
+               class="form-control ps-40 h-40 rounded-pill search-input"/>
+        <i class="ph ph-magnifying-glass position-absolute" aria-hidden="true"
+           style="left: 10px; top: 10px; font-size: 20px; color: #aaa;">
+        </i>
     </div>
 
-    <!-- Buscadores -->
-    <div class="mb-4 d-flex gap-3 flex-wrap">
-        <!-- Input para buscar por nombre -->
-        <div class="position-relative" style="margin-right: 10px;">
-            <input type="text" id="searchByName" placeholder="Buscar por nombre..."
-                   class="form-control ps-40 h-40 rounded-pill search-input"/>
-            <i class="ph ph-magnifying-glass position-absolute" aria-hidden="true"
-               style="left: 10px; top: 10px; font-size: 20px; color: #aaa;">
-            </i>
-        </div>
-
-        <!-- Input para buscar por cédula -->
-        <div class="position-relative">
-            <input type="text" id="searchByCedula" placeholder="Buscar por cédula..."
-                   class="form-control ps-40 h-40 rounded-pill search-input"/>
-            <i class="ph ph-magnifying-glass position-absolute" aria-hidden="true"
-               style="left: 10px; top: 10px; font-size: 20px; color: #aaa;">
-            </i>
-        </div>
+    <div class="position-relative">
+        <input type="text" id="searchByCedula" placeholder="Buscar por cédula..."
+               class="form-control ps-40 h-40 rounded-pill search-input"/>
+        <i class="ph ph-magnifying-glass position-absolute" aria-hidden="true"
+           style="left: 10px; top: 10px; font-size: 20px; color: #aaa;">
+        </i>
     </div>
+</div>
 
-    <div class="card overflow-hidden">
-        <div class="card-body p-0 overflow-x-auto">
-            <table id="studentTable" data-dt="false" class="table table-striped">
-                <thead>
-                <tr>
-                    <th class="h6 text-gray-300">Nombre</th>
-                    <th class="h6 text-gray-300">Cédula</th>
-                    <th class="h6 text-gray-300">Fecha de Nacimiento</th>
-                    <th class="h6 text-gray-300">Dirección</th>
-                    <th class="h6 text-gray-300">Póliza</th>
-                    <th class="h6 text-gray-300">Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
+<!-- Tabla -->
+<div class="card overflow-hidden mt-24">
+    <div class="card-body p-0 overflow-x-auto">
+        <table id="studentTable" class="table table-striped" style="display: none">
+            <thead>
+            <tr>
+                <th data-column="name" class="h5 text-gray-300">Nombre</th>
+                <th data-column="cedula" class="h5 text-gray-300">Cédula</th>
+                <th class="h5 text-gray-300">Fecha de Nacimiento</th>
+                <th class="h5 text-gray-300">Dirección</th>
+                <th class="h5 text-gray-300">Póliza</th>
+                <th class="h5 text-gray-300">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr id="noResultsRow" class="d-none">
+                <td colspan="6" class="text-center text-gray-500">No se encontraron resultados.</td>
+            </tr>
+            @if (Model.Any())
+            {
                 @foreach (var expediente in Model)
                 {
-                <tr>
-                    <td>
-                        <div class="flex-align gap-8">
-                            <img src="~/images/icons/baby_2_icon.png" alt="Imagen del niño"
-                                 class="w-40 h-40 rounded-circle">
-                            <span class="h6 mb-0 fw-medium text-gray-300">@expediente.NombreNino</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="h6 mb-0 fw-medium text-gray-300">@expediente.Cedula</span>
-                    </td>
-                    <td>
-                        <span class="h6 mb-0 fw-medium text-gray-300">@expediente.FechaNacimiento.ToString("dd/MM/yyyy")</span>
-                    </td>
-                    <td>
-                        <span class="h6 mb-0 fw-medium text-gray-300">@expediente.Direccion</span>
-                    </td>
-                    <td>
-                            <span
-                                class="text-13 py-2 px-8 bg-warning-50 text-warning-600 d-inline-flex align-items-center gap-8 rounded-pill">
-                                <span class="w-6 h-6 bg-warning-600 rounded-circle flex-shrink-0"></span>
-                                @expediente.Poliza
-                            </span>
-                    </td>
-                    <td>
-                        @if (roleName == "Administrador")
-                        {
-                            <a asp-action="Details_Admin" asp-route-id="@expediente.IdNino" asp-controller="Ninos"
-                               class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
-                            Ver Más
-                        </a>
-                        }
-                        else
-                        {
-                        <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@expediente.IdNino"
-                           asp-route-idDocente="@ViewBag.DocenteId"
-                           class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
-                            Ver Más
-                        </a>
-                        <form asp-action="EliminarRelacion" asp-controller="Asistencia"
-                              asp-route-idNino="@expediente.IdNino" method="post" class="d-inline"
-                              onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta relación?');">
-                            <button type="submit" class="btn btn-danger rounded-pill">Eliminar</button>
-                        </form>
-                        }
-                    </td>
-                </tr>
+                    <tr data-id="@expediente.IdNino">
+                        <td data-column="name">
+                            <div class="flex-align gap-8">
+                                <img src="~/images/icons/baby_2_icon.png" alt="Imagen del niño"
+                                     class="w-40 h-40 rounded-circle"/>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@expediente.NombreNino</span>
+                            </div>
+                        </td>
+                        <td data-column="cedula">
+                            <span class="h6 mb-0 fw-medium text-gray-300">@expediente.Cedula</span>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@expediente.FechaNacimiento.ToString("dd/MM/yyyy")</span>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@expediente.Direccion</span>
+                        </td>
+                        <td>
+                            <span class="h6 mb-0 fw-medium text-gray-300">@expediente.Poliza</span>
+                        </td>
+                        <td>
+                            @if (roleName == "Administrador")
+                            {
+                                <a asp-action="Details_Admin" asp-route-id="@expediente.IdNino" asp-controller="Ninos"
+                                   class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
+                                    Ver Más
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@expediente.IdNino"
+                                   asp-route-idDocente="@ViewBag.DocenteId"
+                                   class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
+                                    Ver Más
+                                </a>
+                                <form asp-action="EliminarRelacion" asp-controller="Asistencia"
+                                      asp-route-idNino="@expediente.IdNino" method="post" class="d-inline"
+                                      onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta relación?');">
+                                    <button type="submit" class="btn btn-danger rounded-pill">Eliminar</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
                 }
-                </tbody>
-            </table>
-        </div>
+            }
+            </tbody>
+        </table>
     </div>
-
-    <!-- Paginación -->
-    <div class="d-flex justify-content-between mb-2">
-        <span id="infoContainer" class="text-gray-900"></span>
-        <select id="entriesSelect" class="form-select" style="width: 100px;">
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-        </select>
-        <ul class="pagination mb-0"></ul>
-    </div>
-
-    <!-- Estilos -->
-    <style>
-        .form-control {
-            font-size: 16px;
-            border: 1px solid #e0e0e0;
-            padding: 8px 16px;
-        }
-
-        .btn-main {
-            background-color: #007bff;
-            color: white;
-            padding: 6px 12px;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 14px;
-        }
-
-        .btn-main:hover {
-            background-color: #0056b3;
-        }
-
-        .table th, .table td {
-            padding: 12px;
-            vertical-align: middle;
-            text-align: left;
-        }
-
-        .pagination .page-link {
-            color: #007bff;
-            margin: 0 3px;
-        }
-
-        .pagination .page-link:hover {
-            background-color: #f8f9fa;
-        }
-
-        .pagination .active .page-link {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #007bff;
-        }
-
-        .btn-danger {
-            margin-left: 5px;
-        }
-
-        .search-input {
-            width: 300px;
-            max-width: 100%;
-        }
-
-        .mb-4 {
-            margin-bottom: 20px;
-        }
-
-        .d-flex.gap-3 > div {
-            margin-bottom: 10px;
-        }
-
-        .table-striped tbody tr {
-            margin-bottom: 10px;
-            display: table-row;
-        }
-
-        .pagination {
-            margin-top: 1rem;
-            justify-content: center;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .pagination .page-item {
-            margin: 0 4px;
-        }
-
-        .pagination .page-link {
-            color: #007bff;
-            border: 1px solid #dee2e6;
-            padding: 6px 12px;
-            font-size: 14px;
-            border-radius: 8px;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .pagination .page-link:hover {
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-        }
-
-        .pagination .active .page-link {
-            background-color: #007bff;
-            border-color: #007bff;
-            color: #fff;
-        }
-
-        .pagination .page-item.disabled .page-link {
-            color: #6c757d;
-            pointer-events: none;
-            background-color: #f8f9fa;
-        }
-
-        #studentTable {
-            display: none;
-        }
-    </style>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const table = document.getElementById('studentTable');
-
-            const searchByName = document.getElementById('searchByName');
-            const searchByCedula = document.getElementById('searchByCedula');
-            
-            const paginationContainer = document.querySelector('.pagination');
-            const infoContainer = document.querySelector('#infoContainer');
-            const entriesSelect = document.getElementById('entriesSelect');
-
-            const rows = Array.from(document.querySelectorAll('#studentTable tbody tr'));
-            let pageSize = parseInt(entriesSelect.value);
-            let currentPage = 1;
-            let filteredRows = rows.slice();
-
-            // Función para filtrar filas
-            function filterRows() {
-                const nameValue = searchByName.value.toLowerCase();
-                const cedulaValue = searchByCedula.value.toLowerCase();
-
-                filteredRows = rows.filter(row => {
-                    const nameColumn = row.children[0].textContent.toLowerCase();
-                    const cedulaColumn = row.children[1].textContent.toLowerCase();
-
-                    return (nameColumn.includes(nameValue) || nameValue === "") &&
-                        (cedulaColumn.includes(cedulaValue) || cedulaValue === "");
-                });
-
-                currentPage = 1;
-                renderTable();
-            }
-
-            // Función para renderizar la tabla
-            function renderTable() {
-                const totalFilteredItems = filteredRows.length;
-                const totalPages = Math.ceil(totalFilteredItems / pageSize);
-                const start = (currentPage - 1) * pageSize;
-                const end = start + pageSize;
-
-                rows.forEach(row => row.style.display = 'none');
-                filteredRows.slice(start, end).forEach(row => row.style.display = '');
-
-                infoContainer.textContent = `Mostrando ${start + 1} a ${Math.min(end, totalFilteredItems)} de ${totalFilteredItems} registros`;
-
-                renderPagination(totalPages);
-                table.style.display = 'table';
-            }
-
-            // Renderiza la paginación
-            function renderPagination(totalPages) {
-                paginationContainer.innerHTML = '';
-
-                if (currentPage > 1) {
-                    paginationContainer.innerHTML += `<li class="page-item"><a href="#" data-page="${currentPage - 1}">Anterior</a></li>`;
-                }
-
-                for (let i = 1; i <= totalPages; i++) {
-                    paginationContainer.innerHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-                <a href="#" data-page="${i}">${i}</a></li>`;
-                }
-
-                if (currentPage < totalPages) {
-                    paginationContainer.innerHTML += `<li class="page-item"><a href="#" data-page="${currentPage + 1}">Siguiente</a></li>`;
-                }
-
-                paginationContainer.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        currentPage = parseInt(this.dataset.page);
-                        renderTable();
-                    });
-                });
-            }
-
-            entriesSelect.addEventListener('change', function () {
-                pageSize = parseInt(this.value);
-                currentPage = 1;
-                renderTable();
-            });
-
-            searchByName.addEventListener('keyup', filterRows);
-            searchByCedula.addEventListener('keyup', filterRows);
-
-            renderTable();
-        });
-    </script>
 </div>
+
+<!-- Paginación -->
+<div class="card-footer flex-between flex-wrap mt-15">
+    <span id="infoContainer" class="text-gray-900"></span>
+    <select id="entriesSelect" class="form-select custom-dropdown">
+        <option value="5">5</option>
+        <option value="10" selected>10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+    </select>
+    <ul class="pagination flex-align flex-wrap"></ul>
+</div>
+
+<script src="~/js/tables/admin/manage-records.js"></script>
