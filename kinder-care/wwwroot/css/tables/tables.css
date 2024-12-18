@@ -1,0 +1,118 @@
+/* General Form Controls */
+.form-control {
+    font-size: 16px;
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.custom-dropdown {
+    background-color: #f8f9fa;
+    color: #212529;
+    border-radius: 8px;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    font-size: 14px;
+    width: 100px;
+    cursor: pointer;
+}
+
+.custom-dropdown:hover {
+    border-color: #007bff;
+    background-color: #e9ecef;
+}
+
+.search-input {
+    width: 300px;
+    max-width: 100%;
+}
+
+/* Buttons */
+.btn-main {
+    background-color: #007bff;
+    color: white;
+    padding: 6px 12px;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 14px;
+}
+
+.btn-main:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    margin-left: 5px;
+}
+
+/* Table Styles */
+.table th,
+.table td {
+    padding: 12px;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.table-striped tbody tr {
+    margin-bottom: 10px;
+    display: table-row;
+}
+
+/* Card Styles */
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+}
+
+.card-footer {
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 1rem;
+    justify-content: center;
+    font-family: 'Roboto', sans-serif;
+}
+
+.pagination .page-item {
+    margin-right: 5px;
+}
+
+.pagination .page-item .page-link {
+    color: #007bff;
+    border: 1px solid #dee2e6;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+}
+
+.pagination .active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}
+
+.pagination .disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #f8f9fa;
+}
+
+/* Miscellaneous */
+.mb-4 {
+    margin-bottom: 20px;
+}
+
+.d-flex.gap-3 > div {
+    margin-bottom: 10px;
+}

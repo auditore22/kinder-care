@@ -27,7 +27,7 @@ namespace kinder_care.Controllers
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
 
             ViewBag.DocenteId = docente!.IdDocente;
-            
+
             if (userRole == "Docente")
             {
                 var estudiantes = await _context.RelDocenteNinoMateria
@@ -38,14 +38,16 @@ namespace kinder_care.Controllers
                         nino => nino.IdNino,
                         (rel, nino) => nino)
                     .ToListAsync();
-                
+
                 if (!estudiantes.Any())
                 {
                     ViewBag.Mensaje = "No hay estudiantes relacionados con este docente.";
                     return View(new List<Ninos>());
                 }
+
                 return View(estudiantes);
             }
+
             return View(new List<Ninos>());
         }
 
@@ -70,7 +72,7 @@ namespace kinder_care.Controllers
 
             var estudiantesDisponibles = await _context.Ninos
                 .Where(n => !_context.RelDocenteNinoMateria
-                .Any(r => r.IdNino == n.IdNino))
+                    .Any(r => r.IdNino == n.IdNino))
                 .ToListAsync();
 
             var vm = new RelacionDocenteNinosVM
@@ -129,8 +131,10 @@ namespace kinder_care.Controllers
                     ViewBag.Mensaje = "No se pueden hacer asistencias por que no hay estudiantes en el grupo";
                     return View();
                 }
+
                 return View(estudiantes);
             }
+
             return View(new List<Ninos>());
         }
 
@@ -154,11 +158,12 @@ namespace kinder_care.Controllers
                 {
                     IdNino = idNino,
                     Fecha = fechaActual,
-                    Presente = presente 
+                    Presente = presente
                 };
 
                 _context.Asistencia.Add(asistencia);
             }
+
             await _context.SaveChangesAsync();
             return RedirectToAction("ListaNinos");
         }
@@ -167,7 +172,7 @@ namespace kinder_care.Controllers
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var docente = _context.Docentes.FirstOrDefault(d => d.IdUsuario == userId);
-            
+
             var estudiantes = _context.RelDocenteNinoMateria
                 .Where(r => r.IdDocente == docente!.IdDocente)
                 .Select(r => r.IdNino)
@@ -175,7 +180,7 @@ namespace kinder_care.Controllers
 
             var query = _context.Asistencia
                 .Include(a => a.IdNinoNavigation)
-                .Where(a => estudiantes.Contains(a.IdNino)) 
+                .Where(a => estudiantes.Contains(a.IdNino))
                 .AsQueryable();
 
 
@@ -197,8 +202,8 @@ namespace kinder_care.Controllers
         public IActionResult ListaAsistencia_Admin(DateTime? fechaInicio, DateTime? fechaFin)
         {
             var query = _context.Asistencia
-                    .Include(a => a.IdNinoNavigation)
-                    .AsQueryable();
+                .Include(a => a.IdNinoNavigation)
+                .AsQueryable();
 
 
             if (fechaInicio.HasValue && fechaFin.HasValue)
@@ -220,15 +225,39 @@ namespace kinder_care.Controllers
         public IActionResult GenerarReportePdf(DateTime? fechaInicio, DateTime? fechaFin)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            
+            var isAdmin = User.IsInRole("Administrador");
 
-            var docente = _context.Docentes
-                .Include(d => d.IdUsuarioNavigation)
-                .FirstOrDefault(d => d.IdUsuario == userId);
+            List<int> estudiantes;
+            string reportTitle;
 
-            var estudiantes = _context.RelDocenteNinoMateria
-                .Where(r => r.IdDocente == docente!.IdDocente)
-                .Select(r => r.IdNino)
-                .ToList();
+            if (isAdmin)
+            {
+                estudiantes = _context.Asistencia
+                    .Select(a => a.IdNino)
+                    .Distinct()
+                    .ToList();
+
+                reportTitle = "Reporte de Asistencias - Admin";
+            }
+            else
+            {
+                var docente = _context.Docentes
+                    .Include(d => d.IdUsuarioNavigation)
+                    .FirstOrDefault(d => d.IdUsuario == userId);
+
+                if (docente == null)
+                {
+                    return NotFound("Docente no encontrado.");
+                }
+
+                estudiantes = _context.RelDocenteNinoMateria
+                    .Where(r => r.IdDocente == docente.IdDocente)
+                    .Select(r => r.IdNino)
+                    .ToList();
+
+                reportTitle = $"Reporte de Asistencias - {docente.IdUsuarioNavigation.Nombre}";
+            }
 
             var query = _context.Asistencia
                 .Include(a => a.IdNinoNavigation)
@@ -250,7 +279,7 @@ namespace kinder_care.Controllers
                     page.Margin(2, Unit.Centimetre);
                     page.DefaultTextStyle(TextStyle.Default.FontSize(12));
                     page.Header()
-                        .Text($"Reporte de Asistencias - {docente!.IdUsuarioNavigation.Nombre}")
+                        .Text(reportTitle)
                         .Bold()
                         .FontSize(18)
                         .AlignCenter();
@@ -258,9 +287,9 @@ namespace kinder_care.Controllers
                     {
                         table.ColumnsDefinition(columns =>
                         {
-                            columns.ConstantColumn(100); 
-                            columns.RelativeColumn();   
-                            columns.ConstantColumn(80);  
+                            columns.ConstantColumn(100);
+                            columns.RelativeColumn();
+                            columns.ConstantColumn(80);
                         });
 
                         table.Header(header =>
@@ -275,7 +304,7 @@ namespace kinder_care.Controllers
                             table.Cell().Text(asistencia.Fecha.ToString("dd/MM/yyyy"));
                             table.Cell().Text(asistencia.IdNinoNavigation.NombreNino);
                             table.Cell().Text(asistencia.Presente ? "Presente" : "Ausente")
-                                 .FontColor(asistencia.Presente ? Colors.Green.Darken2 : Colors.Red.Darken2);
+                                .FontColor(asistencia.Presente ? Colors.Green.Darken2 : Colors.Red.Darken2);
                         }
                     });
 
