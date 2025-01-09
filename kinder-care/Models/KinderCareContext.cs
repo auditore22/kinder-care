@@ -421,11 +421,24 @@ public partial class KinderCareContext : DbContext
 
             entity.Property(e => e.IdNino).HasColumnName("id_nino");
             entity.Property(e => e.IdTarea).HasColumnName("id_tarea");
+            entity.Property(e => e.Calificacion)
+                .HasDefaultValue(0)
+                .HasColumnName("calificacion");
+            entity.Property(e => e.Id_Doc).HasColumnName("extencion");
+            entity.Property(e => e.DocTareaNino).HasColumnName("doc_tarea_nino");
 
+            // Configuración de relación con tipos_doc
+            entity.HasOne(e => e.TipoDoc)
+                .WithMany()
+                .HasForeignKey(e => e.Id_Doc)
+                .HasConstraintName("FK_RelNinoTarea_TiposDoc");
+
+            // Configuración de relación con Ninos
             entity.HasOne(rt => rt.Ninos)
                 .WithMany(n => n.RelNinoTarea)
                 .HasForeignKey(rt => rt.IdNino);
 
+            // Configuración de relación con Tareas
             entity.HasOne(rt => rt.Tareas)
                 .WithMany(t => t.RelNinoTarea)
                 .HasForeignKey(rt => rt.IdTarea);
