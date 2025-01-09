@@ -62,6 +62,10 @@ public partial class KinderCareContext : DbContext
     public virtual DbSet<Tareas> Tareas { get; set; }
 
     public virtual DbSet<RelNinoTarea> RelNinoTarea { get; set; }
+
+    public virtual DbSet<TipoDoc> TipoDocs { get; set; }
+
+    public virtual DbSet<Niveles> Niveles { get; set; }
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer("Server=(LocalDb)\\MSSQLLocalDB;Database=kinder_care;Trusted_Connection=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -298,7 +302,7 @@ public partial class KinderCareContext : DbContext
 
         modelBuilder.Entity<Ninos>(entity =>
         {
-            entity.HasKey(e => e.IdNino).HasName("PK__ninos__3CAF0674B917C51C");
+            entity.HasKey(e => e.IdNino).HasName("PK__ninos__3CAF067422D54C89");
 
             entity.ToTable("ninos", tb => tb.HasTrigger("trg_update_audit_ninos"));
 
@@ -313,13 +317,18 @@ public partial class KinderCareContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("cedula");
             entity.Property(e => e.Direccion)
-                .HasColumnType("text")
+                .HasColumnType("text") // Original usaba "text"
+                .HasMaxLength(256) // Se agrega la longitud del segundo contexto
+                .IsUnicode(false)
                 .HasColumnName("direccion");
             entity.Property(e => e.FechaCreacion)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("fecha_creacion");
             entity.Property(e => e.FechaNacimiento).HasColumnName("fecha_nacimiento");
+            entity.Property(e => e.IdNivel)
+                .HasDefaultValue(1)
+                .HasColumnName("id_nivel"); // Agregado desde el segundo contexto
             entity.Property(e => e.NombreNino)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -333,15 +342,36 @@ public partial class KinderCareContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("ultima_actualizacion");
 
-            // Configuracion de relación con RelNinoTarea
+            // Relación con niveles
+            entity.HasOne(d => d.IdNivelNavigation).WithMany(p => p.Ninos)
+                .HasForeignKey(d => d.IdNivel)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Ninos_Niveles"); // Agregado desde el segundo contexto
+
+            // Configuración de relación con RelNinoTarea (original)
             entity.HasMany(n => n.RelNinoTarea)
                 .WithOne(rt => rt.Ninos)
                 .HasForeignKey(rt => rt.IdNino);
         });
 
+        modelBuilder.Entity<Niveles>(entity =>
+        {
+            entity.HasKey(e => e.IdNivel).HasName("PK__niveles__9CAF1C53B9DA917D");
+
+            entity.ToTable("niveles");
+
+            entity.HasIndex(e => e.Nombre, "UQ__niveles__72AFBCC67BF9D41F").IsUnique();
+
+            entity.Property(e => e.IdNivel).HasColumnName("id_nivel");
+            entity.Property(e => e.Nombre)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("nombre");
+        });
+
         modelBuilder.Entity<Tareas>(entity =>
         {
-            entity.HasKey(e => e.IdTarea).HasName("PK__tareas__3ED0E6EAB9285C65");
+            entity.HasKey(e => e.IdTarea).HasName("PK__tareas__C0ECF707A3D6C37C");
 
             entity.ToTable("tareas");
 
@@ -368,10 +398,19 @@ public partial class KinderCareContext : DbContext
                 .HasDefaultValue(true)
                 .HasColumnName("activo");
 
-            // Configuracion de relación con RelNinoTarea
+            // Propiedades adicionales del segundo contexto
+            entity.Property(e => e.DocTareaDocente).HasColumnName("doc_tarea_docente");
+            entity.Property(e => e.Extencion).HasColumnName("extencion");
+
+            // Configuración de la relación con RelNinoTarea
             entity.HasMany(t => t.RelNinoTarea)
                 .WithOne(rt => rt.Tareas)
                 .HasForeignKey(rt => rt.IdTarea);
+
+            // Configuración de la relación con ExtencionNavigation
+            entity.HasOne(d => d.ExtencionNavigation).WithMany(p => p.Tareas)
+                .HasForeignKey(d => d.Extencion)
+                .HasConstraintName("FK_Tareas_TiposDoc");
         });
 
         modelBuilder.Entity<RelNinoTarea>(entity =>
@@ -390,6 +429,21 @@ public partial class KinderCareContext : DbContext
             entity.HasOne(rt => rt.Tareas)
                 .WithMany(t => t.RelNinoTarea)
                 .HasForeignKey(rt => rt.IdTarea);
+        });
+
+        modelBuilder.Entity<TipoDoc>(entity =>
+        {
+            entity.HasKey(e => e.IdDoc).HasName("PK__tipos_do__D5EAB26CB493431B");
+
+            entity.ToTable("tipo_doc");
+
+            entity.HasIndex(e => e.Nombre, "UQ__tipos_do__72AFBCC6A2FB9C14").IsUnique();
+
+            entity.Property(e => e.IdDoc).HasColumnName("id_doc");
+            entity.Property(e => e.Nombre)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("nombre");
         });
 
         modelBuilder.Entity<ObservacionesDocentes>(entity =>
