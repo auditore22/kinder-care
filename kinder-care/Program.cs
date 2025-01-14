@@ -2,11 +2,12 @@
 using kinder_care.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF;
 using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-QuestPDF.Settings.License = LicenseType.Community;
+Settings.License = LicenseType.Community;
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -16,9 +17,7 @@ var connectionString = builder.Configuration.GetConnectionString("KinderCareConn
     ?.Replace("{DB_PASSWORD}", Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "");
 
 if (builder.Environment.IsProduction() && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DB_PASSWORD")))
-{
     throw new InvalidOperationException("The DB_PASSWORD environment variable is not set.");
-}
 
 builder.Services.AddDbContext<KinderCareContext>(options =>
     options.UseSqlServer(connectionString));
@@ -52,7 +51,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Access}/{action=Login}/{id?}");
+    "default",
+    "{controller=Access}/{action=Login}/{id?}");
 
 app.Run();

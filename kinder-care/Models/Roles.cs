@@ -1,6 +1,6 @@
 ﻿namespace kinder_care.Models;
 
-public partial class Roles
+public class Roles
 {
     public int IdRol { get; set; }
 

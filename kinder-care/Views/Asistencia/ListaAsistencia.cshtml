@@ -1,4 +1,4 @@
-﻿@model IEnumerable<kinder_care.Models.Asistencia>
+﻿@model IEnumerable<Asistencia>
 
 <link rel="stylesheet" href="~/css/tables/tables.css">
 
@@ -78,7 +78,8 @@
                             <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.IdNinoNavigation.NombreNino</span>
                         </td>
                         <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.Fecha.ToString("yyyy-MM-dd")</span>
+                            <span
+                                class="h6 mb-0 fw-medium text-gray-300">@asistencia.Fecha.ToString("yyyy-MM-dd")</span>
                         </td>
                         <td>
                             <span class="h6 mb-0 fw-medium @(asistencia.Presente ? "text-success" : "text-danger")">
@@ -108,8 +109,8 @@
 <!-- Botón para generar PDF -->
 <div class="card-footer flex-between flex-wrap mt-15 justify-content-end">
     <form asp-action="GenerarReportePdf" asp-controller="Asistencia" method="get">
-        <input type="hidden" name="fechaInicio" value="@ViewBag.FechaInicio" />
-        <input type="hidden" name="fechaFin" value="@ViewBag.FechaFin" />
+        <input type="hidden" name="fechaInicio" value="@ViewBag.FechaInicio"/>
+        <input type="hidden" name="fechaFin" value="@ViewBag.FechaFin"/>
         <button type="submit" class="btn btn-primary">Generar PDF</button>
     </form>
 </div>

@@ -24,12 +24,12 @@
     border-color: var(--main-600);
     color: #fff;
 }
-  
+
 .header-display {
     display: flex;
     align-items: center;
 }
-  
+
 .days, .week {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -64,10 +64,12 @@
     color: var(--main-600);
     cursor: pointer;
 }
+
 .current-date {
     background-color: var(--main-600);
     color: #fff;
 }
+
 .current-date:hover {
     background-color: var(--main-800) !important;
     color: #fff !important;

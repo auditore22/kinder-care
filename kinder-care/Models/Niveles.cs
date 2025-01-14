@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace kinder_care.Models;
 
-namespace kinder_care.Models;
-
-public partial class Niveles
+public class Niveles
 {
     public int IdNivel { get; set; }
 

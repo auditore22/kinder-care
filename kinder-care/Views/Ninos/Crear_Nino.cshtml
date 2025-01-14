@@ -45,7 +45,8 @@
 
                 <div class="col-md-6 mt-3">
                     <label asp-for="FechaNacimiento" class="form-label">Fecha de Nacimiento</label>
-                    <input asp-for="FechaNacimiento" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" required/>
+                    <input asp-for="FechaNacimiento" type="date" class="form-control"
+                           value="@DateTime.Now.ToString("yyyy-MM-dd")" required/>
                     <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
                 </div>
 
@@ -57,7 +58,8 @@
 
                 <div class="col-md-6 mt-3">
                     <label asp-for="Poliza" class="form-label">Póliza</label>
-                    <input asp-for="Poliza" class="form-control" placeholder="Número de póliza o información relevante" required/>
+                    <input asp-for="Poliza" class="form-control" placeholder="Número de póliza o información relevante"
+                           required/>
                     <span asp-validation-for="Poliza" class="text-danger"></span>
                 </div>
 

@@ -13,7 +13,8 @@
         else if (ViewBag.RoleName == "Docente")
         {
             <li>
-                <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@ViewBag.Nino.IdNino" asp-route-idDocente="@ViewBag.Tarea.IdProfesor"
+                <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@ViewBag.Nino.IdNino"
+                   asp-route-idDocente="@ViewBag.Tarea.IdProfesor"
                    class="text-gray-200 fw-normal text-15 hover-text-main-600">
                     Niño
                 </a>

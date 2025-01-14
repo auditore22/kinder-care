@@ -1,6 +1,6 @@
 ﻿namespace kinder_care.Models;
 
-public partial class Actividades
+public class Actividades
 {
     public int IdActividad { get; set; }
 

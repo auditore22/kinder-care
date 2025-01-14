@@ -12,6 +12,7 @@
     @content;
   }
 }
+
 // Medium Small Screen (max-width: 575)
 @mixin msm-screen {
   @media screen and (max-width: 575px) {
@@ -53,12 +54,14 @@
     @content;
   }
 }
+
 //Xtra Large Screen ii (max-width: 1599)
 @mixin xxxl-screen {
   @media screen and (max-width: 1599px) {
     @content;
   }
 }
+
 /* Media Breakpoint for Each Device End */
 
 /* ============================ Mixins Css End ============================ */

@@ -1,6 +1,6 @@
 ﻿namespace kinder_care.Models;
 
-public partial class Docentes
+public class Docentes
 {
     public int IdDocente { get; set; }
 
@@ -18,7 +18,9 @@ public partial class Docentes
 
     public virtual Usuarios IdUsuarioNavigation { get; set; } = null!;
 
-    public virtual ICollection<ObservacionesDocentes> ObservacionesDocentes { get; set; } = new List<ObservacionesDocentes>();
+    public virtual ICollection<ObservacionesDocentes> ObservacionesDocentes { get; set; } =
+        new List<ObservacionesDocentes>();
 
-    public virtual ICollection<RelDocenteNinoMateria> RelDocenteNinoMateria { get; set; } = new List<RelDocenteNinoMateria>();
+    public virtual ICollection<RelDocenteNinoMateria> RelDocenteNinoMateria { get; set; } =
+        new List<RelDocenteNinoMateria>();
 }

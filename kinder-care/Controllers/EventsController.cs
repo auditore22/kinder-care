@@ -21,7 +21,7 @@ public class EventsController : Controller
     // GET: ManageEvents
     public async Task<IActionResult> ManageEvents(int pageNumber = 1)
     {
-        int pageSize = 10; // Definir la cantidad de registros por página
+        var pageSize = 10; // Definir la cantidad de registros por página
 
         // Obtener el total de eventos
         var totalEventos = await _context.Actividades
@@ -38,7 +38,7 @@ public class EventsController : Controller
             .ToListAsync();
 
         // Calcular el total de páginas
-        int totalPages = (int)Math.Ceiling(totalEventos / (double)pageSize);
+        var totalPages = (int)Math.Ceiling(totalEventos / (double)pageSize);
 
         // Pasar los datos a la vista
         ViewBag.CurrentPage = pageNumber;
@@ -55,10 +55,9 @@ public class EventsController : Controller
             .Where(a => a.Activo == true)
             .ToListAsync();
 
-        List<object> eventos = new List<object>();
+        List<object> eventos = new();
 
         foreach (var actividad in actividades)
-        {
             eventos.Add(new
             {
                 id = actividad.IdActividad,
@@ -68,7 +67,6 @@ public class EventsController : Controller
                 location = actividad.Lugar,
                 description = actividad.Descripcion
             });
-        }
 
         ViewBag.Eventos = JsonConvert.SerializeObject(eventos);
         return View();
@@ -223,7 +221,8 @@ public class EventsController : Controller
         return View(actividad);
     }
 
-    [HttpPost, ActionName("DeleteEvent")]
+    [HttpPost]
+    [ActionName("DeleteEvent")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {

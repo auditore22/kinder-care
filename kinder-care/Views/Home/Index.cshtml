@@ -1,462 +1,500 @@
 ﻿<link rel="stylesheet" href="~/css/tables/tables.css">
 
 <div class="dashboard-body">
-<div class="row gy-4">
-<div class="col-lg-9">
-<!-- Grettings Box Start -->
-<div class="grettings-box position-relative rounded-16 bg-main-600 overflow-hidden gap-16 flex-wrap z-1">
-    <img src="~/images/bg/grettings-pattern.png" alt="" class="position-absolute inset-block-start-0 inset-inline-start-0 z-n1 w-100 h-100 opacity-6">
     <div class="row gy-4">
-        <div class="col-sm-7">
-            <div class="grettings-box__content py-xl-4">
-                <h2 class="text-white mb-0">Hola, @ViewBag.UserName! </h2>
-                <p class="text-15 fw-light mt-4 text-white">
-                    <strong>@ViewBag.RoleName</strong>
-                </p>
-                <p class="text-lg fw-light mt-24 text-white">Bienvenid@s al sistema academico</p>
-                <p class="text-lg fw-light mt-24 text-white">
-                    <strong>Centro Infantil Agroecológico La Granja!!</strong>
-                </p>
+        <div class="col-lg-9">
+            <!-- Grettings Box Start -->
+            <div class="grettings-box position-relative rounded-16 bg-main-600 overflow-hidden gap-16 flex-wrap z-1">
+                <img src="~/images/bg/grettings-pattern.png" alt=""
+                     class="position-absolute inset-block-start-0 inset-inline-start-0 z-n1 w-100 h-100 opacity-6">
+                <div class="row gy-4">
+                    <div class="col-sm-7">
+                        <div class="grettings-box__content py-xl-4">
+                            <h2 class="text-white mb-0">Hola, @ViewBag.UserName! </h2>
+                            <p class="text-15 fw-light mt-4 text-white">
+                                <strong>@ViewBag.RoleName</strong>
+                            </p>
+                            <p class="text-lg fw-light mt-24 text-white">Bienvenid@s al sistema academico</p>
+                            <p class="text-lg fw-light mt-24 text-white">
+                                <strong>Centro Infantil Agroecológico La Granja!!</strong>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 d-sm-block d-none">
+                        <div class="text-center h-100 d-flex justify-content-center align-items-end ">
+                            <img src="https://html.themeholy.com/edmate/assets/images/thumbs/auth-img1.png" alt="">
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-sm-5 d-sm-block d-none">
-            <div class="text-center h-100 d-flex justify-content-center align-items-end ">
-                <img src="https://html.themeholy.com/edmate/assets/images/thumbs/auth-img1.png" alt="">
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Grettings Box End -->
+            <!-- Grettings Box End -->
 
-<!-- Hour Spent Card Start -->
-<!-- DASHBOARD ADMINISTRADOR -->
-@if (ViewBag.RoleName == "Administrador")
-{
-    <div class="card mt-24 overflow-hidden">
-        <!-- Usuarios Inactivos -->
-        <div class="card-header">
-            <div class="mb-0 flex-between flex-wrap gap-8">
-                <h4 class="mb-0">Usuarios Inactivos</h4>
-                <a asp-action="Index" asp-controller="Usuarios" class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver todos los usuarios</a>
-            </div>
-        </div>
-        <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
-            <table class="table style-two mb-0">
-                <thead>
-                <tr>
-                    <th>Usuario</th>
-                    <th>Rol</th>
-                    <th class="text-center">Detalles</th>
-                </tr>
-                </thead>
-                <tbody>
-                @if (ViewData["UsuariosInactivos"] is List<kinder_care.Models.Usuarios> usuariosInactivos && usuariosInactivos.Any())
-                {
-                    @foreach (var usuario in usuariosInactivos)
-                    {
-                        <tr>
-                            <td>
-                                <div class="flex-align gap-8">
-                                    <span class="text-main-600 bg-main-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+            <!-- Hour Spent Card Start -->
+            <!-- DASHBOARD ADMINISTRADOR -->
+            @if (ViewBag.RoleName == "Administrador")
+            {
+                <div class="card mt-24 overflow-hidden">
+                    <!-- Usuarios Inactivos -->
+                    <div class="card-header">
+                        <div class="mb-0 flex-between flex-wrap gap-8">
+                            <h4 class="mb-0">Usuarios Inactivos</h4>
+                            <a asp-action="Index" asp-controller="Usuarios"
+                               class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver todos los
+                                usuarios</a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
+                        <table class="table style-two mb-0">
+                            <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Rol</th>
+                                <th class="text-center">Detalles</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if (ViewData["UsuariosInactivos"] is List<Usuarios> usuariosInactivos && usuariosInactivos.Any())
+                            {
+                                @foreach (var usuario in usuariosInactivos)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="flex-align gap-8">
+                                    <span
+                                        class="text-main-600 bg-main-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
                                         <i class="ph-fill ph-graduation-cap"></i>
                                     </span>
-                                    <div>
-                                        <h6 class="mb-0">@usuario.Nombre</h6>
-                                        <div class="table-list">
-                                            <span class="text-13 text-gray-600">@usuario.Cedula</span>
-                                            <span class="text-13 text-gray-600">@usuario.CorreoElectronico</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="flex-align gap-8">
-                                    <h6 class="mb-0">@usuario.IdRolNavigation.Nombre</h6>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="flex-align justify-content-center gap-16">
-                                    <span class="text-13 py-2 px-8 bg-danger-50 text-danger-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                                                <div>
+                                                    <h6 class="mb-0">@usuario.Nombre</h6>
+                                                    <div class="table-list">
+                                                        <span class="text-13 text-gray-600">@usuario.Cedula</span>
+                                                        <span
+                                                            class="text-13 text-gray-600">@usuario.CorreoElectronico</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex-align gap-8">
+                                                <h6 class="mb-0">@usuario.IdRolNavigation.Nombre</h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex-align justify-content-center gap-16">
+                                    <span
+                                        class="text-13 py-2 px-8 bg-danger-50 text-danger-600 d-inline-flex align-items-center gap-8 rounded-pill">
                                         <span class="w-6 h-6 bg-danger-600 rounded-circle flex-shrink-0"></span>
                                         Inactivo
                                     </span>
-                                    <a asp-action="Details" asp-controller="Usuarios" asp-route-id="@usuario.IdUsuario" class="text-gray-900 hover-text-main-600 text-md d-flex">
-                                        <i class="ph ph-caret-right"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="4" class="text-center">Actualmente no hay Usuarios Inactivos.</td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
-    </div>
+                                                <a asp-action="Details" asp-controller="Usuarios"
+                                                   asp-route-id="@usuario.IdUsuario"
+                                                   class="text-gray-900 hover-text-main-600 text-md d-flex">
+                                                    <i class="ph ph-caret-right"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">Actualmente no hay Usuarios Inactivos.</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-    <div class="card mt-24 overflow-hidden">
-        <!-- Pagos Recientes -->
-        <div class="card-header">
-            <div class="mb-0 flex-between flex-wrap gap-8">
-                <h4 class="mb-0">Pagos Recientes</h4>
-                <a asp-action="ManagePayments" asp-controller="Payments" class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver todos los Pagos</a>
-            </div>
-        </div>
-        <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
-            <table class="table style-two mb-0">
-                <thead>
-                <tr>
-                    <th>Usuario</th>
-                    <th>Fecha del Pago</th>
-                    <th class="text-center">Detalles</th>
-                </tr>
-                </thead>
-                <tbody>
-                @if (ViewData["UltimosPagos"] is List<kinder_care.Models.Pagos> ultimosPagos && ultimosPagos.Any())
-                {
-                    @foreach (var pagos in ultimosPagos)
-                    {
-                        <tr>
-                            <td>
-                                <div class="flex-align gap-8">
-                                    <span class="text-purple-600 bg-purple-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                <div class="card mt-24 overflow-hidden">
+                    <!-- Pagos Recientes -->
+                    <div class="card-header">
+                        <div class="mb-0 flex-between flex-wrap gap-8">
+                            <h4 class="mb-0">Pagos Recientes</h4>
+                            <a asp-action="ManagePayments" asp-controller="Payments"
+                               class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver todos los
+                                Pagos</a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
+                        <table class="table style-two mb-0">
+                            <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Fecha del Pago</th>
+                                <th class="text-center">Detalles</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if (ViewData["UltimosPagos"] is List<Pagos> ultimosPagos && ultimosPagos.Any())
+                            {
+                                @foreach (var pagos in ultimosPagos)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="flex-align gap-8">
+                                    <span
+                                        class="text-purple-600 bg-purple-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
                                         <i class="ph ph-chart-line-up"></i>
                                     </span>
-                                    <div>
-                                        <h6 class="mb-0">@pagos.Padre!.Nombre</h6>
-                                        <div class="table-list">
-                                            <span class="text-13 text-gray-600">@pagos.Padre.Cedula</span>
-                                            <span class="text-13 text-gray-600">@pagos.ReferenciaFactura</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="flex-align gap-8">
-                                    <h6 class="mb-0">@pagos.FechaPago.ToString("dd/MM/yyyy")</h6>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="flex-align justify-content-center gap-16">
-                                    <span class="text-13 py-2 px-8 bg-success-50 text-success-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                                                <div>
+                                                    <h6 class="mb-0">@pagos.Padre!.Nombre</h6>
+                                                    <div class="table-list">
+                                                        <span class="text-13 text-gray-600">@pagos.Padre.Cedula</span>
+                                                        <span
+                                                            class="text-13 text-gray-600">@pagos.ReferenciaFactura</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex-align gap-8">
+                                                <h6 class="mb-0">@pagos.FechaPago.ToString("dd/MM/yyyy")</h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex-align justify-content-center gap-16">
+                                    <span
+                                        class="text-13 py-2 px-8 bg-success-50 text-success-600 d-inline-flex align-items-center gap-8 rounded-pill">
                                         <span class="w-6 h-6 bg-success-600 rounded-circle flex-shrink-0"></span>
                                         Detalles
                                     </span>
-                                    <a asp-action="Details" asp-controller="Payments" asp-route-id="@pagos.IdPago" class="text-gray-900 hover-text-main-600 text-md d-flex">
-                                        <i class="ph ph-caret-right"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="4" class="text-center">Actualmente no hay Pagos Registrados.</td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
-    </div>
+                                                <a asp-action="Details" asp-controller="Payments"
+                                                   asp-route-id="@pagos.IdPago"
+                                                   class="text-gray-900 hover-text-main-600 text-md d-flex">
+                                                    <i class="ph ph-caret-right"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">Actualmente no hay Pagos Registrados.</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-    <div class="card mt-24 overflow-hidden">
-        <!-- Calendario -->
-        <div class="card-header">
-            <div class="mb-0 flex-between flex-wrap gap-8">
-                <h4 class="mb-0">Próximas Actividades</h4>
-                <a asp-action="ManageEvents" asp-controller="Events" class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver Calendario</a>
-            </div>
-        </div>
-        <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
-            <table class="table style-two mb-0">
-                <thead>
-                <tr>
-                    <th>Descripcion</th>
-                    <th>Fecha</th>
-                    <th class="text-center">Detalles</th>
-                </tr>
-                </thead>
-                <tbody>
-                @if (ViewData["ActividadesProximas"] is List<kinder_care.Models.Actividades> actividadesProximas && actividadesProximas.Any())
-                {
-                    @foreach (var actividad in actividadesProximas)
-                    {
-                        <tr>
-                            <td>
-                                <div class="flex-align gap-8">
-                                    <span class="text-dribble-600 bg-dribble-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                <div class="card mt-24 overflow-hidden">
+                    <!-- Calendario -->
+                    <div class="card-header">
+                        <div class="mb-0 flex-between flex-wrap gap-8">
+                            <h4 class="mb-0">Próximas Actividades</h4>
+                            <a asp-action="ManageEvents" asp-controller="Events"
+                               class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver
+                                Calendario</a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
+                        <table class="table style-two mb-0">
+                            <thead>
+                            <tr>
+                                <th>Descripcion</th>
+                                <th>Fecha</th>
+                                <th class="text-center">Detalles</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if (ViewData["ActividadesProximas"] is List<Actividades> actividadesProximas && actividadesProximas.Any())
+                            {
+                                @foreach (var actividad in actividadesProximas)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="flex-align gap-8">
+                                    <span
+                                        class="text-dribble-600 bg-dribble-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
                                         <i class="ph ph-dribbble-logo"></i>
                                     </span>
-                                    <div>
-                                        <h6 class="mb-0">@actividad.Descripcion</h6>
-                                        <div class="table-list">
-                                            <span class="text-13 text-gray-600">@actividad.Lugar</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h6 class="mb-0">@actividad.Fecha.ToString("dd/MM/yyyy")</h6>
-                            </td>
-                            <td>
-                                <div class="flex-align justify-content-center gap-16">
-                                    <span class="text-13 py-2 px-8 bg-success-50 text-success-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                                                <div>
+                                                    <h6 class="mb-0">@actividad.Descripcion</h6>
+                                                    <div class="table-list">
+                                                        <span class="text-13 text-gray-600">@actividad.Lugar</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <h6 class="mb-0">@actividad.Fecha.ToString("dd/MM/yyyy")</h6>
+                                        </td>
+                                        <td>
+                                            <div class="flex-align justify-content-center gap-16">
+                                    <span
+                                        class="text-13 py-2 px-8 bg-success-50 text-success-600 d-inline-flex align-items-center gap-8 rounded-pill">
                                         <span class="w-6 h-6 bg-success-600 rounded-circle flex-shrink-0"></span>
                                         Detalles
                                     </span>
-                                    <a asp-action="EventDetails" asp-controller="Events" asp-route-id="@actividad.IdActividad" class="text-gray-900 hover-text-main-600 text-md d-flex">
-                                        <i class="ph ph-caret-right"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="4" class="text-center">No se encontraron actividades próximas.</td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
-    </div>
-}
-else if (ViewBag.RoleName == "Docente")
-{
-    <div class="card mt-24 overflow-hidden">
-        <!-- Ausencias -->
-        <div class="card-header">
-            <div class="mb-0 flex-between flex-wrap gap-8">
-                <h4 class="mb-0">Últimas Ausencias</h4>
-                <a asp-action="ListaAsistencia" asp-controller="Asistencia" class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver Asistencias</a>
-            </div>
-        </div>
-        <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
-            <table class="table style-two mb-0">
-                <thead>
-                <tr>
-                    <th>Estudiante</th>
-                    <th>Fecha</th>
-                    <th class="text-center">Detalles</th>
-                </tr>
-                </thead>
-                <tbody>
-                @if (ViewData["UltimasAusencias"] is List<kinder_care.Models.Asistencia> ultimasAusencias && ultimasAusencias.Any())
-                {
-                    @foreach (var ausencia in ultimasAusencias)
-                    {
-                        <tr>
-                            <td>
-                                <div class="flex-align gap-8">
-                                    <div class="flex-align gap-8">
-                                        <img src="~/images/icons/baby_2_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
-                                    </div>
-                                    <div class="">
-                                        <h6 class="mb-0">@ausencia.IdNinoNavigation.NombreNino</h6>
-                                        <div class="table-list">
-                                            <span class="text-13 text-gray-600">@ausencia.IdNinoNavigation.Cedula</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h6 class="mb-0">@ausencia.Fecha.ToString("dd/MM/yyyy")</h6>
-                            </td>
-                            <td>
-                                <div class="flex-align justify-content-center gap-16">
-                                    <span class="text-13 py-2 px-8 bg-warning-50 text-warning-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                                                <a asp-action="EventDetails" asp-controller="Events"
+                                                   asp-route-id="@actividad.IdActividad"
+                                                   class="text-gray-900 hover-text-main-600 text-md d-flex">
+                                                    <i class="ph ph-caret-right"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">No se encontraron actividades próximas.</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else if (ViewBag.RoleName == "Docente")
+            {
+                <div class="card mt-24 overflow-hidden">
+                    <!-- Ausencias -->
+                    <div class="card-header">
+                        <div class="mb-0 flex-between flex-wrap gap-8">
+                            <h4 class="mb-0">Últimas Ausencias</h4>
+                            <a asp-action="ListaAsistencia" asp-controller="Asistencia"
+                               class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver
+                                Asistencias</a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
+                        <table class="table style-two mb-0">
+                            <thead>
+                            <tr>
+                                <th>Estudiante</th>
+                                <th>Fecha</th>
+                                <th class="text-center">Detalles</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if (ViewData["UltimasAusencias"] is List<Asistencia> ultimasAusencias && ultimasAusencias.Any())
+                            {
+                                @foreach (var ausencia in ultimasAusencias)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="flex-align gap-8">
+                                                <div class="flex-align gap-8">
+                                                    <img src="~/images/icons/baby_2_icon.png" alt="Imagen del niño"
+                                                         class="w-40 h-40 rounded-circle">
+                                                </div>
+                                                <div class="">
+                                                    <h6 class="mb-0">@ausencia.IdNinoNavigation.NombreNino</h6>
+                                                    <div class="table-list">
+                                                        <span
+                                                            class="text-13 text-gray-600">@ausencia.IdNinoNavigation.Cedula</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <h6 class="mb-0">@ausencia.Fecha.ToString("dd/MM/yyyy")</h6>
+                                        </td>
+                                        <td>
+                                            <div class="flex-align justify-content-center gap-16">
+                                    <span
+                                        class="text-13 py-2 px-8 bg-warning-50 text-warning-600 d-inline-flex align-items-center gap-8 rounded-pill">
                                         <span class="w-6 h-6 bg-warning-600 rounded-circle flex-shrink-0"></span>
                                         Detalles
                                     </span>
-                                    <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@ausencia.IdNino" class="text-gray-900 hover-text-main-600 text-md d-flex">
-                                        <i class="ph ph-caret-right"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="3" class="text-center">No se encontraron Ausencias recientes.</td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
-    </div>
+                                                <a asp-action="Details_Docente" asp-controller="Ninos"
+                                                   asp-route-id="@ausencia.IdNino"
+                                                   class="text-gray-900 hover-text-main-600 text-md d-flex">
+                                                    <i class="ph ph-caret-right"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3" class="text-center">No se encontraron Ausencias recientes.</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-    <div class="card mt-24 overflow-hidden">
-        <!-- Calendario -->
-        <div class="card-header">
-            <div class="mb-0 flex-between flex-wrap gap-8">
-                <h4 class="mb-0">Próximas Actividades</h4>
-                <a asp-action="ManageEvents" asp-controller="Events" class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver Calendario</a>
-            </div>
-        </div>
-        <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
-            <table class="table style-two mb-0">
-                <thead>
-                <tr>
-                    <th>Descripcion</th>
-                    <th>Fecha</th>
-                    <th class="text-center">Detalles</th>
-                </tr>
-                </thead>
-                <tbody>
-                @if (ViewData["ActividadesProximas"] is List<kinder_care.Models.Actividades> actividadesProximas && actividadesProximas.Any())
-                {
-                    @foreach (var actividad in actividadesProximas)
-                    {
-                        <tr>
-                            <td>
-                                <div class="flex-align gap-8">
-                                    <span class="text-dribble-600 bg-dribble-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                <div class="card mt-24 overflow-hidden">
+                    <!-- Calendario -->
+                    <div class="card-header">
+                        <div class="mb-0 flex-between flex-wrap gap-8">
+                            <h4 class="mb-0">Próximas Actividades</h4>
+                            <a asp-action="ManageEvents" asp-controller="Events"
+                               class="text-13 fw-medium text-main-600 hover-text-decoration-underline">Ver
+                                Calendario</a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
+                        <table class="table style-two mb-0">
+                            <thead>
+                            <tr>
+                                <th>Descripcion</th>
+                                <th>Fecha</th>
+                                <th class="text-center">Detalles</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if (ViewData["ActividadesProximas"] is List<Actividades> actividadesProximas && actividadesProximas.Any())
+                            {
+                                @foreach (var actividad in actividadesProximas)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="flex-align gap-8">
+                                    <span
+                                        class="text-dribble-600 bg-dribble-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
                                         <i class="ph ph-dribbble-logo"></i>
                                     </span>
-                                    <div>
-                                        <h6 class="mb-0">@actividad.Descripcion</h6>
-                                        <div class="table-list">
-                                            <span class="text-13 text-gray-600">@actividad.Lugar</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h6 class="mb-0">@actividad.Fecha.ToString("dd/MM/yyyy")</h6>
-                            </td>
-                            <td>
-                                <div class="flex-align justify-content-center gap-16">
-                                    <span class="text-13 py-2 px-8 bg-success-50 text-success-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                                                <div>
+                                                    <h6 class="mb-0">@actividad.Descripcion</h6>
+                                                    <div class="table-list">
+                                                        <span class="text-13 text-gray-600">@actividad.Lugar</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <h6 class="mb-0">@actividad.Fecha.ToString("dd/MM/yyyy")</h6>
+                                        </td>
+                                        <td>
+                                            <div class="flex-align justify-content-center gap-16">
+                                    <span
+                                        class="text-13 py-2 px-8 bg-success-50 text-success-600 d-inline-flex align-items-center gap-8 rounded-pill">
                                         <span class="w-6 h-6 bg-success-600 rounded-circle flex-shrink-0"></span>
                                         Detalles
                                     </span>
-                                    <a asp-action="EventDetails" asp-controller="Events" asp-route-id="@actividad.IdActividad" class="text-gray-900 hover-text-main-600 text-md d-flex">
-                                        <i class="ph ph-caret-right"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="4" class="text-center">No se encontraron actividades próximas.</td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
-    </div>
-}
-else if (ViewBag.RoleName == "Padre")
-{
-    <div class="card mt-24 overflow-hidden">
-        <!-- Calendario -->
-        <div class="card-header">
-            <div class="mb-0 flex-between flex-wrap gap-8">
-                <h4 class="mb-0">Próximas Actividades</h4>
-            </div>
-        </div>
-        <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
-            <table class="table style-two mb-0">
-                <thead>
-                <tr>
-                    <th>Descripcion</th>
-                    <th>Fecha</th>
-                    <th class="text-center">Detalles</th>
-                </tr>
-                </thead>
-                <tbody>
-                @if (ViewData["ActividadesProximas"] is List<kinder_care.Models.Actividades> actividadesProximas && actividadesProximas.Any())
-                {
-                    @foreach (var actividad in actividadesProximas)
-                    {
-                        <tr>
-                            <td>
-                                <div class="flex-align gap-8">
-                                    <span class="text-dribble-600 bg-dribble-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
+                                                <a asp-action="EventDetails" asp-controller="Events"
+                                                   asp-route-id="@actividad.IdActividad"
+                                                   class="text-gray-900 hover-text-main-600 text-md d-flex">
+                                                    <i class="ph ph-caret-right"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">No se encontraron actividades próximas.</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else if (ViewBag.RoleName == "Padre")
+            {
+                <div class="card mt-24 overflow-hidden">
+                    <!-- Calendario -->
+                    <div class="card-header">
+                        <div class="mb-0 flex-between flex-wrap gap-8">
+                            <h4 class="mb-0">Próximas Actividades</h4>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 overflow-x-auto scroll-sm scroll-sm-horizontal">
+                        <table class="table style-two mb-0">
+                            <thead>
+                            <tr>
+                                <th>Descripcion</th>
+                                <th>Fecha</th>
+                                <th class="text-center">Detalles</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if (ViewData["ActividadesProximas"] is List<Actividades> actividadesProximas && actividadesProximas.Any())
+                            {
+                                @foreach (var actividad in actividadesProximas)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="flex-align gap-8">
+                                    <span
+                                        class="text-dribble-600 bg-dribble-50 w-44 h-44 rounded-circle flex-center text-2xl flex-shrink-0">
                                         <i class="ph ph-dribbble-logo"></i>
                                     </span>
-                                    <div>
-                                        <h6 class="mb-0">@actividad.Descripcion</h6>
-                                        <div class="table-list">
-                                            <span class="text-13 text-gray-600">@actividad.Lugar</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h6 class="mb-0">@actividad.Fecha.ToString("dd/MM/yyyy")</h6>
-                            </td>
-                            <td>
-                                <div class="flex-align justify-content-center gap-16">
-                                    <span class="text-13 py-2 px-8 bg-success-50 text-success-600 d-inline-flex align-items-center gap-8 rounded-pill">
+                                                <div>
+                                                    <h6 class="mb-0">@actividad.Descripcion</h6>
+                                                    <div class="table-list">
+                                                        <span class="text-13 text-gray-600">@actividad.Lugar</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <h6 class="mb-0">@actividad.Fecha.ToString("dd/MM/yyyy")</h6>
+                                        </td>
+                                        <td>
+                                            <div class="flex-align justify-content-center gap-16">
+                                    <span
+                                        class="text-13 py-2 px-8 bg-success-50 text-success-600 d-inline-flex align-items-center gap-8 rounded-pill">
                                         <span class="w-6 h-6 bg-success-600 rounded-circle flex-shrink-0"></span>
                                         Detalles
                                     </span>
-                                    <a asp-action="Calendar" asp-controller="Events" asp-route-id="@actividad.IdActividad" class="text-gray-900 hover-text-main-600 text-md d-flex">
-                                        <i class="ph ph-caret-right"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="4" class="text-center">No se encontraron actividades próximas.</td>
-                    </tr>
-                }
-                </tbody>
-            </table>
+                                                <a asp-action="Calendar" asp-controller="Events"
+                                                   asp-route-id="@actividad.IdActividad"
+                                                   class="text-gray-900 hover-text-main-600 text-md d-flex">
+                                                    <i class="ph ph-caret-right"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">No se encontraron actividades próximas.</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
         </div>
-    </div>
-}
-</div>
-<div class="col-lg-3">
+        <div class="col-lg-3">
 
-    <!-- Calendar Start -->
-    <div class="card">
-        <div class="card-body">
-            <div class="calendar">
-                <div class="calendar__header">
-                    <button type="button" class="calendar__arrow left">
-                        <i class="ph ph-caret-left"></i>
-                    </button>
-                    <p class="display h6 mb-0">""</p>
-                    <button type="button" class="calendar__arrow right">
-                        <i class="ph ph-caret-right"></i>
-                    </button>
-                </div>
+            <!-- Calendar Start -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="calendar">
+                        <div class="calendar__header">
+                            <button type="button" class="calendar__arrow left">
+                                <i class="ph ph-caret-left"></i>
+                            </button>
+                            <p class="display h6 mb-0">""</p>
+                            <button type="button" class="calendar__arrow right">
+                                <i class="ph ph-caret-right"></i>
+                            </button>
+                        </div>
 
-                <div class="calendar__week week">
-                    <div class="calendar__week-text">Dom</div>
-                    <div class="calendar__week-text">Lun</div>
-                    <div class="calendar__week-text">Mar</div>
-                    <div class="calendar__week-text">Mie</div>
-                    <div class="calendar__week-text">Jue</div>
-                    <div class="calendar__week-text">Vie</div>
-                    <div class="calendar__week-text">Sab</div>
+                        <div class="calendar__week week">
+                            <div class="calendar__week-text">Dom</div>
+                            <div class="calendar__week-text">Lun</div>
+                            <div class="calendar__week-text">Mar</div>
+                            <div class="calendar__week-text">Mie</div>
+                            <div class="calendar__week-text">Jue</div>
+                            <div class="calendar__week-text">Vie</div>
+                            <div class="calendar__week-text">Sab</div>
+                        </div>
+                        <div class="days"></div>
+                    </div>
                 </div>
-                <div class="days"></div>
             </div>
         </div>
     </div>
-</div>
-</div>
 </div>
 
 <script src="~/js/index_scripts/eventActions.js"></script>

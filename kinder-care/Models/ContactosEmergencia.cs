@@ -1,20 +1,20 @@
-﻿namespace kinder_care.Models
+﻿namespace kinder_care.Models;
+
+public class ContactosEmergencia
 {
-    public partial class ContactosEmergencia
-    {
-        public int IdContactoEmergencia { get; set; }
+    public int IdContactoEmergencia { get; set; }
 
-        public string NombreContacto { get; set; } = null!;
+    public string NombreContacto { get; set; } = null!;
 
-        public string? Relacion { get; set; }
+    public string? Relacion { get; set; }
 
-        public int? Telefono { get; set; }
+    public int? Telefono { get; set; }
 
-        public string? Direccion { get; set; }
+    public string? Direccion { get; set; }
 
-        public bool? Activo { get; set; }
+    public bool? Activo { get; set; }
 
-        // Cambia la colección de Ninos por RelNinoContactoEmergencia
-        public virtual ICollection<RelNinoContactoEmergencia> RelNinoContactoEmergencia { get; set; } = new List<RelNinoContactoEmergencia>();
-    }
+    // Cambia la colección de Ninos por RelNinoContactoEmergencia
+    public virtual ICollection<RelNinoContactoEmergencia> RelNinoContactoEmergencia { get; set; } =
+        new List<RelNinoContactoEmergencia>();
 }

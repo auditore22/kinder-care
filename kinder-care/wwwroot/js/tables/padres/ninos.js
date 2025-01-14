@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const table = document.getElementById('childrenTable');
-    
+
     const searchByName = document.getElementById('searchByName');
     const searchByID = document.getElementById('searchByID');
     const searchByCedula = document.getElementById('searchByCedula');
@@ -8,12 +8,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const paginationContainer = document.querySelector('.pagination');
     const infoContainer = document.getElementById('infoContainer');
     const entriesSelect = document.getElementById('entriesSelect');
-    
+
     let rows = Array.from(document.querySelectorAll('#childrenTable tbody tr')).filter(row => !row.id || row.id !== 'noResultsRow');
     let pageSize = parseInt(entriesSelect.value);
     let currentPage = 1;
     let filteredRows = [...rows];
-    
+
     function filterRows() {
         const nameValue = searchByName.value.toLowerCase();
         const idValue = searchByID.value.toLowerCase();
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
             paginationContainer.appendChild(nextButton);
         }
     }
-    
+
     entriesSelect.addEventListener('change', () => {
         pageSize = parseInt(entriesSelect.value);
         currentPage = 1;

@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     const table = document.getElementById('studentTable');
-    
+
     const searchByName = document.getElementById('searchByName');
     const searchByCedula = document.getElementById('searchByCedula');
-    
+
     const paginationContainer = document.querySelector('.pagination');
     const infoContainer = document.querySelector('#infoContainer');
     const entriesSelect = document.getElementById('entriesSelect');
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let pageSize = parseInt(entriesSelect.value);
     let currentPage = 1;
     let filteredRows = [...rows];
-    
+
     function filterRows() {
         const nameValue = searchByName.value.toLowerCase();
         const cedulaValue = searchByCedula.value.toLowerCase();
@@ -27,14 +27,14 @@ document.addEventListener('DOMContentLoaded', function () {
         currentPage = 1;
         renderTable();
     }
-    
+
     function renderTable() {
         const totalFilteredItems = filteredRows.length;
         const totalPages = Math.ceil(totalFilteredItems / pageSize);
         const start = (currentPage - 1) * pageSize;
         const end = start + pageSize;
         const noResultsRow = document.getElementById('noResultsRow');
-        
+
         if (totalFilteredItems === 0) {
             noResultsRow.classList.remove('d-none');
         } else {
@@ -43,19 +43,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         rows.forEach(row => row.style.display = 'none');
         filteredRows.slice(start, end).forEach(row => row.style.display = '');
-        
+
         infoContainer.textContent = totalFilteredItems > 0
             ? `Mostrando ${start + 1} a ${Math.min(end, totalFilteredItems)} de ${totalFilteredItems} registros`
             : "No se encontraron resultados.";
-        
+
         renderPagination(totalPages);
-        
+
         table.style.display = 'table';
     }
-    
+
     function renderPagination(totalPages) {
         paginationContainer.innerHTML = '';
-        
+
         if (totalPages === 0) return;
 
         if (currentPage > 1) {

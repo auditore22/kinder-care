@@ -43,19 +43,23 @@
                 {
                     <tr>
                         <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@evento.Fecha.ToString("yyyy-MM-dd  ||  HH:mm tt")</span>
+                            <span
+                                class="h6 mb-0 fw-medium text-gray-300">@evento.Fecha.ToString("yyyy-MM-dd  ||  HH:mm tt")</span>
                         </td>
                         <td>
                             <span class="h6 mb-0 fw-medium text-gray-300">@evento.Lugar</span>
                         </td>
                         <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@evento.IdTipoActividadNavigation?.NombreTipoActividad</span>
+                            <span
+                                class="h6 mb-0 fw-medium text-gray-300">@evento.IdTipoActividadNavigation?.NombreTipoActividad</span>
                         </td>
                         <td>
                             <span class="h6 mb-0 fw-medium text-gray-300">@evento.Descripcion</span>
                         </td>
                         <td>
-                            <a asp-action="EventDetails" asp-route-id="@evento.IdActividad" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
+                            <a asp-action="EventDetails" asp-route-id="@evento.IdActividad"
+                               class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver
+                                Más</a>
                         </td>
                     </tr>
                 }
@@ -85,7 +89,7 @@
 <div class="card-footer flex-between flex-wrap mt-15">
     <span class="text-gray-900">
         Mostrando @((ViewBag.CurrentPage - 1) * 10 + 1) a
-        @((ViewBag.CurrentPage * 10) > @Model.Count() ? @Model.Count() : ViewBag.CurrentPage * 10)
+        @(ViewBag.CurrentPage * 10 > Model.Count() ? Model.Count() : ViewBag.CurrentPage * 10)
         de @ViewBag.TotalEventos eventos
     </span>
 
@@ -97,14 +101,15 @@
             @if (ViewBag.CurrentPage > 1)
             {
                 <li class="page-item">
-                    <a class="page-link" href="@Url.Action("ManageEvents", "Events", new { pageNumber = ViewBag.CurrentPage - 1 })">Anterior</a>
+                    <a class="page-link"
+                       href="@Url.Action("ManageEvents", "Events", new { pageNumber = ViewBag.CurrentPage - 1 })">Anterior</a>
                 </li>
             }
 
             <!-- Páginas -->
             @for (var i = 1; i <= ViewBag.TotalPages; i++)
             {
-                <li class="page-item @((i == ViewBag.CurrentPage) ? "active" : "")">
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
                     <a class="page-link" href="@Url.Action("ManageEvents", "Events", new { pageNumber = i })">@i</a>
                 </li>
             }
@@ -113,7 +118,8 @@
             @if (ViewBag.CurrentPage < ViewBag.TotalPages)
             {
                 <li class="page-item">
-                    <a class="page-link" href="@Url.Action("ManageEvents", "Events", new { pageNumber = ViewBag.CurrentPage + 1 })">Siguiente</a>
+                    <a class="page-link"
+                       href="@Url.Action("ManageEvents", "Events", new { pageNumber = ViewBag.CurrentPage + 1 })">Siguiente</a>
                 </li>
             }
         </ul>

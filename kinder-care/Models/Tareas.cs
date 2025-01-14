@@ -10,14 +10,12 @@ public class Tareas
 
     public string? Descripcion { get; set; }
 
-    public int Calificacion { get; set; } = 0;
-
     public DateTime FechaAsignada { get; set; } = DateTime.Now;
 
     public DateTime FechaEntrega { get; set; }
 
     public bool Activo { get; set; } = true;
-    
+
     public byte[]? DocTareaDocente { get; set; }
 
     public int? Extencion { get; set; }

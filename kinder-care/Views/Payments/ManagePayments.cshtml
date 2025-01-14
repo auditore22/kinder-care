@@ -30,7 +30,8 @@
             <button type="submit" class="input-icon text-xl d-flex text-gray-100 pointer-event-none">
                 <i class="ph ph-magnifying-glass"></i>
             </button>
-            <input type="text" name="searchQuery" class="form-control ps-40 h-40 border-transparent focus-border-main-600 bg-main-50 rounded-pill placeholder-15"
+            <input type="text" name="searchQuery"
+                   class="form-control ps-40 h-40 border-transparent focus-border-main-600 bg-main-50 rounded-pill placeholder-15"
                    placeholder="Buscar por nombre del padre..." value="@ViewBag.SearchQuery"
                    style="width: 400px; max-width: 100%;"/>
         </div>
@@ -99,7 +100,7 @@
 <div class="card-footer flex-between flex-wrap mt-15">
     <span class="text-gray-900">
         Mostrando @((ViewBag.CurrentPage - 1) * 10 + 1) a
-        @((ViewBag.CurrentPage * 10) > @Model.Count() ? @Model.Count() : ViewBag.CurrentPage * 10)
+        @(ViewBag.CurrentPage * 10 > Model.Count() ? Model.Count() : ViewBag.CurrentPage * 10)
         de @ViewBag.TotalPagos pagos
     </span>
 
@@ -111,13 +112,14 @@
             @if (ViewBag.CurrentPage > 1)
             {
                 <li class="page-item">
-                    <a class="page-link" href="@Url.Action("ManagePayments", "Payments", new { pageNumber = ViewBag.CurrentPage - 1 })">Anterior</a>
+                    <a class="page-link"
+                       href="@Url.Action("ManagePayments", "Payments", new { pageNumber = ViewBag.CurrentPage - 1 })">Anterior</a>
                 </li>
             }
 
             @for (var i = 1; i <= ViewBag.TotalPages; i++)
             {
-                <li class="page-item @((i == ViewBag.CurrentPage) ? "active" : "")">
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
                     <a class="page-link" href="@Url.Action("ManagePayments", "Payments", new { pageNumber = i })">@i</a>
                 </li>
             }
@@ -125,7 +127,8 @@
             @if (ViewBag.CurrentPage < ViewBag.TotalPages)
             {
                 <li class="page-item">
-                    <a class="page-link" href="@Url.Action("ManagePayments", "Payments", new { pageNumber = ViewBag.CurrentPage + 1 })">Siguiente</a>
+                    <a class="page-link"
+                       href="@Url.Action("ManagePayments", "Payments", new { pageNumber = ViewBag.CurrentPage + 1 })">Siguiente</a>
                 </li>
             }
         </ul>
@@ -134,7 +137,8 @@
 
 
 <!-- Estilos -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
 <style>
     /* Estilo para la barra de búsqueda */
@@ -182,6 +186,7 @@
         background-color: #f8f9fa;
         border-top: 1px solid #e0e0e0;
     }
+
     .pagination .page-item {
         margin-right: 5px; /* Espacio entre los botones */
     }
@@ -199,11 +204,11 @@
         width: 24%;
     }
 
-    .column-nombrepadre{
+    .column-nombrepadre {
         width: 22%;
     }
 
-    .column-tipopago{
+    .column-tipopago {
         width: 22%;
     }
 
@@ -215,5 +220,5 @@
     .manage-events-actions button {
         margin-right: 5px;
     }
-    
+
 </style>

@@ -382,11 +382,8 @@ public partial class KinderCareContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("nombre");
             entity.Property(e => e.Descripcion)
-                .HasColumnType("text")
-                .HasColumnName("descripcion");
-            entity.Property(e => e.Calificacion)
                 .HasDefaultValue(0)
-                .HasColumnName("calificacion");
+                .HasColumnName("descripcion");
             entity.Property(e => e.FechaAsignada)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("date")

@@ -2,7 +2,7 @@
 
 namespace kinder_care.Models;
 
-public partial class Usuarios
+public class Usuarios
 {
     public int IdUsuario { get; set; }
 

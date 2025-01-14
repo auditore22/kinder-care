@@ -1,6 +1,6 @@
 ﻿namespace kinder_care.Models;
 
-public partial class Asistencia
+public class Asistencia
 {
     public int IdAsistencia { get; set; }
 

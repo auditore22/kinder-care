@@ -1,6 +1,6 @@
 ﻿namespace kinder_care.Models;
 
-public partial class ProgresoAcademico
+public class ProgresoAcademico
 {
     public int IdProgresoAcademico { get; set; }
 

@@ -12,7 +12,8 @@
             </span>
         </li>
         <li>
-            <a asp-action="ListaNinos" asp-controller="Asistencia" class="text-gray-200 fw-normal text-15 hover-text-main-600">Estudiantes</a>
+            <a asp-action="ListaNinos" asp-controller="Asistencia"
+               class="text-gray-200 fw-normal text-15 hover-text-main-600">Estudiantes</a>
         </li>
         <li>
             <span class="text-gray-500 fw-normal d-flex">
@@ -29,7 +30,8 @@
     <div class="card-body p-0">
         <div class="cover-img position-relative">
             <div class="avatar-preview">
-                <div style="background: rgb(219,162,0); background: linear-gradient(180deg, rgba(219,162,0,0.5041666324733018) 0%, rgba(219,162,0,0) 70%);">
+                <div
+                    style="background: rgb(219,162,0); background: linear-gradient(180deg, rgba(219,162,0,0.5041666324733018) 0%, rgba(219,162,0,0) 70%);">
                 </div>
             </div>
         </div>
@@ -37,7 +39,8 @@
         <div class="setting-profile px-24" style="margin-top: 10px">
             <div class="flex-between">
                 <div class="d-flex align-items-end flex-wrap mb-32 gap-24">
-                    <img src="~/images/icons/Registro_logo.png" alt="Docente" class="w-90 h-90 rounded-circle border border-white">
+                    <img src="~/images/icons/Registro_logo.png" alt="Docente"
+                         class="w-90 h-90 rounded-circle border border-white">
                     <div>
                         <h4 class="mb-8">Docente: @(Model.UsuarioNombre)</h4>
                         <div class="setting-profile__infos flex-align flex-wrap gap-16">
@@ -66,7 +69,8 @@ else
 {
     <div class="tab-content" id="pills-tabContent">
         <!-- My Details Tab start -->
-        <div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab" tabindex="0">
+        <div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab"
+             tabindex="0">
             <div class="card mt-24">
                 <div class="card-header border-bottom">
                     <h4 class="mb-4">Estudiantes sin grupo</h4>
@@ -91,7 +95,8 @@ else
                                 <tr>
                                     <td>
                                         <div class="flex-align gap-8">
-                                            <img src="~/images/icons/baby_1_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
+                                            <img src="~/images/icons/baby_1_icon.png" alt="Imagen del niño"
+                                                 class="w-40 h-40 rounded-circle">
                                             <span class="h6 mb-0 fw-medium text-gray-300">@nino.IdNino</span>
                                         </div>
                                     </td>
@@ -110,7 +115,8 @@ else
                         </table>
 
                         <div class="d-flex justify-content-end mt-3 gap-2">
-                            <a asp-action="ListaNinos" class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancelar</a>
+                            <a asp-action="ListaNinos"
+                               class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 rounded-pill py-9">Cancelar</a>
                             <button type="submit" class="btn btn-main rounded-pill py-9">Confirmar</button>
                         </div>
                     </form>
