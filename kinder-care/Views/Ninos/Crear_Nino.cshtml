@@ -63,6 +63,22 @@
                     <span asp-validation-for="Poliza" class="text-danger"></span>
                 </div>
 
+                @if (ViewBag.ListaNiveles != null)
+                {
+                    <div class="col-md-6 mt-3">
+                        <label for="IdNivel" class="form-label mb-8 h6">Nivel</label>
+                        <select id="IdNivel" name="IdNivel" class="form-control py-11" asp-items="ViewBag.ListaNiveles" required>
+                            <option value="">Selecciona el nivel</option>
+                        </select>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-danger">
+                        No hay niveles disponibles para seleccionar.
+                    </div>
+                }
+                
                 <div class="col-md-6 mt-3">
                     <label asp-for="Activo" class="form-label">¿Activo?</label>
                     <select asp-for="Activo" class="form-select">

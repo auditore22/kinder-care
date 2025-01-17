@@ -49,14 +49,29 @@ public class NinosController : Controller
     }
 
     [HttpGet]
-    public Task<IActionResult> Crear_Nino()
+    public async Task<IActionResult> Crear_Nino()
     {
-        return Task.FromResult<IActionResult>(View());
+        // Obtener los niveles de grado
+        var listNiveles = await _context.Niveles
+            .Where(n => !string.IsNullOrEmpty(n.Nombre))
+            .ToListAsync();
+
+        if (listNiveles != null && listNiveles.Any())
+        {
+            // Asegura que el nivel actual del niño quede seleccionado
+            ViewBag.ListaNiveles = new SelectList(listNiveles, "IdNivel", "Nombre");
+        }
+        else
+        {
+            ViewBag.ListaNiveles = new SelectList(Enumerable.Empty<SelectListItem>());
+        }
+
+        return View();
     }
 
     [HttpPost]
     public async Task<IActionResult> Crear_Nino(string cedula, string nombreNino, DateTime fechaNacimiento,
-        string direccion, string poliza, bool activo)
+        string direccion, string poliza, int idNivel, bool activo)
     {
         if (string.IsNullOrEmpty(cedula) || string.IsNullOrEmpty(nombreNino) || fechaNacimiento == default ||
             string.IsNullOrEmpty(direccion) || string.IsNullOrEmpty(poliza))
@@ -73,6 +88,7 @@ public class NinosController : Controller
             FechaNacimiento = fechaNacimiento,
             Direccion = direccion,
             Poliza = poliza,
+            IdNivel = idNivel,
             Activo = activo
         };
 
@@ -87,9 +103,17 @@ public class NinosController : Controller
         try
         {
             var result = await _context.Database.ExecuteSqlRawAsync(
-                "EXEC GestionarNino @IdNino = {0}, @Cedula = {1}, @NombreNino = {2}, @FechaNacimiento = {3}, @Direccion = {4}, @Poliza = {5}",
-                null!, // Para insertar un nuevo niño, el IdNino tiene que ser nulo
-                nino.Cedula, nino.NombreNino, nino.FechaNacimiento, nino.Direccion, nino.Poliza);
+                    "EXEC GestionarNino @IdNino = {0}, @Cedula = {1}, @NombreNino = {2}, @FechaNacimiento = {3}, @Direccion = {4}, @Poliza = {5}, @IdNivel = {6}, @Activo = {7}, @Accion = {8}",
+                    null!,
+                    nino.Cedula,
+                    nino.NombreNino,
+                    nino.FechaNacimiento,
+                    nino.Direccion,
+                    nino.Poliza,
+                    nino.IdNivel,
+                    nino.Activo,
+                    "AGREGAR")
+                ;
 
             return RedirectToAction("Index", "Home");
         }
