@@ -156,10 +156,14 @@ public class NinosController : Controller
             .ThenInclude(re => re.ContactoEmergencia) // Contactos de emergencia
             .Include(n => n.RelNinoTarea)
             .ThenInclude(rt => rt.Tareas) // Tareas asignadas
+            .Include(n => n.IdNivelNavigation)
             .Where(n => n.IdNino == id)
             .FirstOrDefaultAsync();
 
         if (nino == null) return NotFound();
+
+        ViewBag.NombreNivel = await _context.Niveles.Where(idn => idn.IdNivel == nino.IdNivel).Select(nn => nn.Nombre)
+            .FirstOrDefaultAsync();
 
         // Clasificar tareas según su estado
         var tareasEnProceso = nino.RelNinoTarea?
