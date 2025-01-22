@@ -82,12 +82,12 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab" aria-controls="pills-details" aria-selected="true">Detalles</button>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-edit-tab" data-bs-toggle="pill" data-bs-target="#pills-edit" type="button" role="tab" aria-controls="pills-edit" aria-selected="false">Editar</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-delete-tab" data-bs-toggle="pill" data-bs-target="#pills-delete" type="button" role="tab" aria-controls="pills-delete" aria-selected="false">Eliminar</button>
-                </li>
+                @if (ViewBag.RoleName == "Administrador")
+                {
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-edit-tab" data-bs-toggle="pill" data-bs-target="#pills-edit" type="button" role="tab" aria-controls="pills-edit" aria-selected="false">Editar</button>
+                    </li>
+                }
             </ul>
         </div>
     </div>
@@ -102,21 +102,67 @@
                 <h4 class="mb-4">Información Adicional</h4>
             </div>
             <div class="card-body">
-                <p>
-                    <strong>Monto del pago:</strong> @Model.Monto
-                </p>
-                <p>
-                    <strong>Método de Pago:</strong> @Model.MetodoPago
-                </p>
-                <p>
-                    <strong>Referencia de factura:</strong> @Model.ReferenciaFactura
-                </p>
-                <p>
-                    <strong>Fecha de Creación:</strong> @Model.FechaCreacion?.ToString("dd/MM/yyyy")
-                </p>
-                <p>
-                    <strong>Última Actualización:</strong> @Model.UltimaActualizacion?.ToString("dd/MM/yyyy")
-                </p>
+                <div class="row gy-4">
+                    <ul>
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                            <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                <img style="height: 20px; width: 20px"
+                                     src="~/images/icons/monto_pago.png"
+                                     alt="monto_pago_icono"/>
+                            </span>
+                            <p>
+                                <strong>Monto del pago: </strong>
+                            </p>
+                            @Model.Monto
+                        </li>
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                            <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                <img style="height: 20px; width: 20px"
+                                     src="~/images/icons/metodo_pago.png"
+                                     alt="metodo_pago_icono"/>
+                            </span>
+                            <p>
+                                <strong>Método de Pago: </strong>
+                            </p>
+                            @Model.MetodoPago
+                        </li>
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                            <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                <img style="height: 20px; width: 20px"
+                                     src="~/images/icons/referencia_factura.png"
+                                     alt="referenca_factura_icono"/>
+                            </span>
+                            <p>
+                                <strong>Referencia de factura: </strong>
+                            </p>
+                            @Model.ReferenciaFactura
+                        </li>
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                            <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                <img style="height: 20px; width: 20px"
+                                     src="~/images/icons/fecha_creacion.png"
+                                     alt="fecha_creacion_icono"/>
+                            </span>
+                            <p>
+                                <strong>Fecha de Creación: </strong>
+                            </p>
+                            @Model.FechaCreacion?.ToString("dd/MM/yyyy")
+                        </li>
+
+                        <li class="flex-align gap-6 text-black text-15 mb-12">
+                            <span class="flex-shrink-0 text-22 d-flex text-main-600">
+                                <img style="height: 20px; width: 20px"
+                                     src="~/images/icons/ultima_actualizacion.png"
+                                     alt="ultima_actu_icono"/>
+                            </span>
+                            <p>
+                                <strong>Última Actualización: </strong>
+                            </p>
+                            @Model.UltimaActualizacion?.ToString("dd/MM/yyyy")
+                        </li>
+                        
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -173,21 +219,7 @@
             </div>
         </div>
     </div>
-
-
-    <!-- Eliminar Pago -->
-    <div class="tab-pane fade" id="pills-delete" role="tabpanel" aria-labelledby="pills-delete-tab">
-        <div class="card mt-24">
-            <div class="card-body">
-                <h4>¿Estás seguro de que deseas eliminar este pago?</h4>
-                <form asp-action="DeleteConfirmed" asp-controller="Payments" method="post">
-                    <input type="hidden" asp-for="IdPago"/>
-                    <button type="submit" class="btn btn-danger rounded-pill">Eliminar</button>
-                    <a href="@Url.Action("ManagePayments", "Payments")" class="btn btn-secondary rounded-pill">Cancelar</a>
-                </form>
-            </div>
-        </div>
-    </div>
+    
 
 </div>
 
