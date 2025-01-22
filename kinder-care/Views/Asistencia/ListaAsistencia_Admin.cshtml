@@ -37,8 +37,23 @@
             <input type="date" name="fechaFin" id="fechaFin" class="form-control"
                    value="@ViewBag.FechaFin"/>
         </div>
-        <div class="col-md-4 d-flex align-items-end">
-            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        <div class="col-md-4">
+            <label for="IdNivel">Grado:</label>
+            <select name="idNivel" class="form-select">
+                <option value="">Todos</option>
+                @foreach (var nivel in ViewBag.Niveles)
+                {
+                    <option value="@nivel.IdNivel">
+                        @nivel.Nombre
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="row mt-10">
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+            </div>
         </div>
     </div>
 </form>
@@ -85,6 +100,13 @@
                                 <span class="h6 mb-0 fw-medium @(asistencia.Presente ? "text-success" : "text-danger")">
                                     @(asistencia.Presente ? "Presente" : "Ausente")
                                 </span>
+                        </td>
+                        <td>
+                            <a asp-action="Details_Admin" asp-controller="Ninos" asp-route-id="@asistencia.IdNino"
+                                   class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
+                                    Ver
+                                    Más
+                            </a>
                         </td>
                     </tr>
                 }
