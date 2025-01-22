@@ -1,8 +1,10 @@
+using System.Data;
 using System.Security.Claims;
 using kinder_care.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace kinder_care.Controllers;
@@ -17,102 +19,181 @@ public class TareaController : Controller
         _context = context;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Crear_Tarea(int idNino, int idProfesor, string nombre, string descripcion,
-        DateTime fechaEntrega)
+    /*[HttpPost]
+    public async Task<IActionResult> Crear_Tarea(int IdNino, int IdProfesor, string NombreTarea, string Descripcion,
+        DateTime FechaEntrega, IFormFile? DocTareaDocente, int? Extencion, bool Activo)
     {
-        if (idProfesor <= 0 || string.IsNullOrWhiteSpace(nombre) || string.IsNullOrWhiteSpace(descripcion) ||
-            fechaEntrega == default)
-            return NotFound();
-
-        var tarea = new Tareas
+        if (IdNino == 0 || IdProfesor == 0)
         {
-            IdProfesor = idProfesor,
-            Nombre = nombre,
-            Descripcion = descripcion,
-            FechaAsignada = DateTime.Now,
-            FechaEntrega = fechaEntrega,
-            Activo = true
-        };
-
-        var result = await _context.Database.ExecuteSqlRawAsync(
-            "EXEC GestionarTareas @id_nino = {0}, @id_tarea = {1}, @id_profesor = {2}, @nombre = {3}, @descripcion = {4}, @calificacion = {5}, @fecha_asignada = {6}, @fecha_entrega = {7}, @activo = {8}, @accion = {9}",
-            idNino, null!, tarea.IdProfesor, tarea.Nombre, tarea.Descripcion, 0,
-            tarea.FechaAsignada, tarea.FechaEntrega, tarea.Activo, "AGREGAR");
-
-        if (result == 0) return NotFound();
+            return NotFound();
+        }
 
         var rolUsuarioLogueado =
             User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
 
-        if (rolUsuarioLogueado == "Administrador")
-            return RedirectToAction("Details_Admin", "Ninos", new { id = idNino });
-
-        if (rolUsuarioLogueado == "Docente")
-            return RedirectToAction("Details_Docente", "Ninos", new { id = idNino, idDocente = tarea.IdProfesor });
-
-        return RedirectToAction("ListaNinos", "Asistencia");
-    }
-
-    /*[HttpGet]
-    public async Task<IActionResult> Edit_Tarea(int idNino, int idTarea, int? idDocente)
-    {
-        if (idNino == 0 || idTarea == 0) return NotFound();
-
-        // Obtener el niño y su información asociada
-        var nino = await _context.Ninos
-            .Include(n => n.ProgresoAcademico)
-            .Include(n => n.ObservacionesDocentes)
-            .Include(n => n.Asistencia)
-            .Include(n => n.RelNinoAlergia).ThenInclude(ra => ra.Alergia)
-            .Include(n => n.RelNinoMedicamento).ThenInclude(rm => rm.Medicamento)
-            .Include(n => n.RelNinoCondicion).ThenInclude(rc => rc.Condicion)
-            .Include(n => n.RelNinoContactoEmergencia).ThenInclude(re => re.ContactoEmergencia)
-            .Include(n => n.RelNinoTarea).ThenInclude(rt => rt.Tareas)
-            .FirstOrDefaultAsync(n => n.IdNino == idNino);
-
-        if (nino == null) return NotFound();
-
-        // Buscar la tarea específica para el niño
-        var tarea = nino.RelNinoTarea?
-            .FirstOrDefault(rt => rt.Tareas.IdTarea == idTarea)?.Tareas;
-
-        if (tarea == null) return NotFound(); // Si no se encuentra la tarea
-
-        // Obtener lista de docentes activos
-        var listDocentes = await _context.Docentes
-            .Include(d => d.IdUsuarioNavigation)
-            .Where(d => d.Activo)
-            .Select(d => new
-            {
-                d.IdDocente,
-                NombreDocente = d.IdUsuarioNavigation.Nombre
-            })
-            .ToListAsync();
-
-        ViewBag.ListaDocentes = new SelectList(listDocentes, "IdDocente", "NombreDocente");
-
-        // Obtener el usuario actual y validar el docente
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
-
-        if (docente != null)
+        if (DocTareaDocente != null && Extencion != null)
         {
-            // Si el usuario es docente, pasar el ID del docente al ViewBag
-            ViewBag.RoleName = "Docente";
-            ViewBag.DocenteId = docente.IdDocente; // Establecer el ID del docente en ViewBag
+            var memoryStream = new MemoryStream();
+
+            await DocTareaDocente.OpenReadStream().CopyToAsync(memoryStream);
+
+            // Validar el tamaño del archivo (5 MB máximo)
+            if (DocTareaDocente.Length > 5242880) // 5 MB
+            {
+                TempData["ErrorMessage"] = "El archivo supera el tamaño máximo permitido de 5 MB.";
+
+                // Redirigir según el rol del usuario
+                if (rolUsuarioLogueado == "Administrador")
+                    return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
+
+                if (rolUsuarioLogueado == "Docente")
+                    return RedirectToAction("Details_Docente", "Ninos", new { id = IdNino, idDocente = IdProfesor });
+            }
+
+            // Convertir el archivo a byte array
+            byte[] fileData = memoryStream.ToArray();
+
+            Tareas tarea = new Tareas()
+            {
+                IdProfesor = IdProfesor,
+                Nombre = NombreTarea,
+                Descripcion = Descripcion,
+                FechaEntrega = FechaEntrega,
+                DocTareaDocente = fileData,
+                Extencion = Extencion,
+                Activo = Activo,
+            };
+
+            // Llamada al procedimiento almacenado para crear la tarea
+            var result = await _context.Database.ExecuteSqlRawAsync(
+                "EXEC GestionarTareas @id_nino = {0}, @id_tarea = {1}, @id_profesor = {2}, @nombre = {3}, @descripcion = {4}, @calificacion = {5}, @fecha_asignada = {6}, @fecha_entrega = {7}, @activo = {8}, @extencion = {9}, @doc_tarea_docente = {10}, @doc_tarea_nino = {11}, @accion = {12}",
+                IdNino, null, tarea.IdProfesor, tarea.Nombre, tarea.Descripcion, 0, null, tarea.FechaEntrega, tarea.Activo, tarea.Extencion, tarea.DocTareaDocente, null, "AGREGAR");
+
+            TempData["SuccessMessage"] = "Tarea creada exitosamente.";
+
+            // Redirigir según el rol del usuario
+            if (rolUsuarioLogueado == "Administrador")
+                return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
+
+            if (rolUsuarioLogueado == "Docente")
+                return RedirectToAction("Details_Docente", "Ninos", new { id = IdNino, idDocente = IdProfesor });
         }
         else
         {
-            ViewBag.RoleName = "Administrador";
+            Tareas tarea = new Tareas()
+            {
+                IdProfesor = IdProfesor,
+                Nombre = NombreTarea,
+                Descripcion = Descripcion,
+                FechaEntrega = FechaEntrega,
+                DocTareaDocente = null,
+                Extencion = null,
+                Activo = Activo,
+            };
+
+            // Llamada al procedimiento almacenado para crear la tarea
+            var result = await _context.Database.ExecuteSqlRawAsync(
+                "EXEC GestionarTareas @id_nino = {0}, @id_tarea = {1}, @id_profesor = {2}, @nombre = {3}, @descripcion = {4}, @calificacion = {5}, @fecha_asignada = {6}, @fecha_entrega = {7}, @activo = {8}, @extencion = {9}, @doc_tarea_docente = {10}, @doc_tarea_nino = {11}, @accion = {12}",
+                IdNino, null, tarea.IdProfesor, tarea.Nombre, tarea.Descripcion, 0, null, tarea.FechaEntrega, tarea.Activo, tarea.Extencion, tarea.DocTareaDocente, null, "AGREGAR");
+
+            TempData["SuccessMessage"] = "Tarea creada exitosamente.";
+
+            // Redirigir según el rol del usuario
+            if (rolUsuarioLogueado == "Administrador")
+                return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
+
+            if (rolUsuarioLogueado == "Docente")
+                return RedirectToAction("Details_Docente", "Ninos", new { id = IdNino, idDocente = IdProfesor });
+        }
+        return RedirectToAction("ListaNinos", "Asistencia");
+    }*/
+
+    [HttpPost]
+    public async Task<IActionResult> Crear_Tarea(int IdNino, int IdProfesor, string NombreTarea, string Descripcion,
+        DateTime FechaEntrega, IFormFile? DocTareaDocente, int? Extencion, bool Activo)
+    {
+        if (IdNino == 0 || IdProfesor == 0)
+        {
+            return NotFound();
         }
 
-        // Pasar la tarea y el niño al ViewBag o ViewModel
-        ViewBag.Tarea = tarea;
-        ViewBag.IdNino = nino.IdNino;
+        var rolUsuarioLogueado = User.Claims
+            .Where(c => c.Type == ClaimTypes.Role)
+            .Select(c => c.Value)
+            .SingleOrDefault();
 
-        return View(tarea); // Pasar la tarea como modelo para que los campos se llenen
-    }*/
+        byte[]? fileData = null;
+
+        if (DocTareaDocente != null && Extencion != null)
+        {
+            var memoryStream = new MemoryStream();
+            await DocTareaDocente.OpenReadStream().CopyToAsync(memoryStream);
+
+            // Validar el tamaño del archivo (5 MB máximo)
+            if (DocTareaDocente.Length > 5242880) // 5 MB
+            {
+                TempData["ErrorMessage"] = "El archivo supera el tamaño máximo permitido de 5 MB.";
+
+                // Redirigir según el rol del usuario
+                if (rolUsuarioLogueado == "Administrador")
+                    return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
+
+                if (rolUsuarioLogueado == "Docente")
+                    return RedirectToAction("Details_Docente", "Ninos", new { id = IdNino, idDocente = IdProfesor });
+            }
+
+            // Convertir el archivo a byte array
+            fileData = memoryStream.ToArray();
+        }
+
+        Tareas tarea = new Tareas()
+        {
+            IdProfesor = IdProfesor,
+            Nombre = NombreTarea,
+            Descripcion = Descripcion,
+            FechaEntrega = FechaEntrega,
+            DocTareaDocente = fileData,
+            Extencion = Extencion,
+            Activo = Activo,
+        };
+
+        // Crear parámetros para la consulta SQL
+        var parametros = new[]
+        {
+            new SqlParameter("@id_nino", IdNino),
+            new SqlParameter("@id_tarea", DBNull.Value),
+            new SqlParameter("@id_profesor", tarea.IdProfesor),
+            new SqlParameter("@nombre", tarea.Nombre),
+            new SqlParameter("@descripcion", tarea.Descripcion),
+            new SqlParameter("@calificacion", 0),
+            new SqlParameter("@fecha_asignada", DBNull.Value),
+            new SqlParameter("@fecha_entrega", tarea.FechaEntrega),
+            new SqlParameter("@activo", tarea.Activo),
+            new SqlParameter("@extencion", tarea.Extencion ?? (object)DBNull.Value),
+            new SqlParameter("@doc_tarea_docente", SqlDbType.VarBinary)
+            {
+                Value = tarea.DocTareaDocente ?? (object)DBNull.Value
+            },
+            new SqlParameter("@doc_tarea_nino", DBNull.Value),
+            new SqlParameter("@accion", "AGREGAR")
+        };
+
+        // Llamada al procedimiento almacenado para crear la tarea
+        await _context.Database.ExecuteSqlRawAsync(
+            "EXEC GestionarTareas @id_nino, @id_tarea, @id_profesor, @nombre, @descripcion, @calificacion, @fecha_asignada, @fecha_entrega, @activo, @extencion, @doc_tarea_docente, @doc_tarea_nino, @accion",
+            parametros);
+
+        TempData["SuccessMessage"] = "Tarea creada exitosamente.";
+
+        // Redirigir según el rol del usuario
+        if (rolUsuarioLogueado == "Administrador")
+            return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
+
+        if (rolUsuarioLogueado == "Docente")
+            return RedirectToAction("Details_Docente", "Ninos", new { id = IdNino, idDocente = IdProfesor });
+
+        return RedirectToAction("ListaNinos", "Asistencia");
+    }
 
     [HttpGet]
     public async Task<IActionResult> Edit_Tarea(int idNino, int idTarea, int? idDocente)

@@ -514,15 +514,22 @@
                     </div>
 
                     <!-- Crear Tareas -->
-                    <div class="tab-pane fade" id="subPills-create" role="tabpanel"
-                         aria-labelledby="subPills-create-tab">
+                    <div class="tab-pane fade" id="subPills-create" role="tabpanel" aria-labelledby="subPills-create-tab">
                         <div class="card-body">
+                            @if (TempData["SuccessMessage"] != null)
+                            {
+                                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                            }
+
+                            @if (TempData["ErrorMessage"] != null)
+                            {
+                                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                            }
+
                             <h5 class="mb-4">Crear Nueva Tarea</h5>
-                            <form asp-action="Crear_Tarea" asp-controller="Tarea" method="post">
+                            <form asp-action="Crear_Tarea" asp-controller="Tarea" method="post" enctype="multipart/form-data">
                                 <div class="mb-3">
-                                    <label hidden for="IdNino" class="form-label">IdNino</label>
-                                    <input hidden type="text" class="form-control" id="IdNino" name="IdNino"
-                                           value="@Model.IdNino" required>
+                                    <input hidden type="text" class="form-control" id="IdNino" name="IdNino" value="@Model.IdNino" required>
                                 </div>
 
                                 @if (ViewBag.RoleName == "Administrador")
@@ -531,33 +538,53 @@
                                     {
                                         <div class="mb-3">
                                             <label for="IdProfesor" class="form-label">Docente</label>
-                                            <select id="IdProfesor" name="IdProfesor" class="form-select"
-                                                    asp-items="ViewBag.ListaDocentes" required>
+                                            <select id="IdProfesor" name="IdProfesor" class="form-select" asp-items="ViewBag.ListaDocentes" required>
                                                 <option value="">Selecciona el docente</option>
                                             </select>
                                         </div>
                                     }
                                 }
+
                                 <div class="mb-3">
                                     <label for="NombreTarea" class="form-label">Nombre de la Tarea</label>
-                                    <input type="text" class="form-control" id="NombreTarea" name="Nombre" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="Descripcion" class="form-label">Descripción</label>
-                                    <textarea class="form-control" id="Descripcion" name="Descripcion" rows="3"
-                                              required></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="FechaEntrega" class="form-label">Fecha de Entrega</label>
-                                    <input type="date" class="form-control" id="FechaEntrega" name="FechaEntrega"
-                                           required>
+                                    <input type="text" class="form-control" id="NombreTarea" name="NombreTarea" required>
                                 </div>
 
-                                <input type="hidden" name="IdNino" value="@Model.IdNino">
-                                <button type="submit" class="btn btn-primary rounded-pill py-9 w-100 mt-24">
-                                    Guardar
-                                    Tarea
-                                </button>
+                                <div class="mb-3">
+                                    <label for="Descripcion" class="form-label">Descripción</label>
+                                    <textarea class="form-control" id="Descripcion" name="Descripcion" rows="3" required></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="FechaEntrega" class="form-label">Fecha de Entrega</label>
+                                    <input type="date" class="form-control" id="FechaEntrega" name="FechaEntrega" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="DocTareaDocente" class="form-label">Documento de la tarea (opcional)</label>
+                                    <input type="file" class="form-control" id="DocTareaDocente" name="DocTareaDocente" accept=".pdf,.doc,.jpg,.png">
+                                </div>
+
+                                @if (ViewBag.ListaExtenciones != null)
+                                {
+                                    <div class="mb-3">
+                                        <label for="Extencion" class="form-label">Tipo de documento</label>
+                                        <select id="Extencion" name="Extencion" class="form-select" asp-items="ViewBag.ListaExtenciones">
+                                            <option value="">Selecciona el tipo de documento</option>
+                                        </select>
+                                    </div>
+                                }
+
+                                <div class="mb-3">
+                                    <label asp-for="Activo" class="form-label">¿Activo?</label>
+                                    <select asp-for="Activo" class="form-select">
+                                        <option value="true">Sí</option>
+                                        <option value="false">No</option>
+                                    </select>
+                                    <span asp-validation-for="Activo" class="text-danger"></span>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary rounded-pill py-9 w-100 mt-24">Guardar Tarea</button>
                             </form>
                         </div>
                     </div>

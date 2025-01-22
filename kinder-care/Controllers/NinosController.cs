@@ -382,6 +382,19 @@ public class NinosController : Controller
             ViewBag.ListaNiveles = new SelectList(Enumerable.Empty<SelectListItem>());
         }
 
+        // LIsta de tipos de archivos para las tareas
+        var listTiposDoc = await _context.TipoDocs.ToListAsync();
+        
+        if (listTiposDoc != null && listTiposDoc.Any())
+        {
+            // Asegura que el nivel actual del niño quede seleccionado
+            ViewBag.ListaExtenciones = new SelectList(listTiposDoc, "IdDoc", "Nombre");
+        }
+        else
+        {
+            ViewBag.ListaExtenciones = new SelectList(Enumerable.Empty<SelectListItem>());
+        }
+        
         // Clasificar tareas según el estado
         var tareas = nino.RelNinoTarea?
             .Where(rt => rt.Tareas.Activo)
