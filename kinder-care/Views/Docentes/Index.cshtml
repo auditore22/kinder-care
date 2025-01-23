@@ -1,4 +1,4 @@
-﻿@model IEnumerable<kinder_care.Models.Docentes>
+﻿@model IEnumerable<Docentes>
 
 @{
     ViewBag.Title = "Gestión de Perfiles de Docentes";
@@ -32,21 +32,21 @@
 <!-- Buscadores -->
 <div class="mb-4 d-flex gap-3 flex-wrap">
     <div class="position-relative">
-        <input type="text" id="searchByName" placeholder="Buscar por Nombre..." 
+        <input type="text" id="searchByName" placeholder="Buscar por Nombre..."
                class="form-control ps-40 h-40 rounded-pill search-input"/>
-        <i class="ph ph-magnifying-glass position-absolute" 
+        <i class="ph ph-magnifying-glass position-absolute"
            style="left: 10px; top: 10px; font-size: 20px; color: #aaa;"></i>
     </div>
     <div class="position-relative">
-        <input type="text" id="searchByID" placeholder="Buscar por ID..." 
+        <input type="text" id="searchByID" placeholder="Buscar por ID..."
                class="form-control ps-40 h-40 rounded-pill search-input"/>
-        <i class="ph ph-magnifying-glass position-absolute" 
+        <i class="ph ph-magnifying-glass position-absolute"
            style="left: 10px; top: 10px; font-size: 20px; color: #aaa;"></i>
     </div>
     <div class="position-relative">
-        <input type="text" id="searchByCedula" placeholder="Buscar por Cédula..." 
+        <input type="text" id="searchByCedula" placeholder="Buscar por Cédula..."
                class="form-control ps-40 h-40 rounded-pill search-input"/>
-        <i class="ph ph-magnifying-glass position-absolute" 
+        <i class="ph ph-magnifying-glass position-absolute"
            style="left: 10px; top: 10px; font-size: 20px; color: #aaa;"></i>
     </div>
 </div>
@@ -87,10 +87,12 @@
                             <span class="h6 mb-0 fw-medium text-gray-300">@docente.IdUsuarioNavigation.Cedula</span>
                         </td>
                         <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@docente.IdUsuarioNavigation.CorreoElectronico</span>
+                            <span
+                                class="h6 mb-0 fw-medium text-gray-300">@docente.IdUsuarioNavigation.CorreoElectronico</span>
                         </td>
                         <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@docente.IdUsuarioNavigation.NumTelefono</span>
+                            <span
+                                class="h6 mb-0 fw-medium text-gray-300">@docente.IdUsuarioNavigation.NumTelefono</span>
                         </td>
                         <td>
                             <a asp-action="Details" asp-route-id="@docente.IdDocente"

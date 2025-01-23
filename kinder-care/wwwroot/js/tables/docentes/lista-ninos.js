@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const table = document.getElementById('studentsTable');
-    
+
     const searchByName = document.getElementById('searchByName');
     const searchByID = document.getElementById('searchByID');
     const searchByCedula = document.getElementById('searchByCedula');

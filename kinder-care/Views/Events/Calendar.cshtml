@@ -40,7 +40,7 @@
 </div>
 
 <script>
-    
+
     document.addEventListener('DOMContentLoaded', function () {
         let calendarEl = document.getElementById('calendar');
         let calendar = new FullCalendar.Calendar(calendarEl, {
@@ -49,9 +49,9 @@
             locale: 'es',
             firstDay: 1, // Empieza el lunes
             timeZone: 'local',
-            dayHeaderFormat: { weekday: 'long' }, // Días completos con mayúscula inicial
+            dayHeaderFormat: {weekday: 'long'}, // Días completos con mayúscula inicial
             allDaySlot: false,
-            
+
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
@@ -73,14 +73,14 @@
             editable: false,
             selectable: true,
             eventDisplay: 'block',
-            eventTimeFormat: { hour: '2-digit', minute: '2-digit', meridiem: false, hour12: true },
+            eventTimeFormat: {hour: '2-digit', minute: '2-digit', meridiem: false, hour12: true},
             eventTextColor: '#000000',
-            noEventsContent: function() {
+            noEventsContent: function () {
                 return "🌟¡No hay eventos para este mes!🌟";
             },
             views: {
                 listMonth: { // Personaliza solo la vista de lista
-                    eventContent: function(info) {
+                    eventContent: function (info) {
                         let container = document.createElement('div');
                         container.classList.add('fc-list');
 
@@ -117,7 +117,7 @@
                         container.appendChild(location);
                         container.appendChild(description);
 
-                        return { domNodes: [container] };
+                        return {domNodes: [container]};
                     }
                 }
             },
@@ -134,7 +134,7 @@
                 container.appendChild(time);
                 container.appendChild(title);
 
-                return { domNodes: [container] };
+                return {domNodes: [container]};
             },
             eventClick: function (info) {
                 document.getElementById('eventTitle').innerText = 'Actividad: ' + info.event.title;
@@ -156,12 +156,12 @@
                 calendarEl.style.cursor = 'default'; // Restaurar el cursor
                 info.el.style.backgroundColor = ''; // Restaurar color original al salir
                 info.el.style.color = '';
-            },         
-            dateClick: function(info) {
+            },
+            dateClick: function (info) {
                 calendar.changeView('timeGridDay', info.dateStr); // Cambiar a la vista de día
             }
         });
-        
+
         calendar.render();
     });
 
@@ -220,7 +220,7 @@
         color: #333;
     }
 
-    
+
     /* Agrandar el bloque donde están los días */
     .fc-daygrid-day-frame {
         padding: 4px 8px;
@@ -242,19 +242,20 @@
         padding: 5px;
         transition: all 0.3s ease;
     }
-    
+
     .fc-toolbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
     }
-    
+
     .fc-button {
         background-color: #2d9cdb !important;
         border: none !important;
         color: #ffffff !important;
-        margin: 0 20px; !important;
+        margin: 0 20px;
+    !important;
         border-radius: 4px !important;
         padding: 8px 12px !important;
         transition: background-color 0.3s ease;
@@ -325,7 +326,7 @@
         background-color: #ffffff !important; /* Cambia el color aquí */
         border-color: #0c58e6 !important; /* Cambia el color del borde aquí */
     }
-    
+
     .fc-timegrid-axis-cushion.fc-scrollgrid-shrink {
         text-align: center !important; /* Centra el texto */
         vertical-align: middle !important; /* Alineación vertical */

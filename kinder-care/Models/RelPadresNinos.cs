@@ -1,6 +1,6 @@
 ﻿namespace kinder_care.Models;
 
-public partial class RelPadresNinos
+public class RelPadresNinos
 {
     public int IdPadre { get; set; }
 

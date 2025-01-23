@@ -42,7 +42,7 @@
 </div>
 <!-- Breadcrumb End -->
 
-<div class="row gy-4">
+@*<div class="row gy-4">
     <div class="col-md">
         <!-- Editar Tarea Card Start -->
         <div class="card">
@@ -109,6 +109,99 @@
                         <label for="Calificacion" class="form-label">Calificación</label>
                         <input type="number" class="form-control" id="Calificacion" name="Calificacion"
                                value="@Model.Calificacion" min="0" max="100" required>
+                    </div>
+
+                    <!-- Fecha de Asignación -->
+                    <div class="mb-3">
+                        <label for="FechaAsignada" class="form-label">Fecha Asignada</label>
+                        <input type="date" class="form-control" id="FechaAsignada" name="FechaAsignada"
+                               value="@Model.FechaAsignada.ToString("yyyy-MM-dd")" required>
+                    </div>
+
+                    <!-- Fecha de Entrega -->
+                    <div class="mb-3">
+                        <label for="FechaEntrega" class="form-label">Fecha de Entrega</label>
+                        <input type="date" class="form-control" id="FechaEntrega" name="FechaEntrega"
+                               value="@Model.FechaEntrega.ToString("yyyy-MM-dd")" required>
+                    </div>
+
+                    <!-- Botón para guardar -->
+                    <button type="submit" class="btn btn-primary rounded-pill py-9 w-100 mt-24">Guardar Tarea</button>
+                </form>
+            </div>
+        </div>
+        <!-- Editar Tarea Card End -->
+    </div>
+</div>*@
+
+<div class="row gy-4">
+    <div class="col-md">
+        <!-- Editar Tarea Card Start -->
+        <div class="card">
+            <div class="card-body p-lg-20 p-sm-3">
+                <div class="flex-between flex-wrap gap-12 mb-20">
+                    <div>
+                        <h3 class="mb-4">Editar Tarea</h3>
+                    </div>
+                </div>
+                <form asp-action="Edit_Tarea" asp-controller="Tarea" method="post">
+                    <!-- Campo oculto para el Id de la tarea -->
+                    <div class="mb-3">
+                        <label hidden for="IdTarea" class="form-label">IdTarea</label>
+                        <input hidden type="text" class="form-control" id="IdTarea" name="IdTarea"
+                               value="@Model.IdTarea">
+                    </div>
+
+                    <!-- Campo oculto para el Id del niño -->
+                    <div class="mb-3">
+                        <label hidden for="IdNino" class="form-label">IdNino</label>
+                        <input hidden type="text" class="form-control" id="IdNino" name="IdNino"
+                               value="@ViewBag.IdNino">
+                    </div>
+
+                    <!-- Selección de Docente (solo si el usuario es Administrador) -->
+                    @if (ViewBag.RoleName == "Administrador")
+                    {
+                        @if (ViewBag.ListaDocentes != null)
+                        {
+                            <div class="mb-3">
+                                <label for="IdProfesor" class="form-label">Docente</label>
+                                <select id="IdProfesor" name="IdProfesor" class="form-select"
+                                        asp-items="ViewBag.ListaDocentes">
+                                    <option value="">Selecciona el docente</option>
+                                </select>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <!-- Campo oculto para el ID del docente -->
+                        <div class="mb-3">
+                            <label hidden for="IdProfesor" class="form-label">Docente</label>
+                            <input hidden type="text" class="form-control" id="IdProfesor"
+                                   name="IdProfesor" value="@ViewBag.DocenteId" readonly>
+                        </div>
+                    }
+
+                    <!-- Nombre de la Tarea -->
+                    <div class="mb-3">
+                        <label for="NombreTarea" class="form-label">Nombre de la Tarea</label>
+                        <input type="text" class="form-control" id="NombreTarea" name="Nombre" value="@Model.Nombre"
+                               required>
+                    </div>
+
+                    <!-- Descripción de la Tarea -->
+                    <div class="mb-3">
+                        <label for="Descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="Descripcion" name="Descripcion"
+                                  rows="3">@Model.Descripcion</textarea>
+                    </div>
+
+                    <!-- Calificación de la Tarea -->
+                    <div class="mb-3">
+                        <label for="Calificacion" class="form-label">Calificación</label>
+                        <input type="number" class="form-control" id="Calificacion" name="Calificacion"
+                               value="@ViewBag.Calificacion" min="0" max="100" required>
                     </div>
 
                     <!-- Fecha de Asignación -->

@@ -2,7 +2,7 @@
 
 namespace kinder_care.Models;
 
-public partial class Ninos
+public class Ninos
 {
     public int IdNino { get; set; }
 
@@ -29,6 +29,10 @@ public partial class Ninos
     public DateTime? UltimaActualizacion { get; set; }
 
     public bool? Activo { get; set; }
+
+    public int IdNivel { get; set; }
+
+    public virtual Niveles IdNivelNavigation { get; set; } = null!;
 
     public virtual ICollection<Asistencia> Asistencia { get; set; } = new List<Asistencia>();
 

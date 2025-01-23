@@ -60,7 +60,8 @@
 
                 <div class="col-md-6 mt-3">
                     <label for="FechaPago" class="form-label">Fecha de Pago</label>
-                    <input asp-for="FechaPago" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")"/>
+                    <input asp-for="FechaPago" type="date" class="form-control"
+                           value="@DateTime.Now.ToString("yyyy-MM-dd")"/>
                     <span asp-validation-for="FechaPago" class="text-danger"></span>
                 </div>
 
@@ -86,20 +87,20 @@
 </div>
 
 <script>
-        function roundToNearestFive(value) {
-            return Math.round(value / 5) * 5;
+    function roundToNearestFive(value) {
+        return Math.round(value / 5) * 5;
+    }
+
+    document.addEventListener("input", function () {
+        const initialMonto = parseFloat(document.getElementById("initialMonto").value) || 0;
+        const discount = parseFloat(document.getElementById("discount").value) || 0;
+
+        if (discount >= 0 && discount <= 100) {
+            let finalMonto = initialMonto - (initialMonto * discount / 100);
+            finalMonto = roundToNearestFive(finalMonto);
+            document.getElementById("finalMonto").value = finalMonto;
+        } else {
+            document.getElementById("finalMonto").value = roundToNearestFive(initialMonto);
         }
-
-        document.addEventListener("input", function () {
-            const initialMonto = parseFloat(document.getElementById("initialMonto").value) || 0;
-            const discount = parseFloat(document.getElementById("discount").value) || 0;
-
-            if (discount >= 0 && discount <= 100) {
-                let finalMonto = initialMonto - (initialMonto * discount / 100);
-                finalMonto = roundToNearestFive(finalMonto);
-                document.getElementById("finalMonto").value = finalMonto;
-            } else {
-                document.getElementById("finalMonto").value = roundToNearestFive(initialMonto);
-            }
-        });
-    </script>
+    });
+</script>

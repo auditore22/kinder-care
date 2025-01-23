@@ -1,18 +1,19 @@
 ﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using kinder_care.Models;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
+using kinder_care.Models;
 using kinder_care.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace kinder_care.Controllers;
 
 [Authorize]
 public class ConfigurationController : Controller
 {
-    private readonly ILogger<ConfigurationController> _logger;
     private readonly KinderCareContext _context;
+    private readonly ILogger<ConfigurationController> _logger;
 
     public ConfigurationController(ILogger<ConfigurationController> logger, KinderCareContext context)
     {
@@ -33,7 +34,7 @@ public class ConfigurationController : Controller
             {
                 // Aquí, el método puede llamar a la base de datos para obtener el usuario completo
                 // usando el ID del usuario actual.
-                int userId = int.Parse(userIdClaim.Value);
+                var userId = int.Parse(userIdClaim.Value);
 
                 // Simulación de obtención del usuario desde la base de datos.
                 // En un caso real, este valor sería obtenido mediante un servicio o DbContext.
@@ -97,7 +98,7 @@ public class ConfigurationController : Controller
             }
 
             // Validar nueva contraseña
-            var regex = new System.Text.RegularExpressions.Regex(@"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,25}$");
+            var regex = new Regex(@"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,25}$");
             if (!regex.IsMatch(model.NewPassword))
             {
                 _logger.LogWarning("La nueva contraseña no cumple con los requisitos.");

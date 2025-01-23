@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
 using kinder_care.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace kinder_care.Controllers;
@@ -10,8 +10,8 @@ namespace kinder_care.Controllers;
 [Authorize]
 public class HomeController(ILogger<HomeController> logger, KinderCareContext context) : Controller
 {
-    private readonly ILogger<HomeController> _logger = logger;
     private readonly KinderCareContext _context = context;
+    private readonly ILogger<HomeController> _logger = logger;
 
     public IActionResult Index()
     {
@@ -31,13 +31,9 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
                 .ToList();
 
             if (!usuariosInactivos.Any())
-            {
                 ViewData["Mensaje"] = "Actualmente no hay Usuarios Inactivos.";
-            }
             else
-            {
                 ViewData["UsuariosInactivos"] = usuariosInactivos;
-            }
 
             var ultimosPagos = _context.Pagos
                 .Include(p => p.Padre)
@@ -46,13 +42,9 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
                 .ToList();
 
             if (!ultimosPagos.Any())
-            {
                 ViewData["Mensaje"] = "No hay pagos registrados.";
-            }
             else
-            {
                 ViewData["UltimosPagos"] = ultimosPagos;
-            }
 
             var actividadesProximas = _context.Actividades
                 .Include(a => a.RelNinoActividad)
@@ -62,13 +54,9 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
                 .ToList();
 
             if (!actividadesProximas.Any())
-            {
                 ViewData["Mensaje"] = "No hay Actividades.";
-            }
             else
-            {
                 ViewData["ActividadesProximas"] = actividadesProximas;
-            }
 
             ViewBag.RoleName = "Administrador";
         }
@@ -86,13 +74,9 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
                 .ToList();
 
             if (!ultimasAusencias.Any())
-            {
                 ViewData["Mensaje"] = "Actualmente no hay Ausencias registradas.";
-            }
             else
-            {
                 ViewData["UltimasAusencias"] = ultimasAusencias;
-            }
 
             var actividadesProximas = _context.Actividades
                 .Include(a => a.RelNinoActividad)
@@ -102,13 +86,9 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
                 .ToList();
 
             if (!actividadesProximas.Any())
-            {
                 ViewData["Mensaje"] = "No hay Actividades.";
-            }
             else
-            {
                 ViewData["ActividadesProximas"] = actividadesProximas;
-            }
 
             ViewBag.RoleName = "Docente";
         }
@@ -122,13 +102,9 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
                 .ToList();
 
             if (!actividadesProximas.Any())
-            {
                 ViewData["Mensaje"] = "No hay Actividades.";
-            }
             else
-            {
                 ViewData["ActividadesProximas"] = actividadesProximas;
-            }
 
             ViewBag.RoleName = "Padre";
         }

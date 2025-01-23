@@ -1,6 +1,6 @@
 ﻿namespace kinder_care.Models;
 
-public partial class Alergias
+public class Alergias
 {
     public int IdAlergia { get; set; }
 

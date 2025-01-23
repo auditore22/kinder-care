@@ -60,7 +60,8 @@
                 <div class="mb-24">
                     <label for="CorreoElectronico" class="form-label mb-8 h6">Email</label>
                     <div class="position-relative">
-                        <input type="email" class="form-control py-11 ps-40" placeholder="Escribe tu correo" required asp-for="CorreoElectronico">
+                        <input type="email" class="form-control py-11 ps-40" placeholder="Escribe tu correo" required
+                               asp-for="CorreoElectronico">
                         <span class="position-absolute top-50 translate-middle-y ms-16 text-gray-600 d-flex">
                             <i class="ph ph-user"></i>
                         </span>
@@ -69,10 +70,13 @@
                 <div class="mb-24">
                     <label for="ContrasenaHash" class="form-label mb-8 h6">Contraseña</label>
                     <div class="position-relative">
-                        <input type="password" class="form-control py-11 ps-40" id="passwordInput" placeholder="Ingresa tu contraseña actual" required asp-for="ContrasenaHash">
+                        <input type="password" class="form-control py-11 ps-40" id="passwordInput"
+                               placeholder="Ingresa tu contraseña actual" required asp-for="ContrasenaHash">
 
                         <!-- Ícono para alternar la visibilidad -->
-                        <span class="toggle-password position-absolute top-50 inset-inline-end-0 me-16 translate-middle-y ph ph-eye-slash" id="togglePassword"></span>
+                        <span
+                            class="toggle-password position-absolute top-50 inset-inline-end-0 me-16 translate-middle-y ph ph-eye-slash"
+                            id="togglePassword"></span>
 
                         <!-- Ícono de candado -->
                         <span class="position-absolute top-50 translate-middle-y ms-16 text-gray-600 d-flex">
@@ -88,7 +92,8 @@
                             @ViewData["Mensaje"]
                         </span>
                     }
-                    <a asp-action="Recovery" class="text-main-600 hover-text-decoration-underline text-15 fw-medium">Olvidaste la contraseña?</a>
+                    <a asp-action="Recovery" class="text-main-600 hover-text-decoration-underline text-15 fw-medium">Olvidaste
+                        la contraseña?</a>
                 </div>
                 <button type="submit" class="btn btn-main rounded-pill w-100">Iniciar Sesión</button>
             </form>

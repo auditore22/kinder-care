@@ -60,7 +60,8 @@
                     <img src="~/images/logo/logo-kinder.png" alt="">
                 </a>*@
             <h2 class="mb-8">¿Olvidaste tu contraseña?</h2>
-            <p class="text-gray-600 text-15 mb-32">Ingresa tu correo electrónico. Recibirás un enlace para crear una nueva contraseña.</p>
+            <p class="text-gray-600 text-15 mb-32">Ingresa tu correo electrónico. Recibirás un enlace para crear una
+                nueva contraseña.</p>
 
             <!-- Mensajes de éxito o error -->
             @if (ViewBag.SuccessMessage != null)
@@ -81,7 +82,8 @@
                 <div class="mb-24">
                     <label for="Email" class="form-label mb-8 h6">Correo Electrónico</label>
                     <div class="position-relative">
-                        <input type="email" class="form-control py-11 ps-40" id="Email" placeholder="email@ejemplo.com" required asp-for="Email">
+                        <input type="email" class="form-control py-11 ps-40" id="Email" placeholder="email@ejemplo.com"
+                               required asp-for="Email">
                         <span class="position-absolute top-50 translate-middle-y ms-16 text-gray-600 d-flex">
                             <i class="ph ph-envelope"></i>
                         </span>
@@ -91,23 +93,27 @@
 
                 <button type="submit" class="btn btn-main rounded-pill w-100">Enviar enlace de recuperación</button>
 
-                <a asp-action="Login" asp-controller="Access" class="my-32 text-main-600 flex-align gap-8 justify-content-center">
+                <a asp-action="Login" asp-controller="Access"
+                   class="my-32 text-main-600 flex-align gap-8 justify-content-center">
                     <i class="ph ph-arrow-left d-flex"></i> Volver al inicio de sesión
                 </a>
 
                 <ul class="flex-align gap-10 flex-wrap justify-content-center">
                     <li>
-                        <a href="https://www.facebook.com" class="w-38 h-38 flex-center rounded-6 text-facebook-600 bg-facebook-50 hover-bg-facebook-600 hover-text-white text-lg">
+                        <a href="https://www.facebook.com"
+                           class="w-38 h-38 flex-center rounded-6 text-facebook-600 bg-facebook-50 hover-bg-facebook-600 hover-text-white text-lg">
                             <i class="ph-fill ph-facebook-logo"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="https://www.twitter.com" class="w-38 h-38 flex-center rounded-6 text-twitter-600 bg-twitter-50 hover-bg-twitter-600 hover-text-white text-lg">
+                        <a href="https://www.twitter.com"
+                           class="w-38 h-38 flex-center rounded-6 text-twitter-600 bg-twitter-50 hover-bg-twitter-600 hover-text-white text-lg">
                             <i class="ph-fill ph-twitter-logo"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="https://www.google.com" class="w-38 h-38 flex-center rounded-6 text-google-600 bg-google-50 hover-bg-google-600 hover-text-white text-lg">
+                        <a href="https://www.google.com"
+                           class="w-38 h-38 flex-center rounded-6 text-google-600 bg-google-50 hover-bg-google-600 hover-text-white text-lg">
                             <i class="ph ph-google-logo"></i>
                         </a>
                     </li>

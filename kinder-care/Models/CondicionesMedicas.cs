@@ -1,6 +1,6 @@
 ﻿namespace kinder_care.Models;
 
-public partial class CondicionesMedicas
+public class CondicionesMedicas
 {
     public int IdCondicionMedica { get; set; }
 

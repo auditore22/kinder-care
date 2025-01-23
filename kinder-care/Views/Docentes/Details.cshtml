@@ -1,4 +1,4 @@
-﻿@model kinder_care.Models.Docentes
+﻿@model Docentes
 
 <!-- Breadcrumb Start -->
 <div class="breadcrumb mb-24">
@@ -152,7 +152,7 @@
                         @if (ViewBag.RoleName == "Administrador")
                         {
                             <li class="flex-align gap-6 text-black text-15 mb-12">
-                                @if (Model.Activo == true)
+                                @if (Model.Activo)
                                 {
                                     <span class="flex-shrink-0 text-22 d-flex text-main-600">
                                         <img style="height: 20px; width: 20px"
@@ -170,7 +170,7 @@
                                 <p>
                                     <strong>Estado: </strong>
                                 </p>
-                                @if (Model.Activo == true)
+                                @if (Model.Activo)
                                 {
                                     <p>Usuario Activo</p>
                                 }

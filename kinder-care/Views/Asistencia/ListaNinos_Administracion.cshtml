@@ -1,4 +1,4 @@
-﻿@model IEnumerable<kinder_care.Models.Ninos>
+﻿@model IEnumerable<Ninos>
 
 <div class="breadcrumb-with-buttons mb-24 flex-between flex-wrap gap-8">
     <!-- Breadcrumb Start -->
@@ -41,7 +41,8 @@
                     <tr>
                         <td>
                             <div class="flex-align gap-8">
-                                <img src="~/images/icons/baby_1_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
+                                <img src="~/images/icons/baby_1_icon.png" alt="Imagen del niño"
+                                     class="w-40 h-40 rounded-circle">
                                 <span class="h6 mb-0 fw-medium text-gray-300">@nino.IdNino</span>
                             </div>
                         </td>
@@ -52,7 +53,8 @@
                             <span class="h6 mb-0 fw-medium text-gray-300">@nino.NombreNino</span>
                         </td>
                         <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@nino.FechaNacimiento.ToString("dd/MM/yyyy")</span>
+                            <span
+                                class="h6 mb-0 fw-medium text-gray-300">@nino.FechaNacimiento.ToString("dd/MM/yyyy")</span>
                         </td>
                         <td>
                             <span class="h6 mb-0 fw-medium text-gray-300">@nino.Poliza</span>
@@ -60,18 +62,21 @@
                         <td>
                             @foreach (var relacion in nino.RelDocenteNinoMateria)
                             {
-                                @if (@relacion.IdDocenteNavigation.IdUsuarioNavigation.Nombre == null)
+                                @if (relacion.IdDocenteNavigation.IdUsuarioNavigation.Nombre == null)
                                 {
                                     <span class="h6 mb-0 fw-medium text-gray-300">Sin docente</span>
                                 }
                                 else
                                 {
-                                    <span class="h6 mb-0 fw-medium text-gray-300">@relacion.IdDocenteNavigation.IdUsuarioNavigation.Nombre</span>
+                                    <span
+                                        class="h6 mb-0 fw-medium text-gray-300">@relacion.IdDocenteNavigation.IdUsuarioNavigation.Nombre</span>
                                 }
                             }
                         </td>
                         <td>
-                            <a asp-action="Details_Admin" asp-controller="Ninos" asp-route-id="@nino.IdNino" class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver Más</a>
+                            <a asp-action="Details_Admin" asp-controller="Ninos" asp-route-id="@nino.IdNino"
+                               class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">Ver
+                                Más</a>
                         </td>
                     </tr>
                 }

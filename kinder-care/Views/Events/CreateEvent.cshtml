@@ -14,7 +14,8 @@
                 <!-- Campo Fecha -->
                 <div class="col-md-6">
                     <label for="Fecha" class="form-label">Fecha y Hora</label>
-                    <input asp-for="Fecha" type="datetime-local" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")"/>
+                    <input asp-for="Fecha" type="datetime-local" class="form-control"
+                           value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")"/>
                     <span asp-validation-for="Fecha" class="text-danger"></span>
                 </div>
 
@@ -38,7 +39,8 @@
                 <!-- Campo Descripción -->
                 <div class="col-md-12 mt-3">
                     <label for="Descripcion" class="form-label">Descripción</label>
-                    <textarea asp-for="Descripcion" class="form-control" placeholder="Descripción del Evento" rows="3"></textarea>
+                    <textarea asp-for="Descripcion" class="form-control" placeholder="Descripción del Evento"
+                              rows="3"></textarea>
                     <span asp-validation-for="Descripcion" class="text-danger"></span>
                 </div>
             </div>

@@ -3,28 +3,24 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace kinder_care.Models;
 
-public partial class Pagos
+public class Pagos
 {
-    [Key]
-    public int IdPago { get; set; }
+    [Key] public int IdPago { get; set; }
 
     [Required(ErrorMessage = "El campo 'IdNino' es requerido.")]
     public int IdNino { get; set; }
 
-    [ForeignKey("IdNino")]
-    public virtual Ninos? Nino { get; set; } // Propiedad de navegación opcional
+    [ForeignKey("IdNino")] public virtual Ninos? Nino { get; set; } // Propiedad de navegación opcional
 
     [Required(ErrorMessage = "El campo 'IdPadre' es requerido.")]
     public int IdPadre { get; set; }
 
-    [ForeignKey("IdPadre")]
-    public virtual Usuarios? Padre { get; set; } // Propiedad de navegación opcional
+    [ForeignKey("IdPadre")] public virtual Usuarios? Padre { get; set; } // Propiedad de navegación opcional
 
     [Required(ErrorMessage = "El campo 'IdTipoPago' es requerido.")]
     public int IdTipoPago { get; set; }
 
-    [ForeignKey("IdTipoPago")]
-    public virtual TipoPagos? TipoPago { get; set; } // Propiedad de navegación opcional
+    [ForeignKey("IdTipoPago")] public virtual TipoPagos? TipoPago { get; set; } // Propiedad de navegación opcional
 
     [Required(ErrorMessage = "El campo 'FechaPago' es requerido.")]
     public DateTime FechaPago { get; set; }
