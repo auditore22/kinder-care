@@ -63,9 +63,9 @@ public partial class KinderCareContext : DbContext
 
     public virtual DbSet<RelNinoTarea> RelNinoTarea { get; set; }
 
-    public virtual DbSet<TipoDoc> TipoDocs { get; set; }
-
     public virtual DbSet<Niveles> Niveles { get; set; }
+
+    public DbSet<Documentos> Documentos { get; set; }
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer("Server=(LocalDb)\\MSSQLLocalDB;Database=kinder_care;Trusted_Connection=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -369,6 +369,7 @@ public partial class KinderCareContext : DbContext
                 .HasColumnName("nombre");
         });
 
+        // Configuración para Tareas
         modelBuilder.Entity<Tareas>(entity =>
         {
             entity.HasKey(e => e.IdTarea).HasName("PK__tareas__C0ECF707A3D6C37C");
@@ -395,19 +396,20 @@ public partial class KinderCareContext : DbContext
                 .HasDefaultValue(true)
                 .HasColumnName("activo");
 
-            // Propiedades adicionales del segundo contexto
-            entity.Property(e => e.DocTareaDocente).HasColumnName("doc_tarea_docente");
-            entity.Property(e => e.Extencion).HasColumnName("extencion");
-
-            // Configuración de la relación con RelNinoTarea
+            // Relación con RelNinoTarea
             entity.HasMany(t => t.RelNinoTarea)
                 .WithOne(rt => rt.Tareas)
                 .HasForeignKey(rt => rt.IdTarea);
 
-            // Configuración de la relación con ExtencionNavigation
-            entity.HasOne(d => d.ExtencionNavigation).WithMany(p => p.Tareas)
-                .HasForeignKey(d => d.Extencion)
-                .HasConstraintName("FK_Tareas_TiposDoc");
+            // Relación con el documento del docente
+            entity.HasOne(d => d.DocTareaDocente)
+                .WithMany()
+                .HasForeignKey(d => d.IdDocDocente);
+        });
+
+        modelBuilder.Entity<Documentos>(entity =>
+        {
+            entity.HasKey(d => d.IdDoc); // Definimos la clave primaria explícitamente
         });
 
         modelBuilder.Entity<RelNinoTarea>(entity =>
@@ -421,39 +423,17 @@ public partial class KinderCareContext : DbContext
             entity.Property(e => e.Calificacion)
                 .HasDefaultValue(0)
                 .HasColumnName("calificacion");
-            entity.Property(e => e.Id_Doc).HasColumnName("extencion");
-            entity.Property(e => e.DocTareaNino).HasColumnName("doc_tarea_nino");
+            entity.Property(e => e.IdDocNino).HasColumnName("id_doc_nino");
 
-            // Configuración de relación con tipos_doc
-            entity.HasOne(e => e.TipoDoc)
-                .WithMany()
-                .HasForeignKey(e => e.Id_Doc)
-                .HasConstraintName("FK_RelNinoTarea_TiposDoc");
-
-            // Configuración de relación con Ninos
-            entity.HasOne(rt => rt.Ninos)
-                .WithMany(n => n.RelNinoTarea)
-                .HasForeignKey(rt => rt.IdNino);
-
-            // Configuración de relación con Tareas
+            // Relación con Tareas
             entity.HasOne(rt => rt.Tareas)
                 .WithMany(t => t.RelNinoTarea)
                 .HasForeignKey(rt => rt.IdTarea);
-        });
 
-        modelBuilder.Entity<TipoDoc>(entity =>
-        {
-            entity.HasKey(e => e.IdDoc).HasName("PK__tipos_do__D5EAB26CB493431B");
-
-            entity.ToTable("tipo_doc");
-
-            entity.HasIndex(e => e.Nombre, "UQ__tipos_do__72AFBCC6A2FB9C14").IsUnique();
-
-            entity.Property(e => e.IdDoc).HasColumnName("id_doc");
-            entity.Property(e => e.Nombre)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("nombre");
+            // Configuración de relación con Documentos (sin necesidad de redefinir la propiedad de navegación)
+            entity.HasOne(rt => rt.DocTareaNino)
+                .WithMany()
+                .HasForeignKey(rt => rt.IdDocNino);
         });
 
         modelBuilder.Entity<ObservacionesDocentes>(entity =>

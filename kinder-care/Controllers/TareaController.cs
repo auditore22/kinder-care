@@ -20,97 +20,15 @@ public class TareaController : Controller
     }
 
     /*[HttpPost]
-    public async Task<IActionResult> Crear_Tarea(int IdNino, int IdProfesor, string NombreTarea, string Descripcion,
-        DateTime FechaEntrega, IFormFile? DocTareaDocente, int? Extencion, bool Activo)
-    {
-        if (IdNino == 0 || IdProfesor == 0)
-        {
-            return NotFound();
-        }
-
-        var rolUsuarioLogueado =
-            User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
-
-        if (DocTareaDocente != null && Extencion != null)
-        {
-            var memoryStream = new MemoryStream();
-
-            await DocTareaDocente.OpenReadStream().CopyToAsync(memoryStream);
-
-            // Validar el tamaño del archivo (5 MB máximo)
-            if (DocTareaDocente.Length > 5242880) // 5 MB
-            {
-                TempData["ErrorMessage"] = "El archivo supera el tamaño máximo permitido de 5 MB.";
-
-                // Redirigir según el rol del usuario
-                if (rolUsuarioLogueado == "Administrador")
-                    return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
-
-                if (rolUsuarioLogueado == "Docente")
-                    return RedirectToAction("Details_Docente", "Ninos", new { id = IdNino, idDocente = IdProfesor });
-            }
-
-            // Convertir el archivo a byte array
-            byte[] fileData = memoryStream.ToArray();
-
-            Tareas tarea = new Tareas()
-            {
-                IdProfesor = IdProfesor,
-                Nombre = NombreTarea,
-                Descripcion = Descripcion,
-                FechaEntrega = FechaEntrega,
-                DocTareaDocente = fileData,
-                Extencion = Extencion,
-                Activo = Activo,
-            };
-
-            // Llamada al procedimiento almacenado para crear la tarea
-            var result = await _context.Database.ExecuteSqlRawAsync(
-                "EXEC GestionarTareas @id_nino = {0}, @id_tarea = {1}, @id_profesor = {2}, @nombre = {3}, @descripcion = {4}, @calificacion = {5}, @fecha_asignada = {6}, @fecha_entrega = {7}, @activo = {8}, @extencion = {9}, @doc_tarea_docente = {10}, @doc_tarea_nino = {11}, @accion = {12}",
-                IdNino, null, tarea.IdProfesor, tarea.Nombre, tarea.Descripcion, 0, null, tarea.FechaEntrega, tarea.Activo, tarea.Extencion, tarea.DocTareaDocente, null, "AGREGAR");
-
-            TempData["SuccessMessage"] = "Tarea creada exitosamente.";
-
-            // Redirigir según el rol del usuario
-            if (rolUsuarioLogueado == "Administrador")
-                return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
-
-            if (rolUsuarioLogueado == "Docente")
-                return RedirectToAction("Details_Docente", "Ninos", new { id = IdNino, idDocente = IdProfesor });
-        }
-        else
-        {
-            Tareas tarea = new Tareas()
-            {
-                IdProfesor = IdProfesor,
-                Nombre = NombreTarea,
-                Descripcion = Descripcion,
-                FechaEntrega = FechaEntrega,
-                DocTareaDocente = null,
-                Extencion = null,
-                Activo = Activo,
-            };
-
-            // Llamada al procedimiento almacenado para crear la tarea
-            var result = await _context.Database.ExecuteSqlRawAsync(
-                "EXEC GestionarTareas @id_nino = {0}, @id_tarea = {1}, @id_profesor = {2}, @nombre = {3}, @descripcion = {4}, @calificacion = {5}, @fecha_asignada = {6}, @fecha_entrega = {7}, @activo = {8}, @extencion = {9}, @doc_tarea_docente = {10}, @doc_tarea_nino = {11}, @accion = {12}",
-                IdNino, null, tarea.IdProfesor, tarea.Nombre, tarea.Descripcion, 0, null, tarea.FechaEntrega, tarea.Activo, tarea.Extencion, tarea.DocTareaDocente, null, "AGREGAR");
-
-            TempData["SuccessMessage"] = "Tarea creada exitosamente.";
-
-            // Redirigir según el rol del usuario
-            if (rolUsuarioLogueado == "Administrador")
-                return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
-
-            if (rolUsuarioLogueado == "Docente")
-                return RedirectToAction("Details_Docente", "Ninos", new { id = IdNino, idDocente = IdProfesor });
-        }
-        return RedirectToAction("ListaNinos", "Asistencia");
-    }*/
-
-    [HttpPost]
-    public async Task<IActionResult> Crear_Tarea(int IdNino, int IdProfesor, string NombreTarea, string Descripcion,
-        DateTime FechaEntrega, IFormFile? DocTareaDocente, int? Extencion, bool Activo)
+    public async Task<IActionResult> Crear_Tarea(
+        int IdNino,
+        int IdProfesor,
+        string NombreTarea,
+        string Descripcion,
+        DateTime FechaEntrega,
+        IFormFile? DocTareaDocente,
+        int? Extencion,
+        bool Activo)
     {
         if (IdNino == 0 || IdProfesor == 0)
         {
@@ -122,68 +40,180 @@ public class TareaController : Controller
             .Select(c => c.Value)
             .SingleOrDefault();
 
-        byte[]? fileData = null;
+        byte[]? msBit = null;
 
         if (DocTareaDocente != null && Extencion != null)
         {
-            var memoryStream = new MemoryStream();
-            await DocTareaDocente.OpenReadStream().CopyToAsync(memoryStream);
-
-            // Validar el tamaño del archivo (5 MB máximo)
-            if (DocTareaDocente.Length > 5242880) // 5 MB
+            using (var ms = new MemoryStream())
             {
-                TempData["ErrorMessage"] = "El archivo supera el tamaño máximo permitido de 5 MB.";
+                await DocTareaDocente.CopyToAsync(ms);
 
-                // Redirigir según el rol del usuario
-                if (rolUsuarioLogueado == "Administrador")
-                    return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
+                // Validar el tamaño del archivo (5 MB máximo)
+                if (DocTareaDocente.Length > 5242880) // 5 MB
+                {
+                    TempData["ErrorMessage"] = "El archivo supera el tamaño máximo permitido de 5 MB.";
 
-                if (rolUsuarioLogueado == "Docente")
-                    return RedirectToAction("Details_Docente", "Ninos", new { id = IdNino, idDocente = IdProfesor });
+                    // Redirigir según el rol del usuario
+                    if (rolUsuarioLogueado == "Administrador")
+                        return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
+
+                    if (rolUsuarioLogueado == "Docente")
+                        return RedirectToAction("Details_Docente", "Ninos",
+                            new { id = IdNino, idDocente = IdProfesor });
+                }
+
+                msBit = ms.ToArray();
             }
-
-            // Convertir el archivo a byte array
-            fileData = memoryStream.ToArray();
         }
 
-        Tareas tarea = new Tareas()
+        Tareas Task = new Tareas()
         {
             IdProfesor = IdProfesor,
             Nombre = NombreTarea,
             Descripcion = Descripcion,
+            FechaAsignada = DateTime.Now,
             FechaEntrega = FechaEntrega,
-            DocTareaDocente = fileData,
-            Extencion = Extencion,
             Activo = Activo,
+            DocTareaDocente = msBit,
+            Extencion = Extencion
         };
 
-        // Crear parámetros para la consulta SQL
-        var parametros = new[]
+        try
         {
-            new SqlParameter("@id_nino", IdNino),
-            new SqlParameter("@id_tarea", DBNull.Value),
-            new SqlParameter("@id_profesor", tarea.IdProfesor),
-            new SqlParameter("@nombre", tarea.Nombre),
-            new SqlParameter("@descripcion", tarea.Descripcion),
-            new SqlParameter("@calificacion", 0),
-            new SqlParameter("@fecha_asignada", DBNull.Value),
-            new SqlParameter("@fecha_entrega", tarea.FechaEntrega),
-            new SqlParameter("@activo", tarea.Activo),
-            new SqlParameter("@extencion", tarea.Extencion ?? (object)DBNull.Value),
-            new SqlParameter("@doc_tarea_docente", SqlDbType.VarBinary)
+            // Definir los parámetros explícitamente
+            var parameters = new[]
             {
-                Value = tarea.DocTareaDocente ?? (object)DBNull.Value
-            },
-            new SqlParameter("@doc_tarea_nino", DBNull.Value),
-            new SqlParameter("@accion", "AGREGAR")
+                new SqlParameter("@id_nino", IdNino),
+                new SqlParameter("@id_tarea", DBNull.Value), // Null porque es una inserción
+                new SqlParameter("@id_profesor", Task.IdProfesor),
+                new SqlParameter("@nombre", Task.Nombre ?? (object)DBNull.Value),
+                new SqlParameter("@descripcion", Task.Descripcion ?? (object)DBNull.Value),
+                new SqlParameter("@calificacion", DBNull.Value), // Null porque no se especifica calificación al crear
+                new SqlParameter("@fecha_asignada", Task.FechaAsignada),
+                new SqlParameter("@fecha_entrega", Task.FechaEntrega),
+                new SqlParameter("@activo", Task.Activo),
+                new SqlParameter("@extencion", Task.Extencion ?? (object)DBNull.Value),
+                new SqlParameter("@doc_tarea_docente", Task.DocTareaDocente ?? (object)DBNull.Value),
+                new SqlParameter("@doc_tarea_nino", DBNull.Value), // Null porque no hay archivo del niño en este caso
+                new SqlParameter("@accion", "AGREGAR")
+            };
+
+            // Ejecutar el procedimiento almacenado
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC GestionarTareas @id_nino, @id_tarea, @id_profesor, @nombre, @descripcion, @calificacion, @fecha_asignada, @fecha_entrega, @activo, @extencion, @doc_tarea_docente, @doc_tarea_nino, @accion",
+                parameters);
+
+            TempData["SuccessMessage"] = "Tarea creada exitosamente.";
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al ejecutar el procedimiento almacenado: {ex.Message}");
+            TempData["ErrorMessage"] = "Ocurrió un error al crear la tarea.";
+            throw;
+        }
+
+        // Redirigir según el rol del usuario
+        if (rolUsuarioLogueado == "Administrador")
+            return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
+
+        if (rolUsuarioLogueado == "Docente")
+            return RedirectToAction("Details_Docente", "Ninos", new { id = IdNino, idDocente = IdProfesor });
+
+        return RedirectToAction("ListaNinos", "Asistencia");
+    }*/
+
+/*    [HttpPost]
+    public async Task<IActionResult> Crear_Tarea(
+        int IdNino,
+        int IdProfesor,
+        string NombreTarea,
+        string Descripcion,
+        DateTime FechaEntrega,
+        IFormFile? DocTareaDocente,
+        bool Activo)
+    {
+        if (IdNino == 0 || IdProfesor == 0)
+        {
+            return NotFound();
+        }
+
+        var rolUsuarioLogueado = User.Claims
+            .Where(c => c.Type == ClaimTypes.Role)
+            .Select(c => c.Value)
+            .SingleOrDefault();
+        
+        if (DocTareaDocente != null)
+        {
+            using (var ms = new MemoryStream())
+            {
+                await DocTareaDocente.CopyToAsync(ms);
+
+                // Validar el tamaño del archivo (5 MB máximo)
+                if (DocTareaDocente.Length > 5242880) // 5 MB
+                {
+                    TempData["ErrorMessage"] = "El archivo supera el tamaño máximo permitido de 5 MB.";
+
+                    // Redirigir según el rol del usuario
+                    if (rolUsuarioLogueado == "Administrador")
+                        return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
+
+                    if (rolUsuarioLogueado == "Docente")
+                        return RedirectToAction("Details_Docente", "Ninos",
+                            new { id = IdNino, idDocente = IdProfesor });
+                }
+
+                msBit = ms.ToArray();
+
+                // Imprimir detalles del archivo convertido a bytes
+                Console.WriteLine("Archivo en bytes (Base64, primeros 100 caracteres):");
+                Console.WriteLine(Convert.ToBase64String(msBit).Substring(0, 100));
+
+                Console.WriteLine($"Tamaño total en bytes: {msBit.Length}");
+
+                Console.WriteLine("Primeros 10 bytes del archivo:");
+                Console.WriteLine(string.Join(", ", msBit.Take(10)));
+            }
+        }
+
+        Tareas Task = new Tareas()
+        { 
+            IdProfesor = IdProfesor,
+            Nombre = NombreTarea,
+            Descripcion = Descripcion,
+            FechaAsignada = DateTime.Now,
+            FechaEntrega = FechaEntrega,
+            Activo = Activo
         };
 
-        // Llamada al procedimiento almacenado para crear la tarea
-        await _context.Database.ExecuteSqlRawAsync(
-            "EXEC GestionarTareas @id_nino, @id_tarea, @id_profesor, @nombre, @descripcion, @calificacion, @fecha_asignada, @fecha_entrega, @activo, @extencion, @doc_tarea_docente, @doc_tarea_nino, @accion",
-            parametros);
+        try
+        {
+            // Llamada al procedimiento almacenado
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC GestionarTareas @id_nino, @id_tarea, @id_profesor, @nombre, @descripcion, @calificacion, @fecha_asignada, @fecha_entrega, @activo, @extencion, @doc_tarea_docente, @doc_tarea_nino, @accion",
+                new[]
+                {
+                    new SqlParameter("@id_nino", IdNino),
+                    new SqlParameter("@id_tarea", DBNull.Value),
+                    new SqlParameter("@id_profesor", Task.IdProfesor),
+                    new SqlParameter("@nombre", Task.Nombre ?? (object)DBNull.Value),
+                    new SqlParameter("@descripcion", Task.Descripcion ?? (object)DBNull.Value),
+                    new SqlParameter("@calificacion", DBNull.Value),
+                    new SqlParameter("@fecha_asignada", Task.FechaAsignada),
+                    new SqlParameter("@fecha_entrega", Task.FechaEntrega),
+                    new SqlParameter("@activo", Task.Activo),
+                    new SqlParameter("@doc_tarea_docente", Task.DocTareaDocente ?? (object)DBNull.Value),
+                    new SqlParameter("@doc_tarea_nino", DBNull.Value),
+                    new SqlParameter("@accion", "AGREGAR")
+                });
 
-        TempData["SuccessMessage"] = "Tarea creada exitosamente.";
+            TempData["SuccessMessage"] = "Tarea creada exitosamente.";
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al ejecutar el procedimiento almacenado: {ex.Message}");
+            TempData["ErrorMessage"] = "Ocurrió un error al crear la tarea.";
+            throw;
+        }
 
         // Redirigir según el rol del usuario
         if (rolUsuarioLogueado == "Administrador")
@@ -194,6 +224,7 @@ public class TareaController : Controller
 
         return RedirectToAction("ListaNinos", "Asistencia");
     }
+*/
 
     [HttpGet]
     public async Task<IActionResult> Edit_Tarea(int idNino, int idTarea, int? idDocente)

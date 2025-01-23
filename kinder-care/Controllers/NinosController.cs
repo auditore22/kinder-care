@@ -340,7 +340,6 @@ public class NinosController : Controller
     {
         if (id == null) return NotFound();
 
-        // Obtener información del niño y sus relaciones
         var nino = await _context.Ninos
             .Include(n => n.ProgresoAcademico)
             .Include(n => n.ObservacionesDocentes)
@@ -350,6 +349,9 @@ public class NinosController : Controller
             .Include(n => n.RelNinoCondicion).ThenInclude(rc => rc.Condicion)
             .Include(n => n.RelNinoContactoEmergencia).ThenInclude(re => re.ContactoEmergencia)
             .Include(n => n.RelNinoTarea).ThenInclude(rt => rt.Tareas)
+            .ThenInclude(t => t.DocTareaDocente) // Asegúrate de incluir el documento del docente
+            .Include(n => n.RelNinoTarea)
+            .ThenInclude(rt => rt.DocTareaNino) // Asegúrate de incluir el documento del niño
             .FirstOrDefaultAsync(n => n.IdNino == id);
 
         if (nino == null) return NotFound();
@@ -382,19 +384,6 @@ public class NinosController : Controller
             ViewBag.ListaNiveles = new SelectList(Enumerable.Empty<SelectListItem>());
         }
 
-        // LIsta de tipos de archivos para las tareas
-        var listTiposDoc = await _context.TipoDocs.ToListAsync();
-        
-        if (listTiposDoc != null && listTiposDoc.Any())
-        {
-            // Asegura que el nivel actual del niño quede seleccionado
-            ViewBag.ListaExtenciones = new SelectList(listTiposDoc, "IdDoc", "Nombre");
-        }
-        else
-        {
-            ViewBag.ListaExtenciones = new SelectList(Enumerable.Empty<SelectListItem>());
-        }
-        
         // Clasificar tareas según el estado
         var tareas = nino.RelNinoTarea?
             .Where(rt => rt.Tareas.Activo)

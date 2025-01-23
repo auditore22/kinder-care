@@ -16,11 +16,9 @@ public class Tareas
 
     public bool Activo { get; set; } = true;
 
-    public byte[]? DocTareaDocente { get; set; }
-
-    public int? Extencion { get; set; }
-
-    public virtual TipoDoc? ExtencionNavigation { get; set; }
+    // Relación con el documento del docente
+    public int? IdDocDocente { get; set; }
+    public virtual Documentos? DocTareaDocente { get; set; }
 
     // Relación con la tabla intermedia
     public virtual ICollection<RelNinoTarea> RelNinoTarea { get; set; } = new List<RelNinoTarea>();

@@ -8,14 +8,13 @@ public class RelNinoTarea
 
     public int? Calificacion { get; set; } = 0;
 
-    public int? Id_Doc { get; set; }
+    // Relación con el documento del niño
+    public int? IdDocNino { get; set; }
 
-    public byte[]? DocTareaNino { get; set; }
+    public virtual Documentos? DocTareaNino { get; set; }
 
     // Propiedades de navegación
     public virtual Ninos Ninos { get; set; } = null!;
 
     public virtual Tareas Tareas { get; set; } = null!;
-
-    public virtual TipoDoc? TipoDoc { get; set; }
 }

@@ -565,16 +565,6 @@
                                     <input type="file" class="form-control" id="DocTareaDocente" name="DocTareaDocente" accept=".pdf,.doc,.jpg,.png">
                                 </div>
 
-                                @if (ViewBag.ListaExtenciones != null)
-                                {
-                                    <div class="mb-3">
-                                        <label for="Extencion" class="form-label">Tipo de documento</label>
-                                        <select id="Extencion" name="Extencion" class="form-select" asp-items="ViewBag.ListaExtenciones">
-                                            <option value="">Selecciona el tipo de documento</option>
-                                        </select>
-                                    </div>
-                                }
-
                                 <div class="mb-3">
                                     <label asp-for="Activo" class="form-label">¿Activo?</label>
                                     <select asp-for="Activo" class="form-select">
