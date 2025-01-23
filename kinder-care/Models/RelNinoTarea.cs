@@ -11,7 +11,7 @@ public class RelNinoTarea
     // Relación con el documento del niño
     public int? IdDocNino { get; set; }
 
-    public virtual Documentos? DocTareaNino { get; set; }
+    public virtual Documentos? IdDocNinoNavigation { get; set; }
 
     // Propiedades de navegación
     public virtual Ninos Ninos { get; set; } = null!;

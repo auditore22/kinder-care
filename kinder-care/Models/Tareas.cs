@@ -18,7 +18,8 @@ public class Tareas
 
     // Relación con el documento del docente
     public int? IdDocDocente { get; set; }
-    public virtual Documentos? DocTareaDocente { get; set; }
+
+    public virtual Documentos? IdDocDocenteNavigation { get; set; }
 
     // Relación con la tabla intermedia
     public virtual ICollection<RelNinoTarea> RelNinoTarea { get; set; } = new List<RelNinoTarea>();

@@ -143,22 +143,19 @@ public class NinosController : Controller
 
         // Obtener al niño y sus relaciones
         var nino = await _context.Ninos
-            .Include(n => n.ProgresoAcademico) // Progreso académico
-            .Include(n => n.ObservacionesDocentes) // Observaciones docentes
-            .Include(n => n.Asistencia) // Asistencia
-            .Include(n => n.RelNinoAlergia)
-            .ThenInclude(ra => ra.Alergia) // Alergias
-            .Include(n => n.RelNinoMedicamento)
-            .ThenInclude(rm => rm.Medicamento) // Medicamentos
-            .Include(n => n.RelNinoCondicion)
-            .ThenInclude(rc => rc.Condicion) // Condiciones médicas
-            .Include(n => n.RelNinoContactoEmergencia)
-            .ThenInclude(re => re.ContactoEmergencia) // Contactos de emergencia
+            .Include(n => n.ProgresoAcademico)
+            .Include(n => n.ObservacionesDocentes)
+            .Include(n => n.Asistencia)
+            .Include(n => n.RelNinoAlergia).ThenInclude(ra => ra.Alergia)
+            .Include(n => n.RelNinoMedicamento).ThenInclude(rm => rm.Medicamento)
+            .Include(n => n.RelNinoCondicion).ThenInclude(rc => rc.Condicion)
+            .Include(n => n.RelNinoContactoEmergencia).ThenInclude(re => re.ContactoEmergencia)
             .Include(n => n.RelNinoTarea)
-            .ThenInclude(rt => rt.Tareas) // Tareas asignadas
-            .Include(n => n.IdNivelNavigation)
-            .Where(n => n.IdNino == id)
-            .FirstOrDefaultAsync();
+            .ThenInclude(rt => rt.Tareas)
+            .ThenInclude(t => t.IdDocDocenteNavigation) // Trae el documento del docente
+            .Include(n => n.RelNinoTarea)
+            .ThenInclude(rt => rt.IdDocNinoNavigation) // Trae el documento del niño
+            .FirstOrDefaultAsync(n => n.IdNino == id);
 
         if (nino == null) return NotFound();
 
@@ -251,7 +248,11 @@ public class NinosController : Controller
             .Include(n => n.RelNinoMedicamento).ThenInclude(rm => rm.Medicamento)
             .Include(n => n.RelNinoCondicion).ThenInclude(rc => rc.Condicion)
             .Include(n => n.RelNinoContactoEmergencia).ThenInclude(re => re.ContactoEmergencia)
-            .Include(n => n.RelNinoTarea).ThenInclude(rt => rt.Tareas)
+            .Include(n => n.RelNinoTarea)
+            .ThenInclude(rt => rt.Tareas)
+            .ThenInclude(t => t.IdDocDocenteNavigation) // Trae el documento del docente
+            .Include(n => n.RelNinoTarea)
+            .ThenInclude(rt => rt.IdDocNinoNavigation) // Trae el documento del niño
             .FirstOrDefaultAsync(n => n.IdNino == id);
 
         if (nino == null) return NotFound();
@@ -348,10 +349,11 @@ public class NinosController : Controller
             .Include(n => n.RelNinoMedicamento).ThenInclude(rm => rm.Medicamento)
             .Include(n => n.RelNinoCondicion).ThenInclude(rc => rc.Condicion)
             .Include(n => n.RelNinoContactoEmergencia).ThenInclude(re => re.ContactoEmergencia)
-            .Include(n => n.RelNinoTarea).ThenInclude(rt => rt.Tareas)
-            .ThenInclude(t => t.DocTareaDocente) // Asegúrate de incluir el documento del docente
             .Include(n => n.RelNinoTarea)
-            .ThenInclude(rt => rt.DocTareaNino) // Asegúrate de incluir el documento del niño
+            .ThenInclude(rt => rt.Tareas)
+            .ThenInclude(t => t.IdDocDocenteNavigation) // Trae el documento del docente
+            .Include(n => n.RelNinoTarea)
+            .ThenInclude(rt => rt.IdDocNinoNavigation) // Trae el documento del niño
             .FirstOrDefaultAsync(n => n.IdNino == id);
 
         if (nino == null) return NotFound();
