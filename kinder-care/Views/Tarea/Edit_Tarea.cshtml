@@ -42,98 +42,6 @@
 </div>
 <!-- Breadcrumb End -->
 
-@*<div class="row gy-4">
-    <div class="col-md">
-        <!-- Editar Tarea Card Start -->
-        <div class="card">
-            <div class="card-body p-lg-20 p-sm-3">
-                <div class="flex-between flex-wrap gap-12 mb-20">
-                    <div>
-                        <h3 class="mb-4">Editar Tarea</h3>
-                    </div>
-                </div>
-                <form asp-action="Edit_Tarea" asp-controller="Tarea" method="post">
-                    <!-- Campo oculto para el Id de la tarea -->
-                    <div class="mb-3">
-                        <label hidden for="IdTarea" class="form-label">IdTarea</label>
-                        <input hidden type="text" class="form-control" id="IdTarea" name="IdTarea"
-                               value="@Model.IdTarea">
-                    </div>
-
-                    <div class="mb-3">
-                        <label hidden for="IdNino" class="form-label">IdNino</label>
-                        <input hidden type="text" class="form-control" id="IdNino" name="IdNino"
-                               value="@ViewBag.IdNino">
-                    </div>
-
-                    <!-- Selección de Docente (solo si el usuario es Administrador) -->
-                    @if (ViewBag.RoleName == "Administrador")
-                    {
-                        @if (ViewBag.ListaDocentes != null)
-                        {
-                            <div class="mb-3">
-                                <label for="IdProfesor" class="form-label">Docente</label>
-                                <select id="IdProfesor" name="IdProfesor" class="form-select"
-                                        asp-items="ViewBag.ListaDocentes">
-                                    <option value="">Selecciona el docente</option>
-                                </select>
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        <!-- Campo de texto para el ID del docente (solo lectura) -->
-                        <div class="mb-3">
-                            <label hidden for="IdProfesor" class="form-label">Docente</label>
-                            <input hidden type="text" class="form-control" id="IdProfesor"
-                                   name="IdProfesor" value="@ViewBag.DocenteId" readonly>
-                        </div>
-                    }
-
-                    <!-- Nombre de la Tarea -->
-                    <div class="mb-3">
-                        <label for="NombreTarea" class="form-label">Nombre de la Tarea</label>
-                        <input type="text" class="form-control" id="NombreTarea" name="Nombre" value="@Model.Nombre"
-                               required>
-                    </div>
-
-                    <!-- Descripción de la Tarea -->
-                    <div class="mb-3">
-                        <label for="Descripcion" class="form-label">Descripción</label>
-                        <textarea class="form-control" id="Descripcion" name="Descripcion"
-                                  rows="3">@Model.Descripcion</textarea>
-                    </div>
-
-                    <!-- Calificación de la Tarea -->
-                    <div class="mb-3">
-                        <label for="Calificacion" class="form-label">Calificación</label>
-                        <input type="number" class="form-control" id="Calificacion" name="Calificacion"
-                               value="@Model.Calificacion" min="0" max="100" required>
-                    </div>
-
-                    <!-- Fecha de Asignación -->
-                    <div class="mb-3">
-                        <label for="FechaAsignada" class="form-label">Fecha Asignada</label>
-                        <input type="date" class="form-control" id="FechaAsignada" name="FechaAsignada"
-                               value="@Model.FechaAsignada.ToString("yyyy-MM-dd")" required>
-                    </div>
-
-                    <!-- Fecha de Entrega -->
-                    <div class="mb-3">
-                        <label for="FechaEntrega" class="form-label">Fecha de Entrega</label>
-                        <input type="date" class="form-control" id="FechaEntrega" name="FechaEntrega"
-                               value="@Model.FechaEntrega.ToString("yyyy-MM-dd")" required>
-                    </div>
-
-                    <!-- Botón para guardar -->
-                    <button type="submit" class="btn btn-primary rounded-pill py-9 w-100 mt-24">Guardar Tarea</button>
-                </form>
-            </div>
-        </div>
-        <!-- Editar Tarea Card End -->
-    </div>
-</div>*@
-
 <div class="row gy-4">
     <div class="col-md">
         <!-- Editar Tarea Card Start -->
@@ -144,8 +52,8 @@
                         <h3 class="mb-4">Editar Tarea</h3>
                     </div>
                 </div>
-                <form asp-action="Edit_Tarea" asp-controller="Tarea" method="post">
-                    <!-- Campo oculto para el Id de la tarea -->
+                <form asp-action="Edit_Tarea" asp-controller="Tarea" method="post" enctype="multipart/form-data">
+                <!-- Campo oculto para el Id de la tarea -->
                     <div class="mb-3">
                         <label hidden for="IdTarea" class="form-label">IdTarea</label>
                         <input hidden type="text" class="form-control" id="IdTarea" name="IdTarea"
@@ -186,7 +94,7 @@
                     <!-- Nombre de la Tarea -->
                     <div class="mb-3">
                         <label for="NombreTarea" class="form-label">Nombre de la Tarea</label>
-                        <input type="text" class="form-control" id="NombreTarea" name="Nombre" value="@Model.Nombre"
+                        <input type="text" class="form-control" id="NombreTarea" name="NombreTarea" value="@Model.Nombre"
                                required>
                     </div>
 
@@ -196,6 +104,36 @@
                         <textarea class="form-control" id="Descripcion" name="Descripcion"
                                   rows="3">@Model.Descripcion</textarea>
                     </div>
+
+                    <!-- Documento Adjunto -->
+                    <div class="mb-3">
+                        <label for="Documentos" class="form-label">Documento Adjunto</label>
+                        @if (ViewBag.DocumentoBase64 != null)
+                        {
+                            <!-- Mostrar nombre del documento con un botón de descarga -->
+                            <p class="text-gray-300">Archivo adjunto: <strong>@ViewBag.DocumentoNombre</strong></p>
+                            <label for="EliminarDocumento" class="form-label">Eliminar documento</label>
+                            <div class="form-switch switch-primary d-flex align-items-center gap-8 mb-16">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    role="switch"
+                                    id="EliminarDocumento"
+                                    name="EliminarDocumento"
+                                    value="true" />
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-gray-300">No hay documentos adjuntos para esta tarea.</p>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="DocTareaDocente" class="form-label">Nuevo documento de tarea (Opcional)</label>
+                        <input type="file" class="form-control" id="DocTareaDocente" name="DocTareaDocente" accept=".pdf,.doc,.jpg,.png">
+                        <span>Archivos admitidos (<strong style="color: red">PDF</strong>, <strong style="color: blue">Word</strong>, <strong style="color: lightslategrey">Imagen</strong>)</span>
+                    </div>                    
 
                     <!-- Calificación de la Tarea -->
                     <div class="mb-3">

@@ -365,7 +365,9 @@ public partial class KinderCareContext : DbContext
             entity.ToTable("documentos");
 
             entity.Property(e => e.IdDoc).HasColumnName("id_doc");
-            entity.Property(e => e.Documento1).HasColumnName("documento");
+            entity.Property(e => e.Documento).HasColumnName("documento");
+            entity.Property(e => e.Nombre).HasColumnName("nombre");
+            entity.Property(e => e.Tipo).HasColumnName("tipo");
         });
 
         modelBuilder.Entity<RelNinoTarea>(entity =>

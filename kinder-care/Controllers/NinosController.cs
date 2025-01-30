@@ -141,7 +141,6 @@ public class NinosController : Controller
             return View();
         }
 
-        // Obtener al niño y sus relaciones
         var nino = await _context.Ninos
             .Include(n => n.ProgresoAcademico)
             .Include(n => n.ObservacionesDocentes)
@@ -239,7 +238,6 @@ public class NinosController : Controller
             return View();
         }
 
-        // Obtener información del niño y sus relaciones
         var nino = await _context.Ninos
             .Include(n => n.ProgresoAcademico)
             .Include(n => n.ObservacionesDocentes)
@@ -433,31 +431,73 @@ public class NinosController : Controller
     {
         if (idNino <= 0 || idTarea <= 0) return NotFound();
 
-        // Verificar existencia del niño y la tarea
+        // Verificar existencia del niño
         var verificarNino = await _context.Ninos.FindAsync(idNino);
-        var verificarTarea = await _context.Tareas.FindAsync(idTarea);
-        var listDocentes = await _context.Usuarios
-            .Where(d => d.Activo == true && d.IdRol == 2)
-            .ToListAsync();
+        if (verificarNino == null) return NotFound();
 
-        if (verificarNino == null || verificarTarea == null) return NotFound();
+        // Verificar existencia de la tarea y cargar el documento relacionado
+        var verificarTarea = await _context.Tareas
+            .Include(t => t.IdDocDocenteNavigation) // Incluir relación con el documento
+            .FirstOrDefaultAsync(t => t.IdTarea == idTarea);
+        if (verificarTarea == null) return NotFound();
 
-        // Verificar la relación entre niño y tarea
+        // Verificar la relación entre el niño y la tarea
         var verificarRel = await _context.RelNinoTarea
-            .Include(t => t.Tareas)
             .FirstOrDefaultAsync(tn => tn.IdNino == idNino && tn.IdTarea == idTarea);
-
         if (verificarRel == null) return NotFound();
 
-        // Obtener detalles del profesor asignado
-        var profesorTarea = await _context.Docentes.FindAsync(verificarRel.Tareas.IdProfesor);
+        // traer la el registro de la relacion de nino tarea, ya que ahi se almacena el doc
+        var ModeloRelNinoTarea = await _context.RelNinoTarea.FindAsync(idNino, idTarea);
 
-        var profUsuario = await _context.Usuarios.FindAsync(profesorTarea!.IdUsuario);
+        if (ModeloRelNinoTarea == null)
+        {
+            return NotFound();
+        }
+        var BuscarDocNino = await _context.Documentos.FindAsync(ModeloRelNinoTarea.IdDocNino);
+
+
+        // Obtener detalles del profesor asignado
+        var profesorTarea = await _context.Docentes.FindAsync(verificarTarea.IdProfesor);
+        if (profesorTarea == null) return NotFound();
+
+        var profUsuario = await _context.Usuarios.FindAsync(profesorTarea.IdUsuario);
+
+        // Procesar el documento si existe
+        string? base64Documento = null;
+        string? tipoDocumento = null;
+        string? nombreDocumento = null;
+
+        // Tareas de ninos:
+        string? base64DocumentoNino = null;
+        string? tipoDocumentoNino = null;
+        string? nombreDocumentoNino = null;
+
+        if (verificarTarea.IdDocDocenteNavigation?.Documento != null)
+        {
+            base64Documento = Convert.ToBase64String(verificarTarea.IdDocDocenteNavigation.Documento);
+            tipoDocumento = verificarTarea.IdDocDocenteNavigation.Tipo; // Tipo (ej. application/pdf, image/jpeg)
+            nombreDocumento = verificarTarea.IdDocDocenteNavigation.Nombre; // Nombre del archivo original
+        }
+
+        if (BuscarDocNino != null)
+        {
+            base64DocumentoNino = Convert.ToBase64String(BuscarDocNino.Documento);
+            tipoDocumentoNino = BuscarDocNino.Tipo; // Tipo (ej. application/pdf, image/jpeg)
+            nombreDocumentoNino = BuscarDocNino.Nombre; // Nombre del archivo original
+        }
+
         // Pasar datos a la vista mediante ViewBag
         ViewBag.Nino = verificarNino;
-        ViewBag.Tarea = verificarRel.Tareas;
+        ViewBag.Tarea = verificarTarea;
+        ViewBag.TareaCalificacion = verificarRel.Calificacion;
         ViewBag.Profesor = profUsuario!;
-        ViewBag.ListaProfesores = new SelectList(listDocentes, "IdUsuario", "Nombre");
+        ViewBag.DocumentoBase64 = base64Documento; // Documento codificado en Base64
+        ViewBag.DocumentoTipo = tipoDocumento; // Tipo MIME del documento
+        ViewBag.DocumentoNombre = nombreDocumento; // Nombre del archivo
+
+        ViewBag.DocumentoBase64Nino = base64DocumentoNino; // Documento codificado en Base64
+        ViewBag.DocumentoTipoNino = tipoDocumentoNino; // Tipo MIME del documento
+        ViewBag.DocumentoNombreNino = nombreDocumentoNino; // Nombre del archivo
 
         return View();
     }

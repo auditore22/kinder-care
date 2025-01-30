@@ -139,7 +139,7 @@
                                 <strong>@ViewBag.NombreNivel</strong>
                             </p>
                         </li>
-                        
+
                         <!-- Contactos de Emergencia -->
 
                         <h5>
@@ -310,12 +310,6 @@
                             Completadas
                         </button>
                     </li>
-                    @*<li class="nav-item" role="presentation">
-                        <button class="nav-link" id="subPills-create-tab" data-bs-toggle="pill"
-                                data-bs-target="#subPills-create" type="button" role="tab"
-                                aria-controls="subPills-create" aria-selected="false">Crear Tareas
-                        </button>
-                    </li>*@
                 </ul>
             </div>
             <!-- Contenido de las Sub-Pestañas -->
@@ -327,6 +321,16 @@
                          aria-labelledby="subPills-ongoing-tab">
                         <div class="card-body">
                             <div class="row g-20">
+                                @if (TempData["SuccessMessageCreateOrDeleteDocNino"] != null)
+                                {
+                                    <div class="alert alert-success">@TempData["SuccessMessageCreateOrDeleteDocNino"]</div>
+                                }
+
+                                @if (TempData["ErrorMessageCreateOrDeleteDocNino"] != null)
+                                {
+                                    <div class="alert alert-danger">@TempData["ErrorMessageCreateOrDeleteDocNino"]</div>
+                                }
+                                
                                 @if (ViewBag.TareasEnProceso != null)
                                 {
                                     foreach (var tarea in ViewBag.TareasEnProceso)
@@ -367,11 +371,11 @@
                                                             </div>
                                                         </div>
                                                         <a asp-action="Details_Tareas" asp-controller="Ninos"
-                                                           asp-route-id_nino="@Model.IdNino"
-                                                           asp-route-id_tarea="@tarea.IdTarea"
-                                                           class="btn btn-outline-main rounded-pill py-9 w-100 mt-24">
-                                                            Ver
-                                                            detalles
+                                                           asp-route-IdNino="@Model.IdNino"
+                                                           asp-route-IdTarea="@tarea.IdTarea"
+                                                           class="btn btn-outline-main rounded-pill py-9"
+                                                           style="flex: 1; max-width: 150px;">
+                                                            Ver detalles
                                                         </a>
                                                     </div>
                                                 </div>
@@ -394,6 +398,16 @@
                          aria-labelledby="subPills-complete-tab">
                         <div class="card-body">
                             <div class="row g-20">
+                                @if (TempData["SuccessMessageCreateOrDeleteDocNino"] != null)
+                                {
+                                    <div class="alert alert-success">@TempData["SuccessMessageCreateOrDeleteDocNino"]</div>
+                                }
+
+                                @if (TempData["ErrorMessageCreateOrDeleteDocNino"] != null)
+                                {
+                                    <div class="alert alert-danger">@TempData["ErrorMessageCreateOrDeleteDocNino"]</div>
+                                }
+                                
                                 @if (ViewBag.TareasCompletadas != null)
                                 {
                                     foreach (var tarea in ViewBag.TareasCompletadas)
@@ -434,11 +448,11 @@
                                                             </div>
                                                         </div>
                                                         <a asp-action="Details_Tareas" asp-controller="Ninos"
-                                                           asp-route-id_nino="@Model.IdNino"
-                                                           asp-route-id_tarea="@tarea.IdTarea"
-                                                           class="btn btn-success rounded-pill py-9 w-100 mt-24">
-                                                            Ver
-                                                            detalles
+                                                           asp-route-IdNino="@Model.IdNino"
+                                                           asp-route-IdTarea="@tarea.IdTarea"
+                                                           class="btn btn-outline-main rounded-pill py-9"
+                                                           style="flex: 1; max-width: 150px;">
+                                                            Ver detalles
                                                         </a>
                                                     </div>
                                                 </div>
@@ -488,7 +502,7 @@
                                     <input asp-for="Direccion" type="text" class="form-control py-11"
                                            placeholder="Dirección">
                                 </div>
-                                
+
                                 <!-- Campo de texto para la póliza -->
                                 <div class="col-sm-6 col-xs-6">
                                     <label asp-for="Poliza" class="form-label mb-8 h6">Póliza</label>
@@ -498,9 +512,10 @@
 
                                 <div class="col-sm-6 col-xs-6">
                                     <label hidden asp-for="IdNivel" class="form-label mb-8 h6">Nivel</label>
-                                    <input hidden asp-for="IdNivel" type="text" value="@Model.IdNivel" class="form-control py-11">
+                                    <input hidden asp-for="IdNivel" type="text" value="@Model.IdNivel"
+                                           class="form-control py-11">
                                 </div>
-                                
+
                                 <!-- Botones de acción -->
                                 <div class="col-12">
                                     <div class="flex-align justify-content-end gap-8">

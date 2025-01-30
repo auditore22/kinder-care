@@ -1,10 +1,8 @@
-using System.Data;
 using System.Security.Claims;
 using kinder_care.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace kinder_care.Controllers;
@@ -19,7 +17,7 @@ public class TareaController : Controller
         _context = context;
     }
 
-    /*[HttpPost]
+    [HttpPost]
     public async Task<IActionResult> Crear_Tarea(
         int IdNino,
         int IdProfesor,
@@ -27,46 +25,49 @@ public class TareaController : Controller
         string Descripcion,
         DateTime FechaEntrega,
         IFormFile? DocTareaDocente,
-        int? Extencion,
         bool Activo)
     {
-        if (IdNino == 0 || IdProfesor == 0)
-        {
-            return NotFound();
-        }
+        if (IdNino == 0 || IdProfesor == 0) return NotFound();
 
         var rolUsuarioLogueado = User.Claims
             .Where(c => c.Type == ClaimTypes.Role)
             .Select(c => c.Value)
             .SingleOrDefault();
 
-        byte[]? msBit = null;
+        byte[]? fileData = null;
+        int? idDoc = null;
 
-        if (DocTareaDocente != null && Extencion != null)
+        // Validar y procesar el archivo si se proporciona
+        if (DocTareaDocente != null)
         {
-            using (var ms = new MemoryStream())
+            if (DocTareaDocente.Length > 5242880) // 5 MB
             {
-                await DocTareaDocente.CopyToAsync(ms);
+                TempData["ErrorMessage"] = "El archivo supera el tamaño máximo permitido de 5 MB.";
+                return RedirectToRoleBasedView(rolUsuarioLogueado, IdNino, IdProfesor);
+            }
 
-                // Validar el tamaño del archivo (5 MB máximo)
-                if (DocTareaDocente.Length > 5242880) // 5 MB
+            using (var memoryStream = new MemoryStream())
+            {
+                await DocTareaDocente.CopyToAsync(memoryStream);
+                fileData = memoryStream.ToArray();
+
+                var doc = new Documentos
                 {
-                    TempData["ErrorMessage"] = "El archivo supera el tamaño máximo permitido de 5 MB.";
+                    Documento = fileData,
+                    Nombre = NombreTarea + Path.GetExtension(DocTareaDocente.FileName), // "NombreTarea.extension"
+                    Tipo = DocTareaDocente.ContentType // Obtenemos el tipo del archivo
+                };
 
-                    // Redirigir según el rol del usuario
-                    if (rolUsuarioLogueado == "Administrador")
-                        return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
+                _context.Documentos.Add(doc);
+                await _context.SaveChangesAsync();
 
-                    if (rolUsuarioLogueado == "Docente")
-                        return RedirectToAction("Details_Docente", "Ninos",
-                            new { id = IdNino, idDocente = IdProfesor });
-                }
-
-                msBit = ms.ToArray();
+                // El ID del documento recién creado
+                idDoc = doc.IdDoc;
             }
         }
 
-        Tareas Task = new Tareas()
+        // Crear la tarea
+        var tarea = new Tareas
         {
             IdProfesor = IdProfesor,
             Nombre = NombreTarea,
@@ -74,148 +75,34 @@ public class TareaController : Controller
             FechaAsignada = DateTime.Now,
             FechaEntrega = FechaEntrega,
             Activo = Activo,
-            DocTareaDocente = msBit,
-            Extencion = Extencion
+            IdDocDocente = idDoc
         };
 
-        try
+        _context.Tareas.Add(tarea);
+        await _context.SaveChangesAsync();
+
+        // El ID de la tarea recién creada
+        var idTarea = tarea.IdTarea;
+
+        // Crear la relación niño-tarea
+        var relNinoTarea = new RelNinoTarea
         {
-            // Definir los parámetros explícitamente
-            var parameters = new[]
-            {
-                new SqlParameter("@id_nino", IdNino),
-                new SqlParameter("@id_tarea", DBNull.Value), // Null porque es una inserción
-                new SqlParameter("@id_profesor", Task.IdProfesor),
-                new SqlParameter("@nombre", Task.Nombre ?? (object)DBNull.Value),
-                new SqlParameter("@descripcion", Task.Descripcion ?? (object)DBNull.Value),
-                new SqlParameter("@calificacion", DBNull.Value), // Null porque no se especifica calificación al crear
-                new SqlParameter("@fecha_asignada", Task.FechaAsignada),
-                new SqlParameter("@fecha_entrega", Task.FechaEntrega),
-                new SqlParameter("@activo", Task.Activo),
-                new SqlParameter("@extencion", Task.Extencion ?? (object)DBNull.Value),
-                new SqlParameter("@doc_tarea_docente", Task.DocTareaDocente ?? (object)DBNull.Value),
-                new SqlParameter("@doc_tarea_nino", DBNull.Value), // Null porque no hay archivo del niño en este caso
-                new SqlParameter("@accion", "AGREGAR")
-            };
+            IdNino = IdNino,
+            IdTarea = idTarea,
+            Calificacion = 0
+        };
 
-            // Ejecutar el procedimiento almacenado
-            await _context.Database.ExecuteSqlRawAsync(
-                "EXEC GestionarTareas @id_nino, @id_tarea, @id_profesor, @nombre, @descripcion, @calificacion, @fecha_asignada, @fecha_entrega, @activo, @extencion, @doc_tarea_docente, @doc_tarea_nino, @accion",
-                parameters);
+        _context.RelNinoTarea.Add(relNinoTarea);
+        await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Tarea creada exitosamente.";
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error al ejecutar el procedimiento almacenado: {ex.Message}");
-            TempData["ErrorMessage"] = "Ocurrió un error al crear la tarea.";
-            throw;
-        }
+        TempData["SuccessMessage"] = "Tarea creada exitosamente.";
 
-        // Redirigir según el rol del usuario
-        if (rolUsuarioLogueado == "Administrador")
-            return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
+        return RedirectToRoleBasedView(rolUsuarioLogueado, IdNino, IdProfesor);
+    }
 
-        if (rolUsuarioLogueado == "Docente")
-            return RedirectToAction("Details_Docente", "Ninos", new { id = IdNino, idDocente = IdProfesor });
-
-        return RedirectToAction("ListaNinos", "Asistencia");
-    }*/
-
-/*    [HttpPost]
-    public async Task<IActionResult> Crear_Tarea(
-        int IdNino,
-        int IdProfesor,
-        string NombreTarea,
-        string Descripcion,
-        DateTime FechaEntrega,
-        IFormFile? DocTareaDocente,
-        bool Activo)
+    // Método auxiliar para redirigir basado en el rol
+    private IActionResult RedirectToRoleBasedView(string? rolUsuarioLogueado, int IdNino, int IdProfesor)
     {
-        if (IdNino == 0 || IdProfesor == 0)
-        {
-            return NotFound();
-        }
-
-        var rolUsuarioLogueado = User.Claims
-            .Where(c => c.Type == ClaimTypes.Role)
-            .Select(c => c.Value)
-            .SingleOrDefault();
-        
-        if (DocTareaDocente != null)
-        {
-            using (var ms = new MemoryStream())
-            {
-                await DocTareaDocente.CopyToAsync(ms);
-
-                // Validar el tamaño del archivo (5 MB máximo)
-                if (DocTareaDocente.Length > 5242880) // 5 MB
-                {
-                    TempData["ErrorMessage"] = "El archivo supera el tamaño máximo permitido de 5 MB.";
-
-                    // Redirigir según el rol del usuario
-                    if (rolUsuarioLogueado == "Administrador")
-                        return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
-
-                    if (rolUsuarioLogueado == "Docente")
-                        return RedirectToAction("Details_Docente", "Ninos",
-                            new { id = IdNino, idDocente = IdProfesor });
-                }
-
-                msBit = ms.ToArray();
-
-                // Imprimir detalles del archivo convertido a bytes
-                Console.WriteLine("Archivo en bytes (Base64, primeros 100 caracteres):");
-                Console.WriteLine(Convert.ToBase64String(msBit).Substring(0, 100));
-
-                Console.WriteLine($"Tamaño total en bytes: {msBit.Length}");
-
-                Console.WriteLine("Primeros 10 bytes del archivo:");
-                Console.WriteLine(string.Join(", ", msBit.Take(10)));
-            }
-        }
-
-        Tareas Task = new Tareas()
-        { 
-            IdProfesor = IdProfesor,
-            Nombre = NombreTarea,
-            Descripcion = Descripcion,
-            FechaAsignada = DateTime.Now,
-            FechaEntrega = FechaEntrega,
-            Activo = Activo
-        };
-
-        try
-        {
-            // Llamada al procedimiento almacenado
-            await _context.Database.ExecuteSqlRawAsync(
-                "EXEC GestionarTareas @id_nino, @id_tarea, @id_profesor, @nombre, @descripcion, @calificacion, @fecha_asignada, @fecha_entrega, @activo, @extencion, @doc_tarea_docente, @doc_tarea_nino, @accion",
-                new[]
-                {
-                    new SqlParameter("@id_nino", IdNino),
-                    new SqlParameter("@id_tarea", DBNull.Value),
-                    new SqlParameter("@id_profesor", Task.IdProfesor),
-                    new SqlParameter("@nombre", Task.Nombre ?? (object)DBNull.Value),
-                    new SqlParameter("@descripcion", Task.Descripcion ?? (object)DBNull.Value),
-                    new SqlParameter("@calificacion", DBNull.Value),
-                    new SqlParameter("@fecha_asignada", Task.FechaAsignada),
-                    new SqlParameter("@fecha_entrega", Task.FechaEntrega),
-                    new SqlParameter("@activo", Task.Activo),
-                    new SqlParameter("@doc_tarea_docente", Task.DocTareaDocente ?? (object)DBNull.Value),
-                    new SqlParameter("@doc_tarea_nino", DBNull.Value),
-                    new SqlParameter("@accion", "AGREGAR")
-                });
-
-            TempData["SuccessMessage"] = "Tarea creada exitosamente.";
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error al ejecutar el procedimiento almacenado: {ex.Message}");
-            TempData["ErrorMessage"] = "Ocurrió un error al crear la tarea.";
-            throw;
-        }
-
-        // Redirigir según el rol del usuario
         if (rolUsuarioLogueado == "Administrador")
             return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
 
@@ -224,21 +111,41 @@ public class TareaController : Controller
 
         return RedirectToAction("ListaNinos", "Asistencia");
     }
-*/
 
     [HttpGet]
-    public async Task<IActionResult> Edit_Tarea(int idNino, int idTarea, int? idDocente)
+    public async Task<IActionResult> Edit_Tarea(int IdNino, int IdTarea, int? IdProfesor)
     {
-        if (idNino == 0 || idTarea == 0) return NotFound();
+        if (IdNino == 0 || IdProfesor == 0) return NotFound();
 
         // Obtener la relación entre el niño y la tarea
         var relacionNinoTarea = await _context.RelNinoTarea
             .Include(rt => rt.Tareas)
-            .FirstOrDefaultAsync(rt => rt.IdNino == idNino && rt.IdTarea == idTarea);
+            .ThenInclude(td => td.IdDocDocenteNavigation)
+            .FirstOrDefaultAsync(rt => rt.IdNino == IdNino && rt.IdTarea == IdTarea);
 
         if (relacionNinoTarea == null) return NotFound();
 
         var tarea = relacionNinoTarea.Tareas;
+
+        var docTarea = tarea.IdDocDocenteNavigation;
+
+        // Procesar el documento si existe
+        string? base64Documento = null;
+        string? tipoDocumento = null;
+        string? nombreDocumento = null;
+
+        // Verificar si el documento existe antes de intentar acceder a sus propiedades
+        if (docTarea != null && docTarea.Documento != null)
+        {
+            base64Documento = Convert.ToBase64String(docTarea.Documento);
+            tipoDocumento = docTarea.Tipo; // Tipo (ej. application/pdf, image/jpeg)
+            nombreDocumento = docTarea.Nombre; // Nombre del archivo original
+        }
+
+
+        ViewBag.DocumentoBase64 = base64Documento; // Documento codificado en Base64
+        ViewBag.DocumentoTipo = tipoDocumento; // Tipo MIME del documento
+        ViewBag.DocumentoNombre = nombreDocumento; // Nombre del archivo
 
         // Obtener lista de docentes activos
         var listDocentes = await _context.Docentes
@@ -271,75 +178,296 @@ public class TareaController : Controller
         ViewBag.Calificacion = relacionNinoTarea.Calificacion;
 
         // Pasar la tarea al modelo
-        ViewBag.IdNino = idNino;
+        ViewBag.IdNino = IdNino;
 
         return View(tarea);
     }
 
-
     [HttpPost]
-    public async Task<IActionResult> Edit_Tarea(int idTarea, int idNino, int? idProfesor, string nombre,
-        string descripcion, int? calificacion, DateTime fechaAsignada, DateTime fechaEntrega)
+    public async Task<IActionResult> Edit_Tarea(
+        int IdTarea,
+        int IdNino,
+        int? IdProfesor,
+        string? NombreTarea,
+        string? Descripcion,
+        int? Calificacion,
+        DateTime? FechaAsignada,
+        DateTime? FechaEntrega,
+        bool? EliminarDocumento,
+        IFormFile? DocTareaDocente)
     {
-        if (idTarea == 0) return NotFound();
-
-        // Buscar la tarea existente por id
-        var tarea = await _context.Tareas.FindAsync(idTarea);
-        if (tarea == null) return NotFound();
-
-        var nino = await _context.Ninos.FirstOrDefaultAsync(n => n.IdNino == idNino);
-        if (nino == null) return NotFound();
-
-        // Si el IdProfesor no se ha seleccionado (es null), asignamos el profesor actual de la tarea
-        if (!idProfesor.HasValue) idProfesor = tarea.IdProfesor; // Asigna el profesor actual
-
-        // Llamada al procedimiento almacenado para actualizar la tarea
-        var result = await _context.Database.ExecuteSqlRawAsync(
-            "EXEC GestionarTareas @id_nino = {0}, @id_tarea = {1}, @id_profesor = {2}, @nombre = {3}, @descripcion = {4}, @calificacion = {5}, @fecha_asignada = {6}, @fecha_entrega = {7}, @activo = {8}, @accion = {9}",
-            idNino, idTarea, idProfesor, nombre, descripcion, calificacion!, fechaAsignada, fechaEntrega,
-            true, "ACTUALIZAR");
-
-        if (result == 0) return NotFound();
-
-        await _context.SaveChangesAsync();
+        if (IdTarea == 0 || IdNino == 0)
+        {
+            return NotFound();
+        }
 
         // Obtener el rol del usuario logueado
         var rolUsuarioLogueado =
             User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
 
+        // Buscar la tarea existente por id
+        var tarea = await _context.Tareas.FindAsync(IdTarea);
+        var RNT = await _context.RelNinoTarea.FindAsync(IdNino, IdTarea);
+
+        if (tarea == null || RNT == null) return NotFound();
+
+        // Procedimiento para editar la tarea:
+        tarea.IdProfesor = IdProfesor ?? tarea.IdProfesor;
+        tarea.Nombre = NombreTarea ?? tarea.Nombre;
+        tarea.Descripcion = Descripcion ?? tarea.Descripcion;
+        RNT.Calificacion = Calificacion ?? RNT.Calificacion;
+        tarea.Activo = true;
+        tarea.FechaAsignada = FechaAsignada ?? tarea.FechaAsignada;
+        tarea.FechaEntrega = FechaEntrega ?? tarea.FechaEntrega;
+
+        if (EliminarDocumento == true && DocTareaDocente == null && tarea.IdDocDocente != null)
+        {
+            var BuscarDocumento = await _context.Documentos.FindAsync(tarea.IdDocDocente);
+
+            // Se settea la idDocDocente a null
+            tarea.IdDocDocente = null;
+
+            // Se elimina el documento
+            _context.Documentos.Remove(BuscarDocumento);
+        }
+
+        byte[]? fileData = null;
+        int? idDoc = null;
+
+        // Validar y procesar el archivo si se proporciona
+        if (DocTareaDocente != null)
+        {
+            if (DocTareaDocente.Length > 5242880) // 5 MB
+            {
+                TempData["ErrorMessageEditTarea"] = "El archivo supera el tamaño máximo permitido de 5 MB.";
+                if (rolUsuarioLogueado == "Administrador")
+                    return RedirectToAction("Details_Admin", "Ninos", new
+                    {
+                        id = IdNino
+                    });
+                if (rolUsuarioLogueado == "Docente")
+                    return RedirectToAction("Details_Docente", "Ninos", new
+                    {
+                        id = IdNino
+                    });
+                return RedirectToAction("Details", "Ninos", new
+                {
+                    id = IdNino
+                });
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await DocTareaDocente.CopyToAsync(memoryStream);
+                fileData = memoryStream.ToArray();
+
+                var doc = new Documentos
+                {
+                    Documento = fileData,
+                    Nombre = NombreTarea +
+                             Path.GetExtension(DocTareaDocente.FileName), // "NombreTarea.extension"
+                    Tipo = DocTareaDocente.ContentType // Obtenemos el tipo del archivo
+                };
+
+                if (tarea.IdDocDocente != null)
+                {
+                    var BuscarDocumento = await _context.Documentos.FindAsync(tarea.IdDocDocente);
+
+                    // Se settea la idDocDocente a null
+                    tarea.IdDocDocente = null;
+
+                    // Se elimina el documento
+                    _context.Documentos.Remove(BuscarDocumento);
+                }
+
+                _context.Documentos.Add(doc);
+
+                await _context.SaveChangesAsync();
+
+                // El ID del documento recién creado
+                idDoc = doc.IdDoc;
+            }
+        }
+
+        tarea.IdDocDocente = idDoc;
+
+        await _context.SaveChangesAsync();
+
+        TempData["SuccessMessageEditTarea"] = "Tarea actualizada exitosamente.";
         // Redirigir según el rol del usuario
         if (rolUsuarioLogueado == "Administrador")
-            return RedirectToAction("Details_Admin", "Ninos", new { id = idNino });
+            return RedirectToAction("Details_Admin", "Ninos", new
+            {
+                id = IdNino
+            });
+        if (rolUsuarioLogueado == "Docente")
+            return RedirectToAction("Details_Docente", "Ninos", new
+            {
+                id = IdNino
+            });
+        return RedirectToAction("Details", "Ninos", new
+        {
+            id = IdNino
+        });
+    }
 
-        if (rolUsuarioLogueado == "Docente") return RedirectToAction("Details_Docente", "Ninos", new { id = idNino });
+    [HttpPost]
+    public async Task<IActionResult> CreateOrDeleteDocNino(
+        int IdTarea,
+        int IdNino,
+        bool? EliminarDocumento,
+        IFormFile? DocTareaNino)
+    {
+        if (IdTarea == 0 || IdNino == 0)
+        {
+            return NotFound();
+        }
 
-        return RedirectToAction("Details", "Ninos", new { id = idNino });
+        // Obtener el rol del usuario logueado
+        var rolUsuarioLogueado =
+            User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
+
+        // Buscar la tarea existente por id
+        var tarea = await _context.Tareas.FindAsync(IdTarea);
+        var RNT = await _context.RelNinoTarea.FindAsync(IdNino, IdTarea);
+        var Nino = await _context.Ninos.FindAsync(IdNino);
+
+        if (tarea == null || RNT == null) return NotFound();
+
+        bool documentoEliminado = false;
+        byte[]? fileData = null;
+        int? idDoc = null;
+
+        // En caso de que se elimine y no se suba nada
+        if (EliminarDocumento == true && DocTareaNino == null && RNT.IdDocNino != null)
+        {
+            var BuscarDocumento = await _context.Documentos.FindAsync(RNT.IdDocNino);
+
+            if (BuscarDocumento != null)
+            {
+                // Se settea la idDocNino a null
+                RNT.IdDocNino = null;
+
+                // Se elimina el documento
+                _context.Documentos.Remove(BuscarDocumento);
+
+                documentoEliminado = true; // Marcamos que se eliminó un documento
+            }
+        }
+
+        // Validar y procesar el archivo si se proporciona
+        if (DocTareaNino != null)
+        {
+            if (DocTareaNino.Length > 5242880) // 5 MB
+            {
+                TempData["ErrorMessageCreateOrDeleteDocNino"] = "El archivo supera el tamaño máximo permitido de 5 MB.";
+
+                return RedirectToAction("Details", "Ninos", new { id = IdNino });
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await DocTareaNino.CopyToAsync(memoryStream);
+                fileData = memoryStream.ToArray();
+
+                // Se le da formato a la fecha y hora, sin milisegundos
+                string fechaHora = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+
+                // Se sanitiza el nombre de la tarea para evitar caracteres problemáticos
+                string nombreTarea = string.Concat(tarea.Nombre.Split(Path.GetInvalidFileNameChars()));
+
+                // Construimos el nombre del archivo
+                string nombreArchivo =
+                    $"{Nino.NombreNino}_{nombreTarea}_{fechaHora}{Path.GetExtension(DocTareaNino.FileName)}";
+
+                var doc = new Documentos
+                {
+                    Documento = fileData,
+                    Nombre = nombreArchivo,
+                    Tipo = DocTareaNino.ContentType
+                };
+
+                if (RNT.IdDocNino != null)
+                {
+                    var BuscarDocumento = await _context.Documentos.FindAsync(RNT.IdDocNino);
+
+                    if (BuscarDocumento != null)
+                    {
+                        // Se settea la IdDocNino a null
+                        RNT.IdDocNino = null;
+
+                        // Se elimina el documento anterior
+                        _context.Documentos.Remove(BuscarDocumento);
+                    }
+                }
+
+                _context.Documentos.Add(doc);
+                await _context.SaveChangesAsync();
+
+                // El ID del documento recién creado
+                idDoc = doc.IdDoc;
+            }
+        }
+
+        RNT.IdDocNino = idDoc;
+        await _context.SaveChangesAsync();
+
+        // 🔹 Definir mensaje según la acción realizada
+        if (documentoEliminado)
+        {
+            TempData["SuccessMessageCreateOrDeleteDocNino"] = "El documento de la tarea ha sido eliminado con éxito.";
+        }
+        else if (idDoc != null)
+        {
+            TempData["SuccessMessageCreateOrDeleteDocNino"] =
+                "El documento de la tarea ha sido subido/modificado con éxito.";
+        }
+
+        return RedirectToAction("Details", "Ninos", new { id = IdNino });
     }
 
 
     [HttpPost]
     public async Task<IActionResult> Eliminar_Tarea(int idTarea, int idNino)
     {
-        if (idTarea <= 0) return NotFound();
+        if (idTarea <= 0 || idNino <= 0) return NotFound();
 
         var buscarTarea = await _context.Tareas.FindAsync(idTarea);
-
         if (buscarTarea == null) return NotFound();
 
-        var result = await _context.Database.ExecuteSqlRawAsync(
-            "EXEC GestionarTareas @id_nino = {0}, @id_tarea = {1}, @id_profesor = {2}, @nombre = {3}, @descripcion = {4}, @calificacion = {5}, @fecha_asignada = {6}, @fecha_entrega = {7}, @activo = {8}, @accion = {9}",
-            null!, buscarTarea.IdTarea, null!, null!, null!, null!, null!, null!, null!, "ELIMINAR");
+        var buscarDocTarea = await _context.Documentos.FindAsync(buscarTarea.IdDocDocente);
 
-        if (result == 0) return NotFound();
+        var rolUsuarioLogueado = User.Claims
+            .Where(c => c.Type == ClaimTypes.Role)
+            .Select(c => c.Value)
+            .SingleOrDefault();
 
-        var rolUsuarioLogueado =
-            User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault();
+        // Buscar la relación niño-tarea por claves primarias
+        var BuscarRelTarea = await _context.RelNinoTarea.FindAsync(idNino, idTarea);
 
-        if (rolUsuarioLogueado == "Administrador")
-            return RedirectToAction("Details_Admin", "Ninos", new { id = idNino });
+        if (BuscarRelTarea != null)
+        {
+            // Eliminar la relación niño-tarea
+            _context.RelNinoTarea.Remove(BuscarRelTarea);
 
-        if (rolUsuarioLogueado == "Docente") return RedirectToAction("Details_Docente", "Ninos", new { id = idNino });
+            // Eliminar la tarea
+            _context.Tareas.Remove(buscarTarea);
 
-        return RedirectToAction("ListaNinos", "Asistencia");
+            // Eliminar la tarea
+            _context.Tareas.Remove(buscarTarea);
+
+            if (buscarDocTarea != null)
+                // Eliminar el doc de la tarea
+                _context.Documentos.Remove(buscarDocTarea);
+
+            // Guardar los cambios en la base de datos
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessageTareasEnProceso"] = "Tarea eliminada exitosamente.";
+            return RedirectToRoleBasedView(rolUsuarioLogueado, idNino, buscarTarea.IdProfesor);
+        }
+
+        TempData["ErrorMessageTareasEnProceso"] = "Error al eliminar tarea.";
+        return RedirectToRoleBasedView(rolUsuarioLogueado, idNino, buscarTarea.IdProfesor);
     }
 }
