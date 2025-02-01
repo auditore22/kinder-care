@@ -13,6 +13,25 @@
         <Content Remove="Views\Padres\**"/>
         <EmbeddedResource Remove="Views\Padres\**"/>
         <None Remove="Views\Padres\**"/>
+        <Compile Remove="Models\Usuario.cs" />
+        <Compile Remove="Models\TipoPago.cs" />
+        <Compile Remove="Models\TipoDoc.cs" />
+        <Compile Remove="Models\Tarea.cs" />
+        <Compile Remove="Models\Role.cs" />
+        <Compile Remove="Models\RelPadresNino.cs" />
+        <Compile Remove="Models\Pago.cs" />
+        <Compile Remove="Models\ObservacionesDocente.cs" />
+        <Compile Remove="Models\Nivele.cs" />
+        <Compile Remove="Models\Nino.cs" />
+        <Compile Remove="Models\Medicamento.cs" />
+        <Compile Remove="Models\Evaluacione.cs" />
+        <Compile Remove="Models\Documento.cs" />
+        <Compile Remove="Models\Docente.cs" />
+        <Compile Remove="Models\ContactosEmergencium.cs" />
+        <Compile Remove="Models\CondicionesMedica.cs" />
+        <Compile Remove="Models\Asistencium.cs" />
+        <Compile Remove="Models\Alergia.cs" />
+        <Compile Remove="Models\Actividade.cs" />
     </ItemGroup>
 
     <ItemGroup>

@@ -328,6 +328,27 @@
                          aria-labelledby="subPills-ongoing-tab">
                         <div class="card-body">
                             <div class="row g-20">
+                                @if (TempData["SuccessMessageTareasEnProceso"] != null)
+                                {
+                                    <div class="alert alert-success">@TempData["SuccessMessageTareasEnProceso"]</div>
+                                }
+
+                                @if (TempData["ErrorMessageTareasEnProceso"] != null)
+                                {
+                                    <div class="alert alert-danger">@TempData["ErrorMessageTareasEnProceso"]</div>
+                                }
+
+                                <!-- Mensajes para tareas editadas -->
+                                @if (TempData["SuccessMessageEditTarea"] != null)
+                                {
+                                    <div class="alert alert-success">@TempData["SuccessMessageEditTarea"]</div>
+                                }
+
+                                @if (TempData["ErrorMessageEditTarea"] != null)
+                                {
+                                    <div class="alert alert-danger">@TempData["ErrorMessageEditTarea"]</div>
+                                }
+                                
                                 @if (ViewBag.TareasEnProceso != null)
                                 {
                                     foreach (var tarea in ViewBag.TareasEnProceso)
@@ -342,10 +363,10 @@
                                                              alt="Task Image">
                                                     </a>
                                                     <div class="p-8">
-                                    <span
-                                        class="text-13 py-2 px-10 rounded-pill bg-danger-50 text-danger-600 mb-16">
-                                        En Progreso
-                                    </span>
+                                                        <span
+                                                            class="text-13 py-2 px-10 rounded-pill bg-danger-50 text-danger-600 mb-16">
+                                                            En Progreso
+                                                        </span>
                                                         <h5 class="mb-0">
                                                             <a href="course-details.html"
                                                                class="hover-text-main-600">
@@ -353,10 +374,10 @@
                                                             </a>
                                                         </h5>
                                                         <div class="flex-align gap-8 mt-12">
-                                        <span
-                                            class="text-main-600 flex-shrink-0 text-13 fw-medium">
-                                            0%
-                                        </span>
+                                                            <span
+                                                                class="text-main-600 flex-shrink-0 text-13 fw-medium">
+                                                                0%
+                                                            </span>
                                                             <div class="progress w-100 bg-main-100 rounded-pill h-8"
                                                                  role="progressbar"
                                                                  aria-label="Basic example" aria-valuenow="0"
@@ -371,8 +392,8 @@
                                                             class="d-flex justify-content-between align-items-center mt-24">
                                                             <!-- Botón Ver Más -->
                                                             <a asp-action="Details_Tareas" asp-controller="Ninos"
-                                                               asp-route-id_nino="@Model.IdNino"
-                                                               asp-route-id_tarea="@tarea.IdTarea"
+                                                               asp-route-IdNino="@Model.IdNino"
+                                                               asp-route-IdTarea="@tarea.IdTarea"
                                                                class="btn btn-outline-main rounded-pill py-9"
                                                                style="flex: 1; max-width: 150px;">
                                                                 Ver detalles
@@ -382,7 +403,6 @@
                                                                 <a asp-action="Edit_Tarea" asp-controller="Tarea"
                                                                    asp-route-IdNino="@Model.IdNino"
                                                                    asp-route-IdTarea="@tarea.IdTarea"
-                                                                   asp-route-idDocente="@ViewBag.DocenteId"
                                                                    class="btn p-0">
                                                                     <img src="~/images/icons/Editar_icon.png"
                                                                          alt="Editar icono" class="rounded-circle"
@@ -424,6 +444,27 @@
                          aria-labelledby="subPills-complete-tab">
                         <div class="card-body">
                             <div class="row g-20">
+                                @if (TempData["SuccessMessageTareasEnProceso"] != null)
+                                {
+                                    <div class="alert alert-success">@TempData["SuccessMessageTareasEnProceso"]</div>
+                                }
+
+                                @if (TempData["ErrorMessageTareasEnProceso"] != null)
+                                {
+                                    <div class="alert alert-danger">@TempData["ErrorMessageTareasEnProceso"]</div>
+                                }
+
+                                <!-- Mensajes para tareas editadas -->
+                                @if (TempData["SuccessMessageEditTarea"] != null)
+                                {
+                                    <div class="alert alert-success">@TempData["SuccessMessageEditTarea"]</div>
+                                }
+
+                                @if (TempData["ErrorMessageEditTarea"] != null)
+                                {
+                                    <div class="alert alert-danger">@TempData["ErrorMessageEditTarea"]</div>
+                                }
+                                
                                 @if (ViewBag.TareasCompletadas != null)
                                 {
                                     foreach (var tarea in ViewBag.TareasCompletadas)
@@ -518,10 +559,22 @@
                     <div class="tab-pane fade" id="subPills-create" role="tabpanel"
                          aria-labelledby="subPills-create-tab">
                         <div class="card-body">
+                            @if (TempData["SuccessMessage"] != null)
+                            {
+                                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                            }
+
+                            @if (TempData["ErrorMessage"] != null)
+                            {
+                                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                            }
                             <h5 class="mb-4">Crear Nueva Tarea</h5>
-                            <form asp-action="Crear_Tarea" asp-controller="Tarea" method="post">
-                                <!-- Campo oculto para IdNino -->
-                                <input type="hidden" name="IdNino" value="@Model.IdNino">
+                            <form asp-action="Crear_Tarea" asp-controller="Tarea" method="post"
+                                  enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <input hidden type="text" class="form-control" id="IdNino" name="IdNino"
+                                           value="@Model.IdNino" required>
+                                </div>
 
                                 @if (ViewBag.RoleName == "Docente")
                                 {
@@ -534,25 +587,43 @@
                                     </div>
                                 }
 
-                                <!-- Campos comunes para crear una tarea -->
                                 <div class="mb-3">
                                     <label for="NombreTarea" class="form-label">Nombre de la Tarea</label>
-                                    <input type="text" class="form-control" id="NombreTarea" name="Nombre" required>
+                                    <input type="text" class="form-control" id="NombreTarea" name="NombreTarea"
+                                           required>
                                 </div>
+
                                 <div class="mb-3">
                                     <label for="Descripcion" class="form-label">Descripción</label>
                                     <textarea class="form-control" id="Descripcion" name="Descripcion" rows="3"
                                               required></textarea>
                                 </div>
+
                                 <div class="mb-3">
                                     <label for="FechaEntrega" class="form-label">Fecha de Entrega</label>
                                     <input type="date" class="form-control" id="FechaEntrega" name="FechaEntrega"
                                            required>
                                 </div>
 
-                                <!-- Botón de envío -->
-                                <button type="submit" class="btn btn-primary rounded-pill py-9 w-100 mt-24">
-                                    Guardar
+                                <div class="mb-3">
+                                    <label for="DocTareaDocente" class="form-label">Documento de la tarea
+                                        (opcional)</label>
+                                    <input type="file" class="form-control" id="DocTareaDocente" name="DocTareaDocente"
+                                           accept=".pdf,.doc,.jpg,.png">
+                                    <span>Archivos admitidos (<strong style="color: red">PDF</strong>, <strong
+                                            style="color: blue">Word</strong>, <strong style="color: lightslategrey">Imagen</strong>)</span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Activo" class="form-label">¿Activo?</label>
+                                    <select asp-for="Activo" class="form-select">
+                                        <option value="true">Sí</option>
+                                        <option value="false">No</option>
+                                    </select>
+                                    <span asp-validation-for="Activo" class="text-danger"></span>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary rounded-pill py-9 w-100 mt-24">Guardar
                                     Tarea
                                 </button>
                             </form>
@@ -591,7 +662,7 @@
                                     <input asp-for="Direccion" type="text" class="form-control py-11"
                                            placeholder="Dirección">
                                 </div>
-                                
+
                                 <!-- Campo de texto para la póliza -->
                                 <div class="col-sm-6 col-xs-6">
                                     <label asp-for="Poliza" class="form-label mb-8 h6">Póliza</label>
@@ -603,7 +674,8 @@
                                 {
                                     <div class="col-sm-6 col-xs-6">
                                         <label for="IdNivel" class="form-label mb-8 h6">Nivel</label>
-                                        <select id="IdNivel" name="IdNivel" class="form-control py-11" asp-items="ViewBag.ListaNiveles" required>
+                                        <select id="IdNivel" name="IdNivel" class="form-control py-11"
+                                                asp-items="ViewBag.ListaNiveles" required>
                                             <option value="">Selecciona el nivel</option>
                                         </select>
                                     </div>
@@ -614,7 +686,7 @@
                                         No hay niveles disponibles para seleccionar.
                                     </div>
                                 }
-                                
+
                                 <!-- Botones de acción -->
                                 <div class="col-12">
                                     <div class="flex-align justify-content-end gap-8">
