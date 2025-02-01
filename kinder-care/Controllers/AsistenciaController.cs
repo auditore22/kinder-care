@@ -192,15 +192,19 @@ public class AsistenciaController : Controller
         return View(asistencias);
     }
 
-    public IActionResult ListaAsistencia_Admin(DateTime? fechaInicio, DateTime? fechaFin)
+    public IActionResult ListaAsistencia_Admin(DateTime? fechaInicio, DateTime? fechaFin, int? idNivel)
     {
         var query = _context.Asistencia
             .Include(a => a.IdNinoNavigation)
+            .ThenInclude(n => n.IdNivelNavigation)
             .AsQueryable();
 
 
         if (fechaInicio.HasValue && fechaFin.HasValue)
             query = query.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
+
+        if (idNivel.HasValue)
+            query = query.Where(a => a.IdNinoNavigation.IdNivel == idNivel.Value);
 
         var asistencias = query
             .OrderByDescending(a => a.Fecha)
@@ -208,6 +212,8 @@ public class AsistenciaController : Controller
 
         ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd")!;
         ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd")!;
+        ViewBag.Niveles = _context.Niveles.ToList();
+
 
         return View(asistencias);
     }

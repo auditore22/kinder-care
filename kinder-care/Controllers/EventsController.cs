@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 
 namespace kinder_care.Controllers;
 
-[Authorize]
 public class EventsController : Controller
 {
     private readonly KinderCareContext _context;
@@ -19,9 +18,10 @@ public class EventsController : Controller
     }
 
     // GET: ManageEvents
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> ManageEvents(int pageNumber = 1)
     {
-        var pageSize = 10; // Definir la cantidad de registros por página
+        int pageSize = 10; // Definir la cantidad de registros por página
 
         // Obtener el total de eventos
         var totalEventos = await _context.Actividades
@@ -38,7 +38,7 @@ public class EventsController : Controller
             .ToListAsync();
 
         // Calcular el total de páginas
-        var totalPages = (int)Math.Ceiling(totalEventos / (double)pageSize);
+        int totalPages = (int)Math.Ceiling(totalEventos / (double)pageSize);
 
         // Pasar los datos a la vista
         ViewBag.CurrentPage = pageNumber;
@@ -55,9 +55,10 @@ public class EventsController : Controller
             .Where(a => a.Activo == true)
             .ToListAsync();
 
-        List<object> eventos = new();
+        List<object> eventos = new List<object>();
 
         foreach (var actividad in actividades)
+        {
             eventos.Add(new
             {
                 id = actividad.IdActividad,
@@ -67,12 +68,14 @@ public class EventsController : Controller
                 location = actividad.Lugar,
                 description = actividad.Descripcion
             });
+        }
 
         ViewBag.Eventos = JsonConvert.SerializeObject(eventos);
         return View();
     }
 
     // GET: CreateEvent
+    [Authorize(Roles = "Administrador")]
     public IActionResult CreateEvent()
     {
         ViewBag.TipoActividades = _context.TipoActividad
@@ -87,6 +90,7 @@ public class EventsController : Controller
 
 
     // POST: CreateEvent
+    [Authorize(Roles = "Administrador")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateEvent(EventViewModel model)
@@ -134,6 +138,7 @@ public class EventsController : Controller
         return View(actividad);
     }
 
+    [Authorize(Roles = "Administrador")]
     [HttpGet]
     public async Task<IActionResult> EditEvent(int id)
     {
@@ -167,6 +172,7 @@ public class EventsController : Controller
         return View(model);
     }
 
+    [Authorize(Roles = "Administrador")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> EditEvent(EventViewModel model)
@@ -206,6 +212,7 @@ public class EventsController : Controller
 
 
     // GET: DeleteEvent/{id}
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> DeleteEvent(int? id)
     {
         if (id == null)
@@ -221,8 +228,8 @@ public class EventsController : Controller
         return View(actividad);
     }
 
-    [HttpPost]
-    [ActionName("DeleteEvent")]
+    [HttpPost, ActionName("DeleteEvent")]
+    [Authorize(Roles = "Administrador")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {

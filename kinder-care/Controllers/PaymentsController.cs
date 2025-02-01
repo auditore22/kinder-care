@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace kinder_care.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Administrador, Docente")]
 public class PaymentsController : Controller
 {
     private readonly KinderCareContext _context;
@@ -134,6 +134,14 @@ public class PaymentsController : Controller
                 UltimaActualizacion = DateTime.Now
             };
 
+            var verificar = await _context.RelPadresNinos.FindAsync(model.IdNino, model.IdPadre);
+            
+            if (verificar == null)
+            {
+                var relacion = new RelPadresNinos(){IdNino = model.IdNino, IdPadre = model.IdPadre, Relacion = ""};
+                _context.RelPadresNinos.Add(relacion);
+            }
+            
             _context.Pagos.Add(nuevoPago);
             try
             {

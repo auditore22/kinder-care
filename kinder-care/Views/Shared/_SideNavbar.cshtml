@@ -109,16 +109,20 @@
                                 <span class="text">Registrar Ninos</span>
                             </a>
                         </li>
-
-                        <li class="sidebar-menu__item">
-                            <a asp-action="ManagePayments" asp-controller="Payments" class="sidebar-menu__link">
-                                <span class="icon">
-                                    <i class="ph ph-coins"></i>
-                                </span>
-                                <span class="text">Pagos</span>
-                            </a>
-                        </li>
                     }
+
+                    if (ViewBag.RoleName == "Administrador")
+                        {
+                            <li class="sidebar-menu__item">
+                                <a asp-action="ManagePayments" asp-controller="Payments" class="sidebar-menu__link">
+                                    <span class="icon">
+                                        <i class="ph ph-coins"></i>
+                                    </span>
+                                    <span class="text">Pagos</span>
+                                </a>
+                            </li>
+                        }
+                    
 
                     if (ViewBag.RoleName == "Padre")
                     {
