@@ -222,6 +222,7 @@ public class NinosController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Administrador, Docente")]
     public async Task<IActionResult> Details_Docente(int? id, int? idDocente, DateTime? fechaInicio, DateTime? fechaFin)
     {
         if (id == null) return NotFound();
