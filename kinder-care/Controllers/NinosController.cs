@@ -50,15 +50,30 @@ public class NinosController : Controller
 
     [HttpGet]
     [Authorize(Roles = "Administrador, Docente")]
-    public Task<IActionResult> Crear_Nino()
+    [HttpGet]
+    public async Task<IActionResult> Crear_Nino()
     {
-        return Task.FromResult<IActionResult>(View());
+        // Obtener los niveles de grado
+        var listNiveles = await _context.Niveles
+            .Where(n => !string.IsNullOrEmpty(n.Nombre))
+            .ToListAsync();
+
+        if (listNiveles != null && listNiveles.Any())
+        {
+            // Asegura que el nivel actual del niño quede seleccionado
+            ViewBag.ListaNiveles = new SelectList(listNiveles, "IdNivel", "Nombre");
+        }
+        else
+        {
+            ViewBag.ListaNiveles = new SelectList(Enumerable.Empty<SelectListItem>());
+        }
+
+        return View();
     }
 
     [HttpPost]
-    [Authorize(Roles = "Administrador, Docente")]
     public async Task<IActionResult> Crear_Nino(string cedula, string nombreNino, DateTime fechaNacimiento,
-        string direccion, string poliza, bool activo)
+        string direccion, string poliza, int idNivel, bool activo)
     {
         if (string.IsNullOrEmpty(cedula) || string.IsNullOrEmpty(nombreNino) || fechaNacimiento == default ||
             string.IsNullOrEmpty(direccion) || string.IsNullOrEmpty(poliza))
@@ -75,6 +90,7 @@ public class NinosController : Controller
             FechaNacimiento = fechaNacimiento,
             Direccion = direccion,
             Poliza = poliza,
+            IdNivel = idNivel,
             Activo = activo
         };
 
@@ -89,9 +105,17 @@ public class NinosController : Controller
         try
         {
             var result = await _context.Database.ExecuteSqlRawAsync(
-                "EXEC GestionarNino @IdNino = {0}, @Cedula = {1}, @NombreNino = {2}, @FechaNacimiento = {3}, @Direccion = {4}, @Poliza = {5}",
-                null!, // Para insertar un nuevo niño, el IdNino tiene que ser nulo
-                nino.Cedula, nino.NombreNino, nino.FechaNacimiento, nino.Direccion, nino.Poliza);
+                    "EXEC GestionarNino @IdNino = {0}, @Cedula = {1}, @NombreNino = {2}, @FechaNacimiento = {3}, @Direccion = {4}, @Poliza = {5}, @IdNivel = {6}, @Activo = {7}, @Accion = {8}",
+                    null!,
+                    nino.Cedula,
+                    nino.NombreNino,
+                    nino.FechaNacimiento,
+                    nino.Direccion,
+                    nino.Poliza,
+                    nino.IdNivel,
+                    nino.Activo,
+                    "AGREGAR")
+                ;
 
             return RedirectToAction("Index", "Home");
         }
@@ -119,6 +143,7 @@ public class NinosController : Controller
             return View();
         }
 
+        // Obtener al niño y sus relaciones
         var nino = await _context.Ninos
             .Include(n => n.ProgresoAcademico)
             .Include(n => n.ObservacionesDocentes)
@@ -136,14 +161,17 @@ public class NinosController : Controller
 
         if (nino == null) return NotFound();
 
-        // Filtrar las tareas por estado
+        ViewBag.NombreNivel = await _context.Niveles.Where(idn => idn.IdNivel == nino.IdNivel).Select(nn => nn.Nombre)
+            .FirstOrDefaultAsync();
+
+        // Clasificar tareas según su estado
         var tareasEnProceso = nino.RelNinoTarea?
-            .Where(rt => rt.Tareas.Activo && rt.Tareas.Calificacion == 0)
+            .Where(rt => rt.Tareas.Activo && rt.Calificacion == 0)
             .Select(rt => rt.Tareas)
             .ToList() ?? new List<Tareas>();
 
         var tareasCompletadas = nino.RelNinoTarea?
-            .Where(rt => rt.Tareas.Activo && rt.Tareas.Calificacion > 0)
+            .Where(rt => rt.Tareas.Activo && rt.Calificacion > 0)
             .Select(rt => rt.Tareas)
             .ToList() ?? new List<Tareas>();
 
@@ -175,9 +203,7 @@ public class NinosController : Controller
             .AsQueryable();
 
         if (fechaInicio.HasValue && fechaFin.HasValue)
-        {
             asistenciaNino = asistenciaNino.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
-        }
 
         var asistencias = await asistenciaNino.ToListAsync();
 
@@ -196,7 +222,6 @@ public class NinosController : Controller
     }
 
     [HttpGet]
-    [Authorize(Roles = "Administrador, Docente")]
     public async Task<IActionResult> Details_Docente(int? id, int? idDocente, DateTime? fechaInicio, DateTime? fechaFin)
     {
         if (id == null) return NotFound();
@@ -216,7 +241,7 @@ public class NinosController : Controller
             return View();
         }
 
-        // Obtener información del niño
+        // Obtener información del niño y sus relaciones
         var nino = await _context.Ninos
             .Include(n => n.ProgresoAcademico)
             .Include(n => n.ObservacionesDocentes)
@@ -234,14 +259,20 @@ public class NinosController : Controller
 
         if (nino == null) return NotFound();
 
-        // Obtener las tareas
+        // Clasificar tareas según el estado
         var tareas = nino.RelNinoTarea?
             .Where(rt => rt.Tareas.Activo)
+            .ToList();
+
+        var tareasEnProceso = tareas?
+            .Where(rt => rt.Calificacion == 0)
             .Select(rt => rt.Tareas)
             .ToList() ?? new List<Tareas>();
 
-        var tareasEnProceso = tareas.Where(t => t.Calificacion == 0).ToList();
-        var tareasCompletadas = tareas.Where(t => t.Calificacion > 0).ToList();
+        var tareasCompletadas = tareas?
+            .Where(rt => rt.Calificacion > 0)
+            .Select(rt => rt.Tareas)
+            .ToList() ?? new List<Tareas>();
 
         // Configurar ViewBag.DocenteId o ListaDocentes
         if (idDocente.HasValue)
@@ -265,15 +296,28 @@ public class NinosController : Controller
                 : null)!;
         }
 
+        // Obtener los niveles de grado
+        var listNiveles = await _context.Niveles
+            .Where(n => !string.IsNullOrEmpty(n.Nombre))
+            .ToListAsync();
+
+        if (listNiveles != null && listNiveles.Any())
+        {
+            // Asegura que el nivel actual del niño quede seleccionado
+            ViewBag.ListaNiveles = new SelectList(listNiveles, "IdNivel", "Nombre", nino.IdNivel);
+        }
+        else
+        {
+            ViewBag.ListaNiveles = new SelectList(Enumerable.Empty<SelectListItem>());
+        }
+
         // Filtrar asistencia
         var asistenciaNino = _context.Asistencia
             .Where(a => a.IdNino == id)
             .AsQueryable();
 
         if (fechaInicio.HasValue && fechaFin.HasValue)
-        {
             asistenciaNino = asistenciaNino.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
-        }
 
         nino.Asistencia = await asistenciaNino.ToListAsync();
 
@@ -416,6 +460,7 @@ public class NinosController : Controller
         {
             return NotFound();
         }
+
         var BuscarDocNino = await _context.Documentos.FindAsync(ModeloRelNinoTarea.IdDocNino);
 
 
