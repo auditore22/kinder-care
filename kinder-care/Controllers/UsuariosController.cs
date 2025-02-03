@@ -50,7 +50,7 @@ namespace kinder_care.Controllers
             return View(usuarios);
         }
 
-        //======================================================[VISTA CREATE]==========================================================================================
+        //======================================================[VISTA CREATE - CANCELADO]==========================================================================================
         public async Task<IActionResult> Create()
         {
             ViewData["IdRol"] = new SelectList(await _context.Roles.ToListAsync(), "IdRol", "Nombre");

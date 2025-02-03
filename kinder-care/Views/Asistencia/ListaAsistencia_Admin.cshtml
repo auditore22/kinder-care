@@ -66,6 +66,7 @@
             <tr>
                 <th data-column="id_usuario" class="h5 text-gray-300">ID Niño</th>
                 <th data-column="name" class="h5 text-gray-300">Estudiante</th>
+                <th class="h5 text-gray-300">Grado</th>
                 <th class="h5 text-gray-300">Fecha</th>
                 <th class="h5 text-gray-300">Presente</th>
             </tr>
@@ -91,6 +92,9 @@
                         </td>
                         <td data-column="name">
                             <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.IdNinoNavigation.NombreNino</span>
+                        </td>
+                        <td data-column="name">
+                            <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.IdNinoNavigation.IdNivelNavigation.Nombre</span>
                         </td>
                         <td>
                             <span

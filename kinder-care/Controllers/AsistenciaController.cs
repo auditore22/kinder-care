@@ -219,7 +219,7 @@ public class AsistenciaController : Controller
     }
 
     //=============================[Reporte de Asistencia]=============================
-    public IActionResult GenerarReportePdf(DateTime? fechaInicio, DateTime? fechaFin)
+    public IActionResult GenerarReportePdf(DateTime? fechaInicio, DateTime? fechaFin, int? idNivel)
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
@@ -255,13 +255,22 @@ public class AsistenciaController : Controller
 
         var query = _context.Asistencia
             .Include(a => a.IdNinoNavigation)
+            .ThenInclude(n => n.IdNivelNavigation)
             .Where(a => estudiantes.Contains(a.IdNino))
             .AsQueryable();
 
         if (fechaInicio.HasValue && fechaFin.HasValue)
             query = query.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
 
+        if (idNivel.HasValue)
+            query = query.Where(a => a.IdNinoNavigation.IdNivel == idNivel.Value);
+
         var asistencias = query.OrderByDescending(a => a.Fecha).ToList();
+
+        if (!asistencias.Any())
+        {
+            return Content("No hay registros de asistencia actualmente.");
+        }
 
         var pdfDoc = Document.Create(container =>
         {
@@ -281,6 +290,7 @@ public class AsistenciaController : Controller
                     {
                         columns.ConstantColumn(100);
                         columns.RelativeColumn();
+                        columns.RelativeColumn();
                         columns.ConstantColumn(80);
                     });
 
@@ -288,6 +298,7 @@ public class AsistenciaController : Controller
                     {
                         header.Cell().Text("Fecha").Bold();
                         header.Cell().Text("Estudiante").Bold();
+                        header.Cell().Text("Grado").Bold();
                         header.Cell().Text("Estado").Bold();
                     });
 
@@ -295,6 +306,7 @@ public class AsistenciaController : Controller
                     {
                         table.Cell().Text(asistencia.Fecha.ToString("dd/MM/yyyy"));
                         table.Cell().Text(asistencia.IdNinoNavigation.NombreNino);
+                        table.Cell().Text(asistencia.IdNinoNavigation.IdNivelNavigation.Nombre);
                         table.Cell().Text(asistencia.Presente ? "Presente" : "Ausente")
                             .FontColor(asistencia.Presente ? Colors.Green.Darken2 : Colors.Red.Darken2);
                     }
