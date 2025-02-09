@@ -21,7 +21,7 @@
             </span>
         </li>
         <li>
-            <span class="text-main-600 fw-normal text-15">Crear Grupo</span>
+            <span class="text-main-600 fw-normal text-15">Asignar Alumnos</span>
         </li>
     </ul>
 </div>
@@ -62,7 +62,7 @@
 @if (!Model.Ninos.Any())
 {
     <div class="alert alert-info">
-        <strong>No hay estudiantes disponibles para asignar al grupo.</strong>
+        <strong>No hay estudiantes disponibles para asignar.</strong>
     </div>
 }
 else
@@ -74,7 +74,7 @@ else
             <div class="card mt-24">
                 <div class="card-header border-bottom">
                     <h4 class="mb-4">Estudiantes sin grupo</h4>
-                    <p class="text-gray-600 text-15">Seleccione los estudiantes para su grupo.</p>
+                    <p class="text-gray-600 text-15">Seleccione los estudiantes a los que quiere educar.</p>
                 </div>
                 <div class="card-body p-0 overflow-x-auto">
                     <form asp-action="CrearGrupo" method="post">

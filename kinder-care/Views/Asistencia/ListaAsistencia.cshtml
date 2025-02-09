@@ -37,6 +37,20 @@
             <input type="date" name="fechaFin" id="fechaFin" class="form-control"
                    value="@ViewBag.FechaFin"/>
         </div>
+
+        <div class="col-md-4">
+            <label for="IdNivel">Grado:</label>
+            <select name="idNivel" class="form-select">
+                <option value="">Todos</option>
+                @foreach (var nivel in ViewBag.Niveles)
+                {
+                    <option value="@nivel.IdNivel">
+                        @nivel.Nombre
+                    </option>
+                }
+            </select>
+        </div>
+
         <div class="col-md-4 d-flex align-items-end">
             <div class="col-md-4 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary w-100">Filtrar</button>
@@ -53,6 +67,7 @@
             <tr>
                 <th data-column="id_usuario" class="h5 text-gray-300">ID Niño</th>
                 <th data-column="name" class="h5 text-gray-300">Estudiante</th>
+                <th class="h5 text-gray-300">Grado</th>
                 <th class="h6 text-gray-300">Fecha</th>
                 <th class="h6 text-gray-300">Presente</th>
                 <th class="h6 text-gray-300">Acciones</th>
@@ -79,6 +94,9 @@
                         </td>
                         <td data-column="name">
                             <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.IdNinoNavigation.NombreNino</span>
+                        </td>
+                        <td data-column="name">
+                            <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.IdNinoNavigation.IdNivelNavigation.Nombre</span>
                         </td>
                         <td>
                             <span

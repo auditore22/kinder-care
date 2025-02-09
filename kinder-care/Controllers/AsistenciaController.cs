@@ -32,7 +32,7 @@ public class AsistenciaController : Controller
             var estudiantes = await _context.RelDocenteNinoMateria
                 .Where(r => r.IdDocente == docente!.IdDocente)
                 .Select(r => r.IdNino)
-                .Join(_context.Ninos,
+                .Join(_context.Ninos.Include(n => n.IdNivelNavigation),
                     rel => rel,
                     nino => nino.IdNino,
                     (rel, nino) => nino)
@@ -61,7 +61,7 @@ public class AsistenciaController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> CrearGrupo()
+    public async Task<IActionResult> AsignarAlumnos()
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
@@ -86,7 +86,7 @@ public class AsistenciaController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> CrearGrupo(List<int> ninos)
+    public async Task<IActionResult> AsignarAlumnos(List<int> ninos)
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
@@ -163,7 +163,7 @@ public class AsistenciaController : Controller
         return RedirectToAction("ListaNinos");
     }
 
-    public IActionResult ListaAsistencia(DateTime? fechaInicio, DateTime? fechaFin)
+    public IActionResult ListaAsistencia(DateTime? fechaInicio, DateTime? fechaFin, int? idNivel)
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var docente = _context.Docentes.FirstOrDefault(d => d.IdUsuario == userId);
@@ -175,6 +175,7 @@ public class AsistenciaController : Controller
 
         var query = _context.Asistencia
             .Include(a => a.IdNinoNavigation)
+            .ThenInclude(n => n.IdNivelNavigation)
             .Where(a => estudiantes.Contains(a.IdNino))
             .AsQueryable();
 
@@ -182,12 +183,16 @@ public class AsistenciaController : Controller
         if (fechaInicio.HasValue && fechaFin.HasValue)
             query = query.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
 
+        if (idNivel.HasValue)
+            query = query.Where(a => a.IdNinoNavigation.IdNivel == idNivel.Value);
+
         var asistencias = query
             .OrderByDescending(a => a.Fecha)
             .ToList();
 
         ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd")!;
         ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd")!;
+        ViewBag.Niveles = _context.Niveles.ToList();
 
         return View(asistencias);
     }
