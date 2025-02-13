@@ -1,6 +1,6 @@
 ﻿namespace kinder_care.Models;
 
-public partial class ObservacionesDocentes
+public class ObservacionesDocentes
 {
     public int IdObservacionDocente { get; set; }
 

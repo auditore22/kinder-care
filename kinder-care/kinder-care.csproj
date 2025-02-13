@@ -9,172 +9,191 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="Views\Padres\**" />
-      <Content Remove="Views\Padres\**" />
-      <EmbeddedResource Remove="Views\Padres\**" />
-      <None Remove="Views\Padres\**" />
+        <Compile Remove="Views\Padres\**"/>
+        <Content Remove="Views\Padres\**"/>
+        <EmbeddedResource Remove="Views\Padres\**"/>
+        <None Remove="Views\Padres\**"/>
+        <Compile Remove="Models\Usuario.cs" />
+        <Compile Remove="Models\TipoPago.cs" />
+        <Compile Remove="Models\TipoDoc.cs" />
+        <Compile Remove="Models\Tarea.cs" />
+        <Compile Remove="Models\Role.cs" />
+        <Compile Remove="Models\RelPadresNino.cs" />
+        <Compile Remove="Models\Pago.cs" />
+        <Compile Remove="Models\ObservacionesDocente.cs" />
+        <Compile Remove="Models\Nivele.cs" />
+        <Compile Remove="Models\Nino.cs" />
+        <Compile Remove="Models\Medicamento.cs" />
+        <Compile Remove="Models\Evaluacione.cs" />
+        <Compile Remove="Models\Documento.cs" />
+        <Compile Remove="Models\Docente.cs" />
+        <Compile Remove="Models\ContactosEmergencium.cs" />
+        <Compile Remove="Models\CondicionesMedica.cs" />
+        <Compile Remove="Models\Asistencium.cs" />
+        <Compile Remove="Models\Alergia.cs" />
+        <Compile Remove="Models\Actividade.cs" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dapper" Version="2.1.35" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" NoWarn="NU1605" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.8" NoWarn="NU1605" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+        <PackageReference Include="Dapper" Version="2.1.35"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" NoWarn="NU1605"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.8" NoWarn="NU1605"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Identity.Web" Version="3.4.0" />
-        <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.4.0" />
-        <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="3.4.0" />
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
-        <PackageReference Include="QuestPDF" Version="2024.10.4" />
+        <PackageReference Include="Microsoft.Identity.Web" Version="3.4.0"/>
+        <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.4.0"/>
+        <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="3.4.0"/>
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0"/>
+        <PackageReference Include="QuestPDF" Version="2024.10.4"/>
     </ItemGroup>
 
     <ItemGroup>
-      <_ContentIncludedByDefault Remove="wwwroot\assets\css\fontawesome-all.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\css\images\intro.svg" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\css\main.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\css\noscript.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\js\breakpoints.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\js\browser.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\js\jquery.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\js\jquery.scrollex.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\js\jquery.scrolly.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\js\main.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\js\util.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\base\_page.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\base\_reset.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\base\_typography.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_actions.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_box.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_button.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_contact.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_features.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_form.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_icon.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_icons.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_image.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_list.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_menu.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_row.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_section.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_split.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_spotlights.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_table.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_wrapper.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\layout\_footer.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\layout\_header.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\layout\_intro.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\layout\_sidebar.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\layout\_wrapper.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\libs\_breakpoints.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\libs\_functions.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\libs\_html-grid.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\libs\_mixins.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\libs\_vars.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\libs\_vendor.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\main.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\sass\noscript.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-brands-400.eot" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-brands-400.svg" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-brands-400.ttf" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-brands-400.woff" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-brands-400.woff2" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-regular-400.eot" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-regular-400.svg" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-regular-400.ttf" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-regular-400.woff" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-regular-400.woff2" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-solid-900.eot" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-solid-900.svg" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-solid-900.ttf" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-solid-900.woff" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-solid-900.woff2" />
-      <_ContentIncludedByDefault Remove="Views\Users\ManageProfiles.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Users\ManageRecords.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Users\ManageRoles.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Reports\GenerateReports.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Access\Login.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Access\Recovery.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Access\RecoveryConfirmation.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Access\Register.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Access\ResetPassword.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Configuration\SystemConfig.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Configuration\UserProfile.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Enrollment\AcademicRecord.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Enrollment\AttendanceRecord.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Enrollment\ManageEnrollments.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Enrollment\StudentProfile.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Events\Calendar.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Events\ManageEvents.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Ninos\Index.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Payments\CreatePayment.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Payments\Delete.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Payments\Details.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Payments\Edit.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Payments\FinanceDetails.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Payments\ManagePayments.cshtml" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\base\_page.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\base\_reset.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\base\_typography.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_actions.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_box.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_button.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_contact.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_features.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_form.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_icon.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_icons.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_image.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_list.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_menu.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_row.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_section.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_split.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_spotlights.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_table.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\components\_wrapper.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\layout\_footer.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\layout\_header.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\layout\_intro.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\layout\_sidebar.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\layout\_wrapper.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\libs\_breakpoints.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\libs\_functions.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\libs\_html-grid.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\libs\_mixins.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\libs\_vars.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\libs\_vendor.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\main.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\sass\noscript.scss" />
-      <_ContentIncludedByDefault Remove="wwwroot\images\bg.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\images\BG_LOGIN.jpg" />
-      <_ContentIncludedByDefault Remove="wwwroot\images\logo-kinder.png" />
-      <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\dashboard.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_Assignments.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_Calendar.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_DashboardWidgets.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_ProgressBar.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_SidebarMenu.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_StudyStatistics.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_TopCourses.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_TopNavbar.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\newViews\Dashboard\index.cshtml" />
+        <_ContentIncludedByDefault Remove="wwwroot\assets\css\fontawesome-all.min.css"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\css\images\intro.svg"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\css\main.css"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\css\noscript.css"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\js\breakpoints.min.js"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\js\browser.min.js"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\js\jquery.min.js"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\js\jquery.scrollex.min.js"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\js\jquery.scrolly.min.js"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\js\main.js"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\js\util.js"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\base\_page.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\base\_reset.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\base\_typography.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_actions.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_box.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_button.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_contact.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_features.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_form.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_icon.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_icons.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_image.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_list.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_menu.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_row.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_section.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_split.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_spotlights.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_table.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\components\_wrapper.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\layout\_footer.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\layout\_header.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\layout\_intro.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\layout\_sidebar.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\layout\_wrapper.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\libs\_breakpoints.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\libs\_functions.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\libs\_html-grid.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\libs\_mixins.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\libs\_vars.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\libs\_vendor.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\main.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\sass\noscript.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-brands-400.eot"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-brands-400.svg"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-brands-400.ttf"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-brands-400.woff"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-brands-400.woff2"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-regular-400.eot"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-regular-400.svg"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-regular-400.ttf"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-regular-400.woff"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-regular-400.woff2"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-solid-900.eot"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-solid-900.svg"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-solid-900.ttf"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-solid-900.woff"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\webfonts\fa-solid-900.woff2"/>
+        <_ContentIncludedByDefault Remove="Views\Users\ManageProfiles.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Users\ManageRecords.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Users\ManageRoles.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Reports\GenerateReports.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Access\Login.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Access\Recovery.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Access\RecoveryConfirmation.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Access\Register.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Access\ResetPassword.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Configuration\SystemConfig.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Configuration\UserProfile.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Enrollment\AcademicRecord.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Enrollment\AttendanceRecord.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Enrollment\ManageEnrollments.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Enrollment\StudentProfile.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Events\Calendar.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Events\ManageEvents.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Ninos\Index.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Payments\CreatePayment.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Payments\Delete.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Payments\Details.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Payments\Edit.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Payments\FinanceDetails.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Payments\ManagePayments.cshtml"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\base\_page.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\base\_reset.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\base\_typography.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_actions.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_box.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_button.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_contact.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_features.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_form.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_icon.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_icons.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_image.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_list.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_menu.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_row.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_section.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_split.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_spotlights.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_table.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\components\_wrapper.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\layout\_footer.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\layout\_header.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\layout\_intro.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\layout\_sidebar.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\layout\_wrapper.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\libs\_breakpoints.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\libs\_functions.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\libs\_html-grid.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\libs\_mixins.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\libs\_vars.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\libs\_vendor.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\main.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\sass\noscript.scss"/>
+        <_ContentIncludedByDefault Remove="wwwroot\images\bg.jpg"/>
+        <_ContentIncludedByDefault Remove="wwwroot\images\BG_LOGIN.jpg"/>
+        <_ContentIncludedByDefault Remove="wwwroot\images\logo-kinder.png"/>
+        <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\dashboard.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_Assignments.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_Calendar.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_DashboardWidgets.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_ProgressBar.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_SidebarMenu.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_StudyStatistics.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_TopCourses.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\newViews_to_cshtml\Dashboard\_TopNavbar.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\newViews\Dashboard\index.cshtml"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Remove="Models\ViewModels\ChangePasswordViewModel.cshtml" />
+        <Content Remove="Models\ViewModels\ChangePasswordViewModel.cshtml"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Models\ViewModels\ChangePasswordViewModel.cshtml.cs" />
+        <Compile Remove="Models\ViewModels\ChangePasswordViewModel.cshtml.cs"/>
     </ItemGroup>
 
 </Project>

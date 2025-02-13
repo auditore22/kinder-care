@@ -1,4 +1,3 @@
-
 // // Colors
 @each $color, $shades in $colors {
   @each $shade, $value in $shades {
@@ -11,13 +10,15 @@
 
 .text {
   &-heading {
-      color: hsl(var(--heading-color)) !important;
+    color: hsl(var(--heading-color)) !important;
   }
+
   &-body {
-      color: hsl(var(--body-color)) !important;
+    color: hsl(var(--body-color)) !important;
   }
+
   &-main {
-      color: hsl(var(--main)) !important;
+    color: hsl(var(--main)) !important;
   }
 }
 
@@ -25,7 +26,7 @@
   @each $shade, $value in $shades {
     .hover-text-#{$color}-#{$shade} {
       &:hover {
-          color: var(--#{$color}-#{$shade}) !important;
+        color: var(--#{$color}-#{$shade}) !important;
       }
     }
   }
@@ -33,25 +34,28 @@
 
 /* Text Color */
 .hover-text {
- &-white {
-      &:hover {
-          color: #fff !important;
-      }
+  &-white {
+    &:hover {
+      color: #fff !important;
+    }
   }
+
   &-heading {
-      &:hover {
-          color: hsl(var(--heading-color)) !important;
-      }
+    &:hover {
+      color: hsl(var(--heading-color)) !important;
+    }
   }
+
   &-body {
-      &:hover {
-          color: hsl(var(--body-color)) !important;
-      }
+    &:hover {
+      color: hsl(var(--body-color)) !important;
+    }
   }
+
   &-main {
-      &:hover {
-          color: hsl(var(--main)) !important;
-      }
+    &:hover {
+      color: hsl(var(--main)) !important;
+    }
   }
 }
 

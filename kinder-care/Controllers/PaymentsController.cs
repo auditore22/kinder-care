@@ -41,13 +41,13 @@ public class PaymentsController : Controller
 
         return View("ManagePayments", pagos);
     }
-    
+
     // Mostrar la lista de pagos
     public async Task<IActionResult> ManagePayments(int pageNumber = 1)
     {
         // Número de registros por página
-        int pageSize = 10;
-        
+        var pageSize = 10;
+
         // Total de pagos
         var totalPagos = await _context.Pagos.CountAsync();
 
@@ -77,8 +77,8 @@ public class PaymentsController : Controller
             .Include(p => p.Padre)
             .Include(p => p.TipoPago)
             .OrderByDescending(p => p.FechaPago) // Ordena por fecha de pago descendente
-            .Skip((pageNumber - 1) * pageSize)  // Salta los registros previos
-            .Take(pageSize)                    // Toma los primeros 10 registros
+            .Skip((pageNumber - 1) * pageSize) // Salta los registros previos
+            .Take(pageSize) // Toma los primeros 10 registros
             .ToListAsync();
 
         // Cálculo del total de páginas
@@ -269,10 +269,7 @@ public class PaymentsController : Controller
     // Método para eliminar el pago
     public async Task<IActionResult> Delete(int? id)
     {
-        if (id == null)
-        {
-            return NotFound();
-        }
+        if (id == null) return NotFound();
 
         var pago = await _context.Pagos
             .Include(p => p.Nino)
@@ -280,16 +277,14 @@ public class PaymentsController : Controller
             .Include(p => p.TipoPago)
             .FirstOrDefaultAsync(m => m.IdPago == id);
 
-        if (pago == null)
-        {
-            return NotFound();
-        }
+        if (pago == null) return NotFound();
 
         return View(pago);
     }
 
     // Confirmar la eliminación del pago
-    [HttpPost, ActionName("DeleteConfirmed")]
+    [HttpPost]
+    [ActionName("DeleteConfirmed")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int IdPago)
     {

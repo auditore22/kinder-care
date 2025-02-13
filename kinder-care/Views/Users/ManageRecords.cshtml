@@ -1,4 +1,4 @@
-﻿@model IEnumerable<kinder_care.Models.ExpedienteCompletoNino>
+﻿@model IEnumerable<ExpedienteCompletoNino>
 
 @{
     ViewBag.Title = "Gestión de Expedientes";
@@ -82,7 +82,8 @@
                             <span class="h6 mb-0 fw-medium text-gray-300">@expediente.Cedula</span>
                         </td>
                         <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@expediente.FechaNacimiento.ToString("dd/MM/yyyy")</span>
+                            <span
+                                class="h6 mb-0 fw-medium text-gray-300">@expediente.FechaNacimiento.ToString("dd/MM/yyyy")</span>
                         </td>
                         <td>
                             <span class="h6 mb-0 fw-medium text-gray-300">@expediente.Direccion</span>

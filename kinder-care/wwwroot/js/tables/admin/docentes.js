@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const table = document.getElementById('teacherTable');
-    
+
     const searchByName = document.getElementById('searchByName');
     const searchByID = document.getElementById('searchByID');
     const searchByCedula = document.getElementById('searchByCedula');
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const paginationContainer = document.querySelector('.pagination');
     const infoContainer = document.getElementById('infoContainer');
     const entriesSelect = document.getElementById('entriesSelect');
-    
+
     let rows = Array.from(document.querySelectorAll('#teacherTable tbody tr')).filter(row => !row.id || row.id !== 'noResultsRow');
     let pageSize = parseInt(entriesSelect.value);
     let currentPage = 1;
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         table.style.display = 'table';
     }
-    
+
     function renderPagination(totalPages) {
         paginationContainer.innerHTML = '';
 

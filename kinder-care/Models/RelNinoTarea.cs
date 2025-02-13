@@ -6,6 +6,13 @@ public class RelNinoTarea
 
     public int IdTarea { get; set; }
 
+    public int? Calificacion { get; set; } = 0;
+
+    // Relación con el documento del niño
+    public int? IdDocNino { get; set; }
+
+    public virtual Documentos? IdDocNinoNavigation { get; set; }
+
     // Propiedades de navegación
     public virtual Ninos Ninos { get; set; } = null!;
 

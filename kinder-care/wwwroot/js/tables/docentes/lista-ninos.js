@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     const table = document.getElementById('studentsTable');
-    
+
     const searchByName = document.getElementById('searchByName');
     const searchByID = document.getElementById('searchByID');
     const searchByCedula = document.getElementById('searchByCedula');
+    const searchByGrado = document.getElementById('searchByGrado');
 
     const paginationContainer = document.querySelector('.pagination');
     const infoContainer = document.getElementById('infoContainer');
@@ -18,14 +19,17 @@ document.addEventListener('DOMContentLoaded', function () {
         const nameValue = searchByName.value.toLowerCase();
         const idValue = searchByID.value.toLowerCase();
         const cedulaValue = searchByCedula.value.toLowerCase();
+        const gradoValue = searchByGrado.value.toLowerCase();
 
         filteredRows = rows.filter(row => {
             const nameColumn = row.querySelector('[data-column="name"]')?.textContent?.toLowerCase() || "";
             const idColumn = row.querySelector('[data-column="id_usuario"]')?.textContent?.toLowerCase() || "";
             const cedulaColumn = row.querySelector('[data-column="cedula"]')?.textContent?.toLowerCase() || "";
+            const gradoColumn = row.querySelector('[data-column="grado"]')?.textContent?.toLowerCase() || "";
             return (nameColumn.includes(nameValue) || nameValue === "") &&
                 (idColumn.includes(idValue) || idValue === "") &&
-                (cedulaColumn.includes(cedulaValue) || cedulaValue === "");
+                (cedulaColumn.includes(cedulaValue) || cedulaValue === "") &&
+                (gradoColumn.includes(gradoValue) || gradoValue === "");
         });
 
         currentPage = 1;
@@ -108,6 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
     searchByName.addEventListener('keyup', filterRows);
     searchByID.addEventListener('keyup', filterRows);
     searchByCedula.addEventListener('keyup', filterRows);
+    searchByGrado.addEventListener('keyup', filterRows);
 
     renderTable();
 });

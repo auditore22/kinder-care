@@ -7,7 +7,7 @@ public class ExpedienteCompletoNino
     public string? NombreNino { get; set; }
     public DateTime FechaNacimiento { get; set; }
     public string? Direccion { get; set; }
-    public string? Poliza { get; set; } 
+    public string? Poliza { get; set; }
     public string? NombreAlergia { get; set; }
     public string? NombreCondicion { get; set; }
     public string? NombreMedicamento { get; set; }

@@ -50,9 +50,9 @@ public class UserProfile : Controller
 
             if (result == 0) return NotFound();
 
-            return RedirectToAction("Index", "UserProfile", new { id = id });
+            return RedirectToAction("Index", "UserProfile", new { id });
         }
 
-        return RedirectToAction("Index", "UserProfile", new { id = id });
+        return RedirectToAction("Index", "UserProfile", new { id });
     }
 }

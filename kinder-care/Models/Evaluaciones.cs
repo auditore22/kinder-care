@@ -1,6 +1,6 @@
 ﻿namespace kinder_care.Models;
 
-public partial class Evaluaciones
+public class Evaluaciones
 {
     public int IdEvaluacion { get; set; }
 

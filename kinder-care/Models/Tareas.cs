@@ -10,13 +10,16 @@ public class Tareas
 
     public string? Descripcion { get; set; }
 
-    public int Calificacion { get; set; } = 0;
-
     public DateTime FechaAsignada { get; set; } = DateTime.Now;
 
     public DateTime FechaEntrega { get; set; }
 
     public bool Activo { get; set; } = true;
+
+    // Relación con el documento del docente
+    public int? IdDocDocente { get; set; }
+
+    public virtual Documentos? IdDocDocenteNavigation { get; set; }
 
     // Relación con la tabla intermedia
     public virtual ICollection<RelNinoTarea> RelNinoTarea { get; set; } = new List<RelNinoTarea>();

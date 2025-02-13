@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const table = document.getElementById('userTable');
-    
+
     const searchByName = document.getElementById('searchByName');
     const searchByID = document.getElementById('searchByID');
     const searchByCedula = document.getElementById('searchByCedula');
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         table.style.display = 'table';
     }
-    
+
     function renderPagination(totalPages) {
         paginationContainer.innerHTML = '';
 

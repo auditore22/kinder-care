@@ -1,6 +1,6 @@
 ﻿namespace kinder_care.Models;
 
-public partial class RelDocenteNinoMateria
+public class RelDocenteNinoMateria
 {
     public int IdDocente { get; set; }
 

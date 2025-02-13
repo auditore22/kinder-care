@@ -1,4 +1,4 @@
-﻿@model IEnumerable<kinder_care.Models.Ninos>
+﻿@model IEnumerable<Ninos>
 
 <link rel="stylesheet" href="~/css/tables/tables.css">
 
@@ -22,11 +22,12 @@
             </li>
         </ul>
     </div>
-    
+
     <!-- Breadcrumb Right Start -->
     <div class="flex-align gap-8 flex-wrap">
-        <a asp-action="CrearGrupo" asp-controller="Asistencia" class="btn btn-main">
-            Crear un Grupo
+        <a asp-action="AsignarAlumnos" asp-controller="Asistencia"
+           class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 hover-bg-main-600 hover-text-white" >
+            Alumnos
         </a>
         <a asp-action="ControlAsistencias" asp-controller="Asistencia"
            class="btn btn-outline-main bg-main-100 border-main-100 text-main-600 hover-bg-main-600 hover-text-white">
@@ -56,6 +57,12 @@
         <i class="ph ph-magnifying-glass position-absolute"
            style="left: 10px; top: 10px; font-size: 20px; color: #aaa;"></i>
     </div>
+    <div class="position-relative">
+        <input type="text" id="searchByGrado" placeholder="Buscar por grado..."
+               class="form-control ps-40 h-40 rounded-pill search-input" />
+        <i class="ph ph-magnifying-glass position-absolute"
+           style="left: 10px; top: 10px; font-size: 20px; color: #aaa;"></i>
+    </div>
 </div>
 
 
@@ -69,8 +76,10 @@
                 <th data-column="name" class="h5 text-gray-300">Estudiante</th>
                 <th data-column="id_usuario" class="h5 text-gray-300">ID</th>
                 <th data-column="cedula" class="h5 text-gray-300">Cédula</th>
+                <th data-column="grado" class="h5 text-gray-300">Grado</th>
                 <th class="h5 text-gray-300">Fecha de Nacimiento</th>
                 <th class="h5 text-gray-300">Estado</th>
+                <th class="h5 text-gray-300">Acciones</th>
             </tr>
             </thead>
             <tbody>
@@ -84,7 +93,8 @@
                     <tr>
                         <td data-column="name">
                             <div class="flex-align gap-8">
-                                <img src="~/images/icons/baby_2_icon.png" alt="Imagen del niño" class="w-40 h-40 rounded-circle">
+                                <img src="~/images/icons/baby_2_icon.png" alt="Imagen del niño"
+                                     class="w-40 h-40 rounded-circle">
                                 <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.NombreNino</span>
                             </div>
                         </td>
@@ -94,11 +104,23 @@
                         <td data-column="cedula">
                             <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.Cedula</span>
                         </td>
-                        <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.FechaNacimiento.ToString("dd/MM/yyyy")</span>
+                        <td data-column="grado">
+                            <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.IdNivelNavigation.Nombre</span>
                         </td>
                         <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@((bool)estudiante.Activo! ? "Activo" : "Inactivo")</span>
+                            <span
+                                class="h6 mb-0 fw-medium text-gray-300">@estudiante.FechaNacimiento.ToString("dd/MM/yyyy")</span>
+                        </td>
+                        <td>
+                            <span
+                                class="h6 mb-0 fw-medium text-gray-300">@((bool)estudiante.Activo! ? "Activo" : "Inactivo")</span>
+                        </td>
+                        <td>
+                            <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@estudiante.IdNino"
+                                 class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
+                                 Ver
+                                 Más
+                            </a>
                         </td>
                     </tr>
                 }

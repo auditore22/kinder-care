@@ -6,6 +6,7 @@ $font-base: 16px;
   }
   @return calc($target / $context * 1rem);
 }
+
 /* Convert to Rem End */
 
 
@@ -15,9 +16,11 @@ $font-base: 16px;
   $val: calc($px / 16);
   @return $val;
 }
+
 @function formatFloatingNumber($number) {
   @return calc(round($number * 1000) / 1000);
 }
+
 @function clampCal($minSize, $maxSize, $minWidth: 768, $maxWidth: 1399) {
   $minREMsize: convertToRem($minSize);
   $maxREMsize: convertToRem($maxSize);
@@ -36,9 +39,9 @@ $font-base: 16px;
   $preferredMax: formatFloatingNumber($preferred);
 
   @return clamp(
-    #{$minREMsize}rem,
-    #{$xAxisMax}rem + #{$preferredMax}vw,
-    #{$maxREMsize}rem
+          #{$minREMsize}rem,
+          #{$xAxisMax}rem + #{$preferredMax}vw,
+          #{$maxREMsize}rem
   );
 }
 

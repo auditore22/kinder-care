@@ -17,7 +17,7 @@ public class NinosController : Controller
         _context = context;
     }
 
-    // GET: Ninos - trae a la vista los hijos del padre logueado
+    // trae a la vista los hijos del padre logueado
     public async Task<IActionResult> Index()
     {
         // Obtener el ID del padre logueado desde las Claims
@@ -50,15 +50,30 @@ public class NinosController : Controller
 
     [HttpGet]
     [Authorize(Roles = "Administrador, Docente")]
-    public Task<IActionResult> Crear_Nino()
+    [HttpGet]
+    public async Task<IActionResult> Crear_Nino()
     {
-        return Task.FromResult<IActionResult>(View());
+        // Obtener los niveles de grado
+        var listNiveles = await _context.Niveles
+            .Where(n => !string.IsNullOrEmpty(n.Nombre))
+            .ToListAsync();
+
+        if (listNiveles != null && listNiveles.Any())
+        {
+            // Asegura que el nivel actual del niño quede seleccionado
+            ViewBag.ListaNiveles = new SelectList(listNiveles, "IdNivel", "Nombre");
+        }
+        else
+        {
+            ViewBag.ListaNiveles = new SelectList(Enumerable.Empty<SelectListItem>());
+        }
+
+        return View();
     }
 
     [HttpPost]
-    [Authorize(Roles = "Administrador, Docente")]
     public async Task<IActionResult> Crear_Nino(string cedula, string nombreNino, DateTime fechaNacimiento,
-        string direccion, string poliza, bool activo)
+        string direccion, string poliza, int idNivel, bool activo)
     {
         if (string.IsNullOrEmpty(cedula) || string.IsNullOrEmpty(nombreNino) || fechaNacimiento == default ||
             string.IsNullOrEmpty(direccion) || string.IsNullOrEmpty(poliza))
@@ -75,6 +90,7 @@ public class NinosController : Controller
             FechaNacimiento = fechaNacimiento,
             Direccion = direccion,
             Poliza = poliza,
+            IdNivel = idNivel,
             Activo = activo
         };
 
@@ -89,9 +105,17 @@ public class NinosController : Controller
         try
         {
             var result = await _context.Database.ExecuteSqlRawAsync(
-                "EXEC GestionarNino @IdNino = {0}, @Cedula = {1}, @NombreNino = {2}, @FechaNacimiento = {3}, @Direccion = {4}, @Poliza = {5}",
-                null!, // Para insertar un nuevo niño, el IdNino tiene que ser nulo
-                nino.Cedula, nino.NombreNino, nino.FechaNacimiento, nino.Direccion, nino.Poliza);
+                    "EXEC GestionarNino @IdNino = {0}, @Cedula = {1}, @NombreNino = {2}, @FechaNacimiento = {3}, @Direccion = {4}, @Poliza = {5}, @IdNivel = {6}, @Activo = {7}, @Accion = {8}",
+                    null!,
+                    nino.Cedula,
+                    nino.NombreNino,
+                    nino.FechaNacimiento,
+                    nino.Direccion,
+                    nino.Poliza,
+                    nino.IdNivel,
+                    nino.Activo,
+                    "AGREGAR")
+                ;
 
             return RedirectToAction("Index", "Home");
         }
@@ -119,33 +143,35 @@ public class NinosController : Controller
             return View();
         }
 
+        // Obtener al niño y sus relaciones
         var nino = await _context.Ninos
-            .Include(n => n.ProgresoAcademico) // Progreso académico
-            .Include(n => n.ObservacionesDocentes) // Observaciones de los docentes
-            .Include(n => n.Asistencia) // Asistencia
-            .Include(n => n.RelNinoAlergia) // Alergias
-            .ThenInclude(ra => ra.Alergia)
-            .Include(n => n.RelNinoMedicamento) // Medicamentos
-            .ThenInclude(rm => rm.Medicamento)
-            .Include(n => n.RelNinoCondicion) // Condiciones médicas
-            .ThenInclude(rc => rc.Condicion)
-            .Include(n => n.RelNinoContactoEmergencia) // Contactos de emergencia
-            .ThenInclude(re => re.ContactoEmergencia)
+            .Include(n => n.ProgresoAcademico)
+            .Include(n => n.ObservacionesDocentes)
+            .Include(n => n.Asistencia)
+            .Include(n => n.RelNinoAlergia).ThenInclude(ra => ra.Alergia)
+            .Include(n => n.RelNinoMedicamento).ThenInclude(rm => rm.Medicamento)
+            .Include(n => n.RelNinoCondicion).ThenInclude(rc => rc.Condicion)
+            .Include(n => n.RelNinoContactoEmergencia).ThenInclude(re => re.ContactoEmergencia)
             .Include(n => n.RelNinoTarea)
             .ThenInclude(rt => rt.Tareas)
-            .Where(n => n.IdNino == id)
-            .FirstOrDefaultAsync();
+            .ThenInclude(t => t.IdDocDocenteNavigation) // Trae el documento del docente
+            .Include(n => n.RelNinoTarea)
+            .ThenInclude(rt => rt.IdDocNinoNavigation) // Trae el documento del niño
+            .FirstOrDefaultAsync(n => n.IdNino == id);
 
         if (nino == null) return NotFound();
 
-        // Filtrar las tareas por estado
+        ViewBag.NombreNivel = await _context.Niveles.Where(idn => idn.IdNivel == nino.IdNivel).Select(nn => nn.Nombre)
+            .FirstOrDefaultAsync();
+
+        // Clasificar tareas según su estado
         var tareasEnProceso = nino.RelNinoTarea?
-            .Where(rt => rt.Tareas.Activo && rt.Tareas.Calificacion == 0)
+            .Where(rt => rt.Tareas.Activo && rt.Calificacion == 0)
             .Select(rt => rt.Tareas)
             .ToList() ?? new List<Tareas>();
 
         var tareasCompletadas = nino.RelNinoTarea?
-            .Where(rt => rt.Tareas.Activo && rt.Tareas.Calificacion > 0)
+            .Where(rt => rt.Tareas.Activo && rt.Calificacion > 0)
             .Select(rt => rt.Tareas)
             .ToList() ?? new List<Tareas>();
 
@@ -177,9 +203,7 @@ public class NinosController : Controller
             .AsQueryable();
 
         if (fechaInicio.HasValue && fechaFin.HasValue)
-        {
             asistenciaNino = asistenciaNino.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
-        }
 
         var asistencias = await asistenciaNino.ToListAsync();
 
@@ -218,7 +242,7 @@ public class NinosController : Controller
             return View();
         }
 
-        // Obtener información del niño
+        // Obtener información del niño y sus relaciones
         var nino = await _context.Ninos
             .Include(n => n.ProgresoAcademico)
             .Include(n => n.ObservacionesDocentes)
@@ -227,19 +251,29 @@ public class NinosController : Controller
             .Include(n => n.RelNinoMedicamento).ThenInclude(rm => rm.Medicamento)
             .Include(n => n.RelNinoCondicion).ThenInclude(rc => rc.Condicion)
             .Include(n => n.RelNinoContactoEmergencia).ThenInclude(re => re.ContactoEmergencia)
-            .Include(n => n.RelNinoTarea).ThenInclude(rt => rt.Tareas)
+            .Include(n => n.RelNinoTarea)
+            .ThenInclude(rt => rt.Tareas)
+            .ThenInclude(t => t.IdDocDocenteNavigation) // Trae el documento del docente
+            .Include(n => n.RelNinoTarea)
+            .ThenInclude(rt => rt.IdDocNinoNavigation) // Trae el documento del niño
             .FirstOrDefaultAsync(n => n.IdNino == id);
 
         if (nino == null) return NotFound();
 
-        // Obtener las tareas
+        // Clasificar tareas según el estado
         var tareas = nino.RelNinoTarea?
             .Where(rt => rt.Tareas.Activo)
+            .ToList();
+
+        var tareasEnProceso = tareas?
+            .Where(rt => rt.Calificacion == 0)
             .Select(rt => rt.Tareas)
             .ToList() ?? new List<Tareas>();
 
-        var tareasEnProceso = tareas.Where(t => t.Calificacion == 0).ToList();
-        var tareasCompletadas = tareas.Where(t => t.Calificacion > 0).ToList();
+        var tareasCompletadas = tareas?
+            .Where(rt => rt.Calificacion > 0)
+            .Select(rt => rt.Tareas)
+            .ToList() ?? new List<Tareas>();
 
         // Configurar ViewBag.DocenteId o ListaDocentes
         if (idDocente.HasValue)
@@ -263,15 +297,28 @@ public class NinosController : Controller
                 : null)!;
         }
 
+        // Obtener los niveles de grado
+        var listNiveles = await _context.Niveles
+            .Where(n => !string.IsNullOrEmpty(n.Nombre))
+            .ToListAsync();
+
+        if (listNiveles != null && listNiveles.Any())
+        {
+            // Asegura que el nivel actual del niño quede seleccionado
+            ViewBag.ListaNiveles = new SelectList(listNiveles, "IdNivel", "Nombre", nino.IdNivel);
+        }
+        else
+        {
+            ViewBag.ListaNiveles = new SelectList(Enumerable.Empty<SelectListItem>());
+        }
+
         // Filtrar asistencia
         var asistenciaNino = _context.Asistencia
             .Where(a => a.IdNino == id)
             .AsQueryable();
 
         if (fechaInicio.HasValue && fechaFin.HasValue)
-        {
             asistenciaNino = asistenciaNino.Where(a => a.Fecha >= fechaInicio.Value && a.Fecha <= fechaFin.Value);
-        }
 
         nino.Asistencia = await asistenciaNino.ToListAsync();
 
@@ -306,7 +353,11 @@ public class NinosController : Controller
             .Include(n => n.RelNinoMedicamento).ThenInclude(rm => rm.Medicamento)
             .Include(n => n.RelNinoCondicion).ThenInclude(rc => rc.Condicion)
             .Include(n => n.RelNinoContactoEmergencia).ThenInclude(re => re.ContactoEmergencia)
-            .Include(n => n.RelNinoTarea).ThenInclude(rt => rt.Tareas)
+            .Include(n => n.RelNinoTarea)
+            .ThenInclude(rt => rt.Tareas)
+            .ThenInclude(t => t.IdDocDocenteNavigation) // Trae el documento del docente
+            .Include(n => n.RelNinoTarea)
+            .ThenInclude(rt => rt.IdDocNinoNavigation) // Trae el documento del niño
             .FirstOrDefaultAsync(n => n.IdNino == id);
 
         if (nino == null) return NotFound();
@@ -324,14 +375,35 @@ public class NinosController : Controller
 
         ViewBag.ListaDocentes = new SelectList(listDocentes, "IdDocente", "NombreDocente");
 
-        // Filtrar tareas por estado
+        // Obtener los niveles de grado
+        var listNiveles = await _context.Niveles
+            .Where(n => !string.IsNullOrEmpty(n.Nombre))
+            .ToListAsync();
+
+        if (listNiveles != null && listNiveles.Any())
+        {
+            // Asegura que el nivel actual del niño quede seleccionado
+            ViewBag.ListaNiveles = new SelectList(listNiveles, "IdNivel", "Nombre", nino.IdNivel);
+        }
+        else
+        {
+            ViewBag.ListaNiveles = new SelectList(Enumerable.Empty<SelectListItem>());
+        }
+
+        // Clasificar tareas según el estado
         var tareas = nino.RelNinoTarea?
             .Where(rt => rt.Tareas.Activo)
+            .ToList();
+
+        var tareasEnProceso = tareas?
+            .Where(rt => rt.Calificacion == 0)
             .Select(rt => rt.Tareas)
             .ToList() ?? new List<Tareas>();
 
-        var tareasEnProceso = tareas.Where(t => t.Calificacion == 0).ToList();
-        var tareasCompletadas = tareas.Where(t => t.Calificacion > 0).ToList();
+        var tareasCompletadas = tareas?
+            .Where(rt => rt.Calificacion > 0)
+            .Select(rt => rt.Tareas)
+            .ToList() ?? new List<Tareas>();
 
         // Filtrar asistencia
         var asistenciaNino = _context.Asistencia
@@ -367,31 +439,74 @@ public class NinosController : Controller
     {
         if (idNino <= 0 || idTarea <= 0) return NotFound();
 
-        // Verificar existencia del niño y la tarea
+        // Verificar existencia del niño
         var verificarNino = await _context.Ninos.FindAsync(idNino);
-        var verificarTarea = await _context.Tareas.FindAsync(idTarea);
-        var listDocentes = await _context.Usuarios
-            .Where(d => d.Activo == true && d.IdRol == 2)
-            .ToListAsync();
+        if (verificarNino == null) return NotFound();
 
-        if (verificarNino == null || verificarTarea == null) return NotFound();
+        // Verificar existencia de la tarea y cargar el documento relacionado
+        var verificarTarea = await _context.Tareas
+            .Include(t => t.IdDocDocenteNavigation) // Incluir relación con el documento
+            .FirstOrDefaultAsync(t => t.IdTarea == idTarea);
+        if (verificarTarea == null) return NotFound();
 
-        // Verificar la relación entre niño y tarea
+        // Verificar la relación entre el niño y la tarea
         var verificarRel = await _context.RelNinoTarea
-            .Include(t => t.Tareas)
             .FirstOrDefaultAsync(tn => tn.IdNino == idNino && tn.IdTarea == idTarea);
-
         if (verificarRel == null) return NotFound();
 
-        // Obtener detalles del profesor asignado
-        var profesorTarea = await _context.Docentes.FindAsync(verificarRel.Tareas.IdProfesor);
+        // traer la el registro de la relacion de nino tarea, ya que ahi se almacena el doc
+        var ModeloRelNinoTarea = await _context.RelNinoTarea.FindAsync(idNino, idTarea);
 
-        var profUsuario = await _context.Usuarios.FindAsync(profesorTarea!.IdUsuario);
+        if (ModeloRelNinoTarea == null)
+        {
+            return NotFound();
+        }
+
+        var BuscarDocNino = await _context.Documentos.FindAsync(ModeloRelNinoTarea.IdDocNino);
+
+
+        // Obtener detalles del profesor asignado
+        var profesorTarea = await _context.Docentes.FindAsync(verificarTarea.IdProfesor);
+        if (profesorTarea == null) return NotFound();
+
+        var profUsuario = await _context.Usuarios.FindAsync(profesorTarea.IdUsuario);
+
+        // Procesar el documento si existe
+        string? base64Documento = null;
+        string? tipoDocumento = null;
+        string? nombreDocumento = null;
+
+        // Tareas de ninos:
+        string? base64DocumentoNino = null;
+        string? tipoDocumentoNino = null;
+        string? nombreDocumentoNino = null;
+
+        if (verificarTarea.IdDocDocenteNavigation?.Documento != null)
+        {
+            base64Documento = Convert.ToBase64String(verificarTarea.IdDocDocenteNavigation.Documento);
+            tipoDocumento = verificarTarea.IdDocDocenteNavigation.Tipo; // Tipo (ej. application/pdf, image/jpeg)
+            nombreDocumento = verificarTarea.IdDocDocenteNavigation.Nombre; // Nombre del archivo original
+        }
+
+        if (BuscarDocNino != null)
+        {
+            base64DocumentoNino = Convert.ToBase64String(BuscarDocNino.Documento);
+            tipoDocumentoNino = BuscarDocNino.Tipo; // Tipo (ej. application/pdf, image/jpeg)
+            nombreDocumentoNino = BuscarDocNino.Nombre; // Nombre del archivo original
+        }
+
         // Pasar datos a la vista mediante ViewBag
         ViewBag.Nino = verificarNino;
-        ViewBag.Tarea = verificarRel.Tareas;
+        ViewBag.Tarea = verificarTarea;
+        ViewBag.TareaCalificacion = verificarRel.Calificacion;
         ViewBag.Profesor = profUsuario!;
-        ViewBag.ListaProfesores = new SelectList(listDocentes, "IdUsuario", "Nombre");
+        ViewBag.DocumentoBase64 = base64Documento; // Documento codificado en Base64
+        ViewBag.DocumentoTipo = tipoDocumento; // Tipo MIME del documento
+        ViewBag.DocumentoNombre = nombreDocumento; // Nombre del archivo
+
+        ViewBag.DocumentoBase64Nino = base64DocumentoNino; // Documento codificado en Base64
+        ViewBag.DocumentoTipoNino = tipoDocumentoNino; // Tipo MIME del documento
+        ViewBag.DocumentoNombreNino = nombreDocumentoNino; // Nombre del archivo
 
         return View();
     }

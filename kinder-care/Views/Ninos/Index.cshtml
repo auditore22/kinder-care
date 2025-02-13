@@ -1,4 +1,4 @@
-@model IEnumerable<kinder_care.Models.Ninos>
+@model IEnumerable<Ninos>
 
 <link rel="stylesheet" href="~/css/tables/tables.css">
 
@@ -28,100 +28,100 @@
 <!-- Verificar si hay un mensaje en ViewBag -->
 @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
 {
-<div class="alert alert-warning">
-    @ViewBag.Mensaje
-</div>
+    <div class="alert alert-warning">
+        @ViewBag.Mensaje
+    </div>
 }
 else
 {
-<!-- Buscadores -->
-<div class="mb-4 d-flex gap-3 flex-wrap">
-    <div class="position-relative">
-        <input type="text" id="searchByName" placeholder="Buscar por nombre..."
-               class="form-control ps-40 h-40 rounded-pill search-input"/>
-        <i class="ph ph-magnifying-glass position-absolute"
-           style="left: 10px; top: 10px; font-size: 20px; color: #aaa;">
-        </i>
+    <!-- Buscadores -->
+    <div class="mb-4 d-flex gap-3 flex-wrap">
+        <div class="position-relative">
+            <input type="text" id="searchByName" placeholder="Buscar por nombre..."
+                   class="form-control ps-40 h-40 rounded-pill search-input"/>
+            <i class="ph ph-magnifying-glass position-absolute"
+               style="left: 10px; top: 10px; font-size: 20px; color: #aaa;">
+            </i>
+        </div>
+        <div class="position-relative">
+            <input type="text" id="searchByID" placeholder="Buscar por ID..."
+                   class="form-control ps-40 h-40 rounded-pill search-input"/>
+            <i class="ph ph-magnifying-glass position-absolute"
+               style="left: 10px; top: 10px; font-size: 20px; color: #aaa;">
+            </i>
+        </div>
+        <div class="position-relative">
+            <input type="text" id="searchByCedula" placeholder="Buscar por cédula..."
+                   class="form-control ps-40 h-40 rounded-pill search-input"/>
+            <i class="ph ph-magnifying-glass position-absolute"
+               style="left: 10px; top: 10px; font-size: 20px; color: #aaa;">
+            </i>
+        </div>
     </div>
-    <div class="position-relative">
-        <input type="text" id="searchByID" placeholder="Buscar por ID..."
-               class="form-control ps-40 h-40 rounded-pill search-input"/>
-        <i class="ph ph-magnifying-glass position-absolute"
-           style="left: 10px; top: 10px; font-size: 20px; color: #aaa;">
-        </i>
-    </div>
-    <div class="position-relative">
-        <input type="text" id="searchByCedula" placeholder="Buscar por cédula..."
-               class="form-control ps-40 h-40 rounded-pill search-input"/>
-        <i class="ph ph-magnifying-glass position-absolute"
-           style="left: 10px; top: 10px; font-size: 20px; color: #aaa;">
-        </i>
-    </div>
-</div>
 
-<!-- Tabla -->
-<div class="card overflow-hidden mt-24">
-    <div class="card-body p-0 overflow-x-auto">
-        <table id="childrenTable" class="table table-striped" style="display: none">
-            <thead>
-            <tr>
-                <th data-column="name" class="h5 text-gray-300">Estudiante</th>
-                <th data-column="id_usuario" class="h5 text-gray-300">ID</th>
-                <th data-column="cedula" class="h5 text-gray-300">Cédula</th>
-                <th class="h6 text-gray-300">Póliza</th>
-                <th class="h6 text-gray-300">Acciones</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr id="noResultsRow" class="d-none">
-                <td colspan="8" class="text-center text-gray-500">No se encontraron resultados.</td>
-            </tr>
-            @if (Model.Any())
-            {
-            @foreach (var nino in Model)
-            {
-            <tr>
-                <td data-column="name">
-                    <div class="flex-align gap-8">
-                        <img src="~/images/icons/baby_2_icon.png" alt="Imagen del niño"
-                             class="w-40 h-40 rounded-circle">
-                        <span class="h6 mb-0 fw-medium text-gray-300">@nino.NombreNino</span>
-                    </div>
-                </td>
-                <td data-column="id_usuario">
-                    <span class="h6 mb-0 fw-medium text-gray-300">@nino.IdNino</span>
-                </td>
-                <td data-column="cedula">
-                    <span class="h6 mb-0 fw-medium text-gray-300">@nino.Cedula</span>
-                </td>
-                <td>
-                    <span class="h6 mb-0 fw-medium text-gray-300">@nino.Poliza</span>
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@nino.IdNino"
-                       class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
-                        Ver Más
-                    </a>
-                </td>
-            </tr>
-            }
-            }
-            </tbody>
-        </table>
+    <!-- Tabla -->
+    <div class="card overflow-hidden mt-24">
+        <div class="card-body p-0 overflow-x-auto">
+            <table id="childrenTable" class="table table-striped" style="display: none">
+                <thead>
+                <tr>
+                    <th data-column="name" class="h5 text-gray-300">Estudiante</th>
+                    <th data-column="id_usuario" class="h5 text-gray-300">ID</th>
+                    <th data-column="cedula" class="h5 text-gray-300">Cédula</th>
+                    <th class="h6 text-gray-300">Póliza</th>
+                    <th class="h6 text-gray-300">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr id="noResultsRow" class="d-none">
+                    <td colspan="8" class="text-center text-gray-500">No se encontraron resultados.</td>
+                </tr>
+                @if (Model.Any())
+                {
+                    @foreach (var nino in Model)
+                    {
+                        <tr>
+                            <td data-column="name">
+                                <div class="flex-align gap-8">
+                                    <img src="~/images/icons/baby_2_icon.png" alt="Imagen del niño"
+                                         class="w-40 h-40 rounded-circle">
+                                    <span class="h6 mb-0 fw-medium text-gray-300">@nino.NombreNino</span>
+                                </div>
+                            </td>
+                            <td data-column="id_usuario">
+                                <span class="h6 mb-0 fw-medium text-gray-300">@nino.IdNino</span>
+                            </td>
+                            <td data-column="cedula">
+                                <span class="h6 mb-0 fw-medium text-gray-300">@nino.Cedula</span>
+                            </td>
+                            <td>
+                                <span class="h6 mb-0 fw-medium text-gray-300">@nino.Poliza</span>
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@nino.IdNino"
+                                   class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
+                                    Ver Más
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
-<!-- Paginación -->
-<div class="card-footer flex-between flex-wrap mt-15">
-    <span id="infoContainer" class="text-gray-900"></span>
-    <select id="entriesSelect" class="form-select custom-dropdown">
-        <option value="5">5</option>
-        <option value="10" selected>10</option>
-        <option value="20">20</option>
-        <option value="50">50</option>
-    </select>
-    <ul class="pagination flex-align flex-wrap"></ul>
-</div>
+    <!-- Paginación -->
+    <div class="card-footer flex-between flex-wrap mt-15">
+        <span id="infoContainer" class="text-gray-900"></span>
+        <select id="entriesSelect" class="form-select custom-dropdown">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+        </select>
+        <ul class="pagination flex-align flex-wrap"></ul>
+    </div>
 }
 
 <script src="~/js/tables/padres/ninos.js"></script>

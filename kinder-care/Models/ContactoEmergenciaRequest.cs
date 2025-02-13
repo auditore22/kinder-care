@@ -7,5 +7,5 @@ public class ContactoEmergenciaRequest
     public int? Telefono { get; set; }
     public string? Relacion { get; set; }
     public int? IdContacto { get; set; }
-    public string? Accion { get; set; } 
+    public string? Accion { get; set; }
 }

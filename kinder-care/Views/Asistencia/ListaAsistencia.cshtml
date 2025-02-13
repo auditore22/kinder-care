@@ -1,4 +1,4 @@
-﻿@model IEnumerable<kinder_care.Models.Asistencia>
+﻿@model IEnumerable<Asistencia>
 
 <link rel="stylesheet" href="~/css/tables/tables.css">
 
@@ -37,8 +37,24 @@
             <input type="date" name="fechaFin" id="fechaFin" class="form-control"
                    value="@ViewBag.FechaFin"/>
         </div>
+
+        <div class="col-md-4">
+            <label for="IdNivel">Grado:</label>
+            <select name="idNivel" class="form-select">
+                <option value="">Todos</option>
+                @foreach (var nivel in ViewBag.Niveles)
+                {
+                    <option value="@nivel.IdNivel">
+                        @nivel.Nombre
+                    </option>
+                }
+            </select>
+        </div>
+
         <div class="col-md-4 d-flex align-items-end">
-            <button type="submit" class="btn btn-main w-100">Filtrar</button>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+            </div>
         </div>
     </div>
 </form>
@@ -51,8 +67,10 @@
             <tr>
                 <th data-column="id_usuario" class="h5 text-gray-300">ID Niño</th>
                 <th data-column="name" class="h5 text-gray-300">Estudiante</th>
+                <th class="h5 text-gray-300">Grado</th>
                 <th class="h6 text-gray-300">Fecha</th>
                 <th class="h6 text-gray-300">Presente</th>
+                <th class="h6 text-gray-300">Acciones</th>
             </tr>
             </thead>
             <tbody>
@@ -77,14 +95,25 @@
                         <td data-column="name">
                             <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.IdNinoNavigation.NombreNino</span>
                         </td>
+                        <td data-column="name">
+                            <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.IdNinoNavigation.IdNivelNavigation.Nombre</span>
+                        </td>
                         <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@asistencia.Fecha.ToString("yyyy-MM-dd")</span>
+                            <span
+                                class="h6 mb-0 fw-medium text-gray-300">@asistencia.Fecha.ToString("yyyy-MM-dd")</span>
                         </td>
                         <td>
                             <span class="h6 mb-0 fw-medium @(asistencia.Presente ? "text-success" : "text-danger")">
                                 @(asistencia.Presente ? "Presente" : "Ausente")
                             </span>
                         </td>
+                            <td>
+                                <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@asistencia.IdNino"
+                                   class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
+                                    Ver
+                                    Más
+                                </a>
+                            </td>
                     </tr>
                 }
             }
@@ -108,8 +137,8 @@
 <!-- Botón para generar PDF -->
 <div class="card-footer flex-between flex-wrap mt-15 justify-content-end">
     <form asp-action="GenerarReportePdf" asp-controller="Asistencia" method="get">
-        <input type="hidden" name="fechaInicio" value="@ViewBag.FechaInicio" />
-        <input type="hidden" name="fechaFin" value="@ViewBag.FechaFin" />
+        <input type="hidden" name="fechaInicio" value="@ViewBag.FechaInicio"/>
+        <input type="hidden" name="fechaFin" value="@ViewBag.FechaFin"/>
         <button type="submit" class="btn btn-primary">Generar PDF</button>
     </form>
 </div>

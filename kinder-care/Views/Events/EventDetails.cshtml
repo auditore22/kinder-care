@@ -1,10 +1,11 @@
-@model kinder_care.Models.Actividades
+@model Actividades
 
 <!-- Breadcrumb Start -->
 <div class="breadcrumb mb-24">
     <ul class="flex-align gap-4">
         <li>
-            <a asp-action="Index" asp-controller="Home" class="text-gray-200 fw-normal text-15 hover-text-main-600">Home</a>
+            <a asp-action="Index" asp-controller="Home"
+               class="text-gray-200 fw-normal text-15 hover-text-main-600">Home</a>
         </li>
         <li>
             <span class="text-gray-500 fw-normal d-flex">
@@ -24,7 +25,8 @@
             <div class="avatar-upload">
                 <input type="file" id="coverImageUpload" accept=".png, .jpg, .jpeg">
                 <div class="avatar-preview">
-                    <div id="coverImagePreview" style="background: rgb(45, 156, 219); background: linear-gradient(180deg, rgba(45, 156, 219, 0.5) 0%, rgba(45, 156, 219, 0) 70%);">
+                    <div id="coverImagePreview"
+                         style="background: rgb(45, 156, 219); background: linear-gradient(180deg, rgba(45, 156, 219, 0.5) 0%, rgba(45, 156, 219, 0) 70%);">
                     </div>
                 </div>
             </div>
@@ -40,7 +42,8 @@
                             <span class="text-gray-600 d-flex text-lg">
                                 <i class="ph ph-calendar"></i>
                             </span>
-                            <span class="text-gray-600 d-flex text-15">Fecha: @Model.Fecha.ToString("yyyy-MM-dd HH:mm")</span>
+                            <span
+                                class="text-gray-600 d-flex text-15">Fecha: @Model.Fecha.ToString("yyyy-MM-dd HH:mm")</span>
                         </div>
                         <div class="flex-align gap-6">
                             <span class="text-gray-600 d-flex text-lg">
@@ -52,7 +55,8 @@
                             <span class="text-gray-600 d-flex text-lg">
                                 <i class="ph ph-list"></i>
                             </span>
-                            <span class="text-gray-600 d-flex text-15">Tipo: @Model.IdTipoActividadNavigation.NombreTipoActividad</span>
+                            <span
+                                class="text-gray-600 d-flex text-15">Tipo: @Model.IdTipoActividadNavigation.NombreTipoActividad</span>
                         </div>
                         <div class="flex-align gap-6">
                             <span class="text-gray-600 d-flex text-lg">
@@ -66,10 +70,15 @@
 
             <ul class="nav common-tab style-two nav-pills mb-0" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="pills-edit-tab" data-bs-toggle="pill" data-bs-target="#pills-edit" type="button" role="tab" aria-controls="pills-edit" aria-selected="false">Editar</button>
+                    <button class="nav-link active" id="pills-edit-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-edit" type="button" role="tab" aria-controls="pills-edit"
+                            aria-selected="false">Editar
+                    </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-delete-tab" data-bs-toggle="pill" data-bs-target="#pills-delete" type="button" role="tab" aria-controls="pills-delete" aria-selected="false">Eliminar</button>
+                    <button class="nav-link" id="pills-delete-tab" data-bs-toggle="pill" data-bs-target="#pills-delete"
+                            type="button" role="tab" aria-controls="pills-delete" aria-selected="false">Eliminar
+                    </button>
                 </li>
             </ul>
         </div>
@@ -93,7 +102,8 @@
 
                     <div class="mb-4">
                         <label for="Fecha" class="form-label">Fecha y Hora</label>
-                        <input type="datetime-local" class="form-control" asp-for="Fecha" value="@Model.Fecha.ToString("yyyy-MM-ddTHH:mm")"/>
+                        <input type="datetime-local" class="form-control" asp-for="Fecha"
+                               value="@Model.Fecha.ToString("yyyy-MM-ddTHH:mm")"/>
                         <span asp-validation-for="Fecha" class="text-danger"></span>
                     </div>
 
@@ -112,7 +122,8 @@
                     <!-- Botones de acción -->
                     <div class="d-flex justify-content-end gap-2">
                         <button type="submit" class="btn btn-main rounded-pill">Guardar Cambios</button>
-                        <a href="@Url.Action("ManageEvents", "Events")" class="btn btn-secondary rounded-pill">Cancelar</a>
+                        <a href="@Url.Action("ManageEvents", "Events")"
+                           class="btn btn-secondary rounded-pill">Cancelar</a>
                     </div>
                 </form>
             </div>
