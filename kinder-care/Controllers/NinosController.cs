@@ -17,7 +17,7 @@ public class NinosController : Controller
         _context = context;
     }
 
-    // GET: Ninos - trae a la vista los hijos del padre logueado
+    // trae a la vista los hijos del padre logueado
     public async Task<IActionResult> Index()
     {
         // Obtener el ID del padre logueado desde las Claims
