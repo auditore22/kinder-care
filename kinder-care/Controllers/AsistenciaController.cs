@@ -331,7 +331,7 @@ public class AsistenciaController : Controller
         return File(pdfBytes, "application/pdf", "Reporte_Asistencia.pdf");
     }
 
-    //=============================[Eliminar de Grupos]=============================
+    //=============================[Eliminar Relación]=============================
     [HttpPost]
     public async Task<IActionResult> EliminarRelacion(int idNino)
     {
@@ -344,7 +344,7 @@ public class AsistenciaController : Controller
         _context.RelDocenteNinoMateria.Remove(relacion!);
         await _context.SaveChangesAsync();
 
-        ViewBag.Mensaje = "El estudiante fue eliminado del grupo.";
+        ViewBag.Mensaje = "El estudiante se encuentra sin docente.";
         return RedirectToAction("ListaNinos");
     }
 }
