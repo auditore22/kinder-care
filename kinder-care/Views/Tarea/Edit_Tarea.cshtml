@@ -53,7 +53,7 @@
                     </div>
                 </div>
                 <form asp-action="Edit_Tarea" asp-controller="Tarea" method="post" enctype="multipart/form-data">
-                <!-- Campo oculto para el Id de la tarea -->
+                    <!-- Campo oculto para el Id de la tarea -->
                     <div class="mb-3">
                         <label hidden for="IdTarea" class="form-label">IdTarea</label>
                         <input hidden type="text" class="form-control" id="IdTarea" name="IdTarea"
@@ -133,7 +133,7 @@
                         <label for="DocTareaDocente" class="form-label">Nuevo documento de tarea (Opcional)</label>
                         <input type="file" class="form-control" id="DocTareaDocente" name="DocTareaDocente" accept=".pdf,.doc,.jpg,.png">
                         <span>Archivos admitidos (<strong style="color: red">PDF</strong>, <strong style="color: blue">Word</strong>, <strong style="color: lightslategrey">Imagen</strong>)</span>
-                    </div>                    
+                    </div>
 
                     <!-- Calificación de la Tarea -->
                     <div class="mb-3">

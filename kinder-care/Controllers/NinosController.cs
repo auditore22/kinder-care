@@ -143,6 +143,7 @@ public class NinosController : Controller
             var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
             if (docente == null) return NotFound();
 
+            ViewBag.DocenteId = docente.IdDocente;
             // Verificar si el docente está asociado con este niño
             var isAssociated = await _context.RelDocenteNinoMateria
                 .AnyAsync(r => r.IdDocente == docente.IdDocente && r.IdNino == id);
@@ -208,7 +209,7 @@ public class NinosController : Controller
             .Where(d => d.Activo == true && d.IdRol == 2)
             .ToListAsync();
 
-        ViewBag.ListaProfesores = new SelectList(listDocentes, "IdUsuario", "Nombre");
+        ViewBag.ListaDocentes = new SelectList(listDocentes, "IdUsuario", "Nombre");
 
         // Pasar las tareas al ViewBag      
         ViewBag.TareasEnProceso = tareasEnProceso;
