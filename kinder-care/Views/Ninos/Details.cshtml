@@ -539,7 +539,8 @@
                                                                              style="width: 30px; height: 30px;">
                                                                     </a>
                                                                     <!-- Formulario para eliminar -->
-                                                                    <form asp-action="Eliminar_Tarea" asp-controller="Tarea"
+                                                                    <form asp-action="Eliminar_Tarea"
+                                                                          asp-controller="Tarea"
                                                                           method="post" style="display: inline;">
                                                                         <input type="hidden" name="IdNino"
                                                                                value="@Model.IdNino"/>
@@ -547,7 +548,8 @@
                                                                                value="@tarea.IdTarea"/>
                                                                         <button type="submit" class="btn p-0">
                                                                             <img src="~/images/icons/Eliminar_icon.png"
-                                                                                 alt="Eliminar icono" class="rounded-circle"
+                                                                                 alt="Eliminar icono"
+                                                                                 class="rounded-circle"
                                                                                  style="width: 30px; height: 30px;">
                                                                         </button>
                                                                     </form>
@@ -698,12 +700,26 @@
                                            placeholder="Póliza">
                                 </div>
 
-                                <div class="col-sm-6 col-xs-6">
-                                    <label hidden asp-for="IdNivel" class="form-label mb-8 h6">Nivel</label>
-                                    <input hidden asp-for="IdNivel" type="text" value="@Model.IdNivel"
-                                           class="form-control py-11">
-                                </div>
-
+                                @if (User.IsInRole(("Administrador")) || User.IsInRole(("Docente")))
+                                {
+                                    if (ViewBag.ListaNiveles != null)
+                                    {
+                                        <div class="col-sm-6 col-xs-6">
+                                            <label for="IdNivel" class="form-label mb-8 h6">Nivel</label>
+                                            <select id="IdNivel" name="IdNivel" class="form-control py-11"
+                                                    asp-items="ViewBag.ListaNiveles" required>
+                                                <option value="">Selecciona el nivel</option>
+                                            </select>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-danger">
+                                            No hay niveles disponibles para seleccionar.
+                                        </div>
+                                    }
+                                }
+                                
                                 <!-- Botones de acción -->
                                 <div class="col-12">
                                     <div class="flex-align justify-content-end gap-8">

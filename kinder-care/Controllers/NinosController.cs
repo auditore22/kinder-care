@@ -570,16 +570,16 @@ public class NinosController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(int id, string nombreNino, string direccion, string poliza, int idNivel)
+    public async Task<IActionResult> Edit(int id, string nombreNino, string direccion, string poliza, int? idNivel)
     {
         if (id == 0) return NotFound();
 
         var nino = await _context.Ninos.FindAsync(id);
         if (nino == null) return NotFound();
-
+        
         var result = await _context.Database.ExecuteSqlRawAsync(
             "EXEC GestionarNino @IdNino = {0}, @Cedula = {1}, @NombreNino = {2}, @FechaNacimiento = {3}, @Direccion = {4}, @Poliza = {5}, @IdNivel = {6}, @Activo = {7}, @Accion = {8}",
-            id, nino.Cedula, nombreNino, nino.FechaNacimiento, direccion, poliza, idNivel, nino.Activo!, "ACTUALIZAR");
+            id, nino.Cedula, nombreNino, nino.FechaNacimiento, direccion, poliza, idNivel ?? nino.IdNivel, nino.Activo!, "ACTUALIZAR");
 
         if (result == 0) return NotFound();
 
@@ -587,15 +587,6 @@ public class NinosController : Controller
             .Where(c => c.Type == ClaimTypes.Role)
             .Select(c => c.Value)
             .SingleOrDefault();
-
-        //if (rolUsuarioLogueado == "Administrador")
-        //{
-        //    return RedirectToAction("Details_Admin", "Ninos", new { id = id });
-        //}
-        //else if (rolUsuarioLogueado == "Docente")
-        //{
-        //    return RedirectToAction("Details_Docente", "Ninos", new { id = id });
-        //}
 
         return RedirectToAction("Details", "Ninos", new { id = id });
     }
