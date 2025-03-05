@@ -24,16 +24,16 @@
 </div>
 
 <!-- Tabla de eventos -->
-<div class="card overflow-hidden">
+<div class="card overflow-hidden mt-24">
     <div class="card-body p-0 overflow-x-auto">
         <table id="studentTable" class="table table-striped">
             <thead>
             <tr>
-                <th class="column-fecha h6 text-gray-300">Fecha y Hora</th>
-                <th class="column-lugar h6 text-gray-300">Lugar</th>
-                <th class="column-tipo-actividad h6 text-gray-300">Tipo de Actividad</th>
-                <th class="column-descripcion h6 text-gray-300">Descripción</th>
-                <th class="column-acciones h6 text-gray-300">Acciones</th>
+                <th class="column-fecha h5 text-gray-300">Fecha y Hora</th>
+                <th class="column-lugar h5 text-gray-300">Lugar</th>
+                <th class="column-tipo-actividad h5 text-gray-300">Tipo de Actividad</th>
+                <th class="column-descripcion h5 text-gray-300">Descripción</th>
+                <th class="h5 text-gray-300">Acciones</th>
             </tr>
             </thead>
             <tbody>
@@ -54,7 +54,7 @@
                                 class="h6 mb-0 fw-medium text-gray-300">@evento.IdTipoActividadNavigation?.NombreTipoActividad</span>
                         </td>
                         <td>
-                            <span class="h6 mb-0 fw-medium text-gray-300">@evento.Descripcion</span>
+                            <span class="h6 mb-0 fw-medium text-gray-300" maxlength="10">@evento.Descripcion</span>
                         </td>
                         <td>
                             <a asp-action="EventDetails" asp-route-id="@evento.IdActividad"

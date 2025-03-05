@@ -192,21 +192,21 @@
                     <!-- Campo de Monto -->
                     <div class="mb-4">
                         <label for="Monto" class="form-label">Monto</label>
-                        <input type="text" class="form-control" asp-for="Monto" placeholder="0.00"/>
+                        <input type="text" class="form-control" maxlength="9" id="Monto" asp-for="Monto" placeholder="0.00"/>
                         <span asp-validation-for="Monto" class="text-danger"></span>
                     </div>
 
                     <!-- Campo de Método de Pago -->
                     <div class="mb-4">
                         <label for="MetodoPago" class="form-label">Método de Pago</label>
-                        <input type="text" class="form-control" asp-for="MetodoPago" placeholder="E.g., Transferencia, Efectivo"/>
+                        <input type="text" class="form-control" maxlength="20" asp-for="MetodoPago" placeholder="E.g., Transferencia, Efectivo"/>
                         <span asp-validation-for="MetodoPago" class="text-danger"></span>
                     </div>
 
                     <!-- Campo de Referencia de Factura -->
                     <div class="mb-4">
                         <label for="ReferenciaFactura" class="form-label">Referencia de Factura</label>
-                        <input type="text" class="form-control" asp-for="ReferenciaFactura" placeholder="Número de Factura"/>
+                        <input type="text" class="form-control" maxlength="15" asp-for="ReferenciaFactura" placeholder="Número de Factura"/>
                         <span asp-validation-for="ReferenciaFactura" class="text-danger"></span>
                     </div>
 
@@ -219,7 +219,6 @@
             </div>
         </div>
     </div>
-    
 
 </div>
 
@@ -229,3 +228,15 @@
         <i class="fas fa-arrow-left me-2"></i> Volver a la Gestión de Pagos
     </a>
 </div>
+
+<script>
+    document.getElementById("Monto").addEventListener("input", function (e) {
+        let value = e.target.value;
+
+        // Expresión regular para validar hasta 9 dígitos enteros y 2 decimales
+        let regex = /^\d{0,6}(\.\d{0,2})?$/;
+        if (!regex.test(value)) {
+            e.target.value = value.slice(0, -1); // Remueve el último carácter si no es válido
+        }
+    });
+</script>
