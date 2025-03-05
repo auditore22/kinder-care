@@ -109,13 +109,13 @@
 
                     <div class="mb-4">
                         <label for="Lugar" class="form-label">Lugar</label>
-                        <input type="text" class="form-control" asp-for="Lugar"/>
+                        <input type="text" class="form-control" minlength="3" maxlength="30" asp-for="Lugar"/>
                         <span asp-validation-for="Lugar" class="text-danger"></span>
                     </div>
 
                     <div class="mb-4">
                         <label for="Descripcion" class="form-label">Descripción</label>
-                        <textarea class="form-control" asp-for="Descripcion"></textarea>
+                        <textarea class="form-control" maxlength="100" asp-for="Descripcion"></textarea>
                         <span asp-validation-for="Descripcion" class="text-danger"></span>
                     </div>
 
