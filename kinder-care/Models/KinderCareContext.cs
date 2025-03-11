@@ -774,6 +774,9 @@ public partial class KinderCareContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("ultima_actualizacion");
+            entity.Property(e => e.SesionActiva)
+                .HasDefaultValue(false)
+                .HasColumnName("SesionActiva");
 
             entity.HasOne(d => d.IdRolNavigation).WithMany(p => p.Usuarios)
                 .HasForeignKey(d => d.IdRol)
