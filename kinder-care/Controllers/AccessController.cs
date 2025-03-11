@@ -119,12 +119,6 @@ public class AccessController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-    // public async Task<IActionResult> LogOut()
-    // {
-    //     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-    //     return RedirectToAction("Login", "Access");
-    // }
-
     public async Task<IActionResult> LogOut()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
