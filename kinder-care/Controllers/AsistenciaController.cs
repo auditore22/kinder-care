@@ -134,29 +134,39 @@ public class AsistenciaController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ControlAsistencias(List<int> estudiantesPresentes)
+    public async Task<IActionResult> ControlAsistencias(Dictionary<int, string> estudiantesPresentes)
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var fechaActual = DateTime.Now;
         var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
 
+        if (docente == null) return NotFound("Docente no encontrado.");
+
         var estudiantes = await _context.RelDocenteNinoMateria
-            .Where(r => r.IdDocente == docente!.IdDocente)
+            .Where(r => r.IdDocente == docente.IdDocente)
             .Select(r => r.IdNino)
             .ToListAsync();
 
         foreach (var idNino in estudiantes)
         {
-            var presente = estudiantesPresentes?.Contains(idNino) ?? false;
+            if (!estudiantesPresentes.ContainsKey(idNino)) continue; 
 
-            var asistencia = new Asistencia
+            bool? estadoAsistencia = estudiantesPresentes[idNino] switch
             {
-                IdNino = idNino,
-                Fecha = fechaActual,
-                Presente = presente
+                "true" => true,
+                "false" => false,
+                _ => null 
             };
 
-            _context.Asistencia.Add(asistencia);
+            if (estadoAsistencia.HasValue)
+            {
+                _context.Asistencia.Add(new Asistencia
+                {
+                    IdNino = idNino,
+                    Fecha = fechaActual,
+                    Presente = estadoAsistencia
+                });
+            }
         }
 
         await _context.SaveChangesAsync();
@@ -312,8 +322,7 @@ public class AsistenciaController : Controller
                         table.Cell().Text(asistencia.Fecha.ToString("dd/MM/yyyy"));
                         table.Cell().Text(asistencia.IdNinoNavigation.NombreNino);
                         table.Cell().Text(asistencia.IdNinoNavigation.IdNivelNavigation.Nombre);
-                        table.Cell().Text(asistencia.Presente ? "Presente" : "Ausente")
-                            .FontColor(asistencia.Presente ? Colors.Green.Darken2 : Colors.Red.Darken2);
+                        table.Cell().Text(asistencia.Presente.HasValue? (asistencia.Presente.Value ? "Presente" : "Ausente") : "Sin seleccionar").FontColor(asistencia.Presente == true ? Colors.Green.Darken2 : Colors.Red.Darken2);
                     }
                 });
 

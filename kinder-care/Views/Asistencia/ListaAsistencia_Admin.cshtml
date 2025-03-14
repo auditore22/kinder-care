@@ -101,9 +101,10 @@
                                 class="h6 mb-0 fw-medium text-gray-300">@asistencia.Fecha.ToString("yyyy-MM-dd")</span>
                         </td>
                         <td>
-                                <span class="h6 mb-0 fw-medium @(asistencia.Presente ? "text-success" : "text-danger")">
-                                    @(asistencia.Presente ? "Presente" : "Ausente")
-                                </span>
+                            <span class="h6 mb-0 fw-medium
+                                @(asistencia.Presente.HasValue ? (asistencia.Presente.Value ? "text-success" : "text-danger") : "text-warning")">
+                                @(asistencia.Presente.HasValue ? (asistencia.Presente.Value ? "Presente" : "Ausente") : "Sin seleccionar")
+                            </span>
                         </td>
                         <td>
                             <a asp-action="Details" asp-controller="Ninos" asp-route-id="@asistencia.IdNino"

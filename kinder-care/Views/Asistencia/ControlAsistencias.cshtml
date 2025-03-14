@@ -54,7 +54,11 @@
                                 <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.NombreNino</span>
                             </td>
                             <td>
-                                <input type="checkbox" name="estudiantesPresentes" value="@estudiante.IdNino"/>
+                                <select name="estudiantesPresentes[@estudiante.IdNino]" class="form-select">
+                                    <option value="">Sin seleccionar</option>
+                                    <option value="true">Presente</option>
+                                    <option value="false">Ausente</option>
+                                </select>
                             </td>
                         </tr>
                     }

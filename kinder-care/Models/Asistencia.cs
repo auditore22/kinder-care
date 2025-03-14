@@ -8,7 +8,7 @@ public class Asistencia
 
     public DateTime Fecha { get; set; }
 
-    public bool Presente { get; set; }
+    public bool? Presente { get; set; }
 
     public virtual Ninos IdNinoNavigation { get; set; } = null!;
 }

@@ -68,7 +68,7 @@ public class HomeController(ILogger<HomeController> logger, KinderCareContext co
             var ultimasAusencias = _context.Asistencia
                 .Include(a => a.IdNinoNavigation)
                 .Where(a => a.IdNinoNavigation.RelDocenteNinoMateria.Any(r => r.IdDocente == docente!.IdDocente))
-                .Where(a => !a.Presente)
+                .Where(a => a.Presente.HasValue && !a.Presente.Value)
                 .OrderByDescending(a => a.Fecha)
                 .Take(10)
                 .ToList();
