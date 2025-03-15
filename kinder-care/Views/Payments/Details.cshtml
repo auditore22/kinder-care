@@ -51,27 +51,15 @@
                             </div>
                             <div class="flex-align gap-6">
                                 <span class="text-gray-600 d-flex text-lg">
-                                    <i class="ph ph-child"></i>
+                                    <i class="ph ph-user"></i>
                                 </span>
                                 <span class="text-gray-600 d-flex text-15">Estudiante: @Model.Nino?.NombreNino</span>
-                            </div>
-                            <div class="flex-align gap-6">
-                                <span class="text-gray-600 d-flex text-lg">
-                                    <i class="ph ph-currency-dollar"></i>
-                                </span>
-                                <span class="text-gray-600 d-flex text-15">Monto: ₡@Model.Monto</span>
                             </div>
                             <div class="flex-align gap-6">
                                 <span class="text-gray-600 d-flex text-lg">
                                     <i class="ph ph-bookmark-simple"></i>
                                 </span>
                                 <span class="text-gray-600 d-flex text-15">Tipo de Pago: @Model.TipoPago?.NombreTipoPago</span>
-                            </div>
-                            <div class="flex-align gap-6">
-                                <span class="text-gray-600 d-flex text-lg">
-                                    <i class="ph ph-note-pencil"></i>
-                                </span>
-                                <span class="text-gray-600 d-flex text-15">Referencia: @Model.ReferenciaFactura</span>
                             </div>
                         </div>
                     </div>
@@ -213,7 +201,6 @@
                     <!-- Botones de acción -->
                     <div class="d-flex justify-content-end gap-2">
                         <button type="submit" class="btn btn-main rounded-pill">Guardar Cambios</button>
-                        <a href="@Url.Action("ManagePayments", "Payments")" class="btn btn-secondary rounded-pill">Cancelar</a>
                     </div>
                 </form>
             </div>
