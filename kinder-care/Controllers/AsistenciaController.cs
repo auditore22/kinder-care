@@ -92,19 +92,22 @@ public class AsistenciaController : Controller
         var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.IdUsuario == userId);
 
         foreach (var ninoId in ninos)
-            if (!_context.RelDocenteNinoMateria.Any(r => r.IdDocente == docente!.IdDocente && r.IdNino == ninoId))
+        {
+            if (!_context.RelDocenteNinoMateria.Any(r => r.IdDocente == docente!.IdDocente && r.IdNino == ninoId)) 
                 _context.RelDocenteNinoMateria.Add(new RelDocenteNinoMateria
                 {
                     IdDocente = docente!.IdDocente,
                     IdNino = ninoId
-                });
+                }
+            );
+        }
 
         await _context.SaveChangesAsync();
         return RedirectToAction("ListaNinos");
     }
 
     //===========================[Asistencia de Estudiantes]===========================
-    public async Task<IActionResult> ControlAsistencias()
+    public async Task<IActionResult> ControlAsistencias(int? nivelId)
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var userRole = User.FindFirstValue(ClaimTypes.Role);
@@ -115,15 +118,27 @@ public class AsistenciaController : Controller
             var estudiantes = await _context.RelDocenteNinoMateria
                 .Where(r => r.IdDocente == docente!.IdDocente)
                 .Select(r => r.IdNino)
-                .Join(_context.Ninos,
+                .Join(_context.Ninos.Include(n => n.IdNivelNavigation),
                     rel => rel,
                     nino => nino.IdNino,
                     (rel, nino) => nino)
                 .ToListAsync();
 
+            var niveles = estudiantes
+                .Select(n => n.IdNivelNavigation)
+                .Distinct()
+                .ToList();
+
+            ViewBag.Niveles = niveles;
+
+            if (nivelId.HasValue)
+            {
+                estudiantes = estudiantes.Where(n => n.IdNivel == nivelId.Value).ToList();
+            }
+
             if (!estudiantes.Any())
             {
-                ViewBag.Mensaje = "No se pueden hacer asistencias por que no hay estudiantes en el grupo";
+                ViewBag.Mensaje = "No se pueden hacer asistencias porque no hay estudiantes en el grupo.";
                 return View();
             }
 

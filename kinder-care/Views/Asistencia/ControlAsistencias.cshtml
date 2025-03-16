@@ -30,6 +30,42 @@
 
 </div>
 
+<div class="card overflow-hidden">
+    <div class="card-body p-0">
+        <div class="cover-img position-relative">
+            <div class="avatar-preview">
+                <div style="background: rgb(219,162,0); background: linear-gradient(180deg, rgba(219,162,0,0.5041666324733018) 0%, rgba(219,162,0,0) 70%);">
+                </div>
+            </div>
+        </div>
+
+        <div class="setting-profile px-24" style="margin-top: 10px">
+            <div class="flex-between">
+                <div class="d-flex align-items-end flex-wrap mb-32 gap-24">
+                    <div>
+                        <h4 class="mb-8">Grado de los estudiantes</h4>
+                        <form method="get" asp-action="ControlAsistencias">
+                            <label for="nivelId">Filtrar por Nivel:</label>
+                            <select name="nivelId" id="nivelId" class="form-select form-select-lg">
+                                <option value="">Todos</option>
+                                @if (ViewBag.Niveles != null)
+                                {
+                                    foreach (var nivel in ViewBag.Niveles)
+                                    {
+                                        <option value="@nivel.IdNivel">@nivel.Nombre</option>
+                                    }
+                                }
+                            </select>
+                            <button type="submit" class="btn btn-primary">Filtrar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @if (Model.Any())
 {
     <form asp-action="ControlAsistencias" method="post">
@@ -37,31 +73,29 @@
             <div class="card-body p-0 overflow-x-auto">
                 <table id="studentTable" class="table table-striped">
                     <thead>
-                    <tr>
-                        <th class="h6 text-gray-300">ID Niño</th>
-                        <th class="h6 text-gray-300">Estudiante</th>
-                        <th class="h6 text-gray-300">Presente</th>
-                    </tr>
+                        <tr>
+                            <th class="h6 text-gray-300">ID Niño</th>
+                            <th class="h6 text-gray-300">Estudiante</th>
+                            <th class="h6 text-gray-300">Nivel</th>
+                            <th class="h6 text-gray-300">Presente</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @foreach (var estudiante in Model)
-                    {
-                        <tr>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.IdNino</span>
-                            </td>
-                            <td>
-                                <span class="h6 mb-0 fw-medium text-gray-300">@estudiante.NombreNino</span>
-                            </td>
-                            <td>
-                                <select name="estudiantesPresentes[@estudiante.IdNino]" class="form-select">
-                                    <option value="">Sin seleccionar</option>
-                                    <option value="true">Presente</option>
-                                    <option value="false">Ausente</option>
-                                </select>
-                            </td>
-                        </tr>
-                    }
+                        @foreach (var estudiante in Model)
+                        {
+                            <tr>
+                                <td><span class="h6 mb-0 fw-medium text-gray-300">@estudiante.IdNino</span></td>
+                                <td><span class="h6 mb-0 fw-medium text-gray-300">@estudiante.NombreNino</span></td>
+                                <td><span class="h6 mb-0 fw-medium text-gray-300">@estudiante.IdNivelNavigation.Nombre</span></td>
+                                <td>
+                                    <select name="estudiantesPresentes[@estudiante.IdNino]" class="form-select">
+                                        <option value="">Sin seleccionar</option>
+                                        <option value="true">Presente</option>
+                                        <option value="false">Ausente</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
