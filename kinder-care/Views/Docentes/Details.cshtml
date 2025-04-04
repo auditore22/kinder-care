@@ -131,24 +131,7 @@
                             </p>
                             @Model.IdUsuarioNavigation.Direccion
                         </li>
-                        <li class="flex-align gap-6 text-black text-15 mb-12">
-                            <span class="flex-shrink-0 text-22 d-flex text-main-600">
-                                <img style="height: 20px; width: 20px"
-                                     src="~/images/icons/Grupo_asignado_icon.png" alt="Fecha_entrega_icono"/>
-                            </span>
-
-                            <p>
-                                <strong>Grupo Asignado: </strong>
-                            </p>
-                            @if (Model.GrupoAsignado == null)
-                            {
-                                <p>Sin grupo asignado</p>
-                            }
-                            else
-                            {
-                                <p>@Model.GrupoAsignado</p>
-                            }
-                        </li>
+                       
                         @if (ViewBag.RoleName == "Administrador")
                         {
                             <li class="flex-align gap-6 text-black text-15 mb-12">
@@ -247,12 +230,7 @@
                                            placeholder="Fecha de Nacimiento">
                                 </div>
 
-                                <div class="col-sm-6 col-xs-6">
-                                    <label asp-for="GrupoAsignado" class="form-label mb-8 h6">Grupo Asignado</label>
-                                    <input asp-for="GrupoAsignado" type="text" class="form-control py-11"
-                                           placeholder="Grupo Asignado">
-                                </div>
-
+                              
                                 <div>
                                     <label>Usuario Activo</label>
                                     <input type="checkbox" name="Activo" value="true" @(Model.Activo ? "checked" : "")/>
