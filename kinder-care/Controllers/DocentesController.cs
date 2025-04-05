@@ -65,9 +65,8 @@ public class DocentesController : Controller
         if (docentes == null) return NotFound();
 
         var result = await _context.Database.ExecuteSqlRawAsync(
-            "EXEC DocentesActualizar @id_Docente = {0}, @id_usuario = {1}, @nombre = {2}, @direccion = {3}, @correo_electronico = {4}, @num_Telefono = {5}, @fecha_nacimiento = {6}, @grupo_asignado = {7}, @activo = {8}",
-            id, docentes.IdUsuario, Nombre, Direccion, CorreoElectronico, NumTelefono, FechaNacimiento,
-            GrupoAsignado, Activo);
+            "EXEC DocentesActualizar @id_Docente = {0}, @id_usuario = {1}, @nombre = {2}, @direccion = {3}, @correo_electronico = {4}, @num_Telefono = {5}, @fecha_nacimiento = {6}, @activo = {7}",
+            id, docentes.IdUsuario, Nombre, Direccion, CorreoElectronico, NumTelefono, FechaNacimiento, Activo);
 
         if (result == 0) return NotFound();
 

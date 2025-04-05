@@ -35,6 +35,7 @@ public class Usuarios
 
     public string? TokenRecovery { get; set; }
 
+    public bool SesionActiva { get; set; }
     public int IdRol { get; set; }
 
     public virtual Roles IdRolNavigation { get; set; } = null!;

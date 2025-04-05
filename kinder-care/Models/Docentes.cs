@@ -8,8 +8,6 @@ public class Docentes
 
     public DateTime? FechaNacimiento { get; set; }
 
-    public string? GrupoAsignado { get; set; }
-
     public DateTime FechaCreacion { get; set; }
 
     public DateTime? UltimaActualizacion { get; set; }

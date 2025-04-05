@@ -116,11 +116,18 @@
                                 class="h6 mb-0 fw-medium text-gray-300">@((bool)estudiante.Activo! ? "Activo" : "Inactivo")</span>
                         </td>
                         <td>
-                            <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@estudiante.IdNino"
-                                 class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
+                            <a asp-action="Details" asp-controller="Ninos" asp-route-id="@estudiante.IdNino"
+                                 class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white mx-2">
                                  Ver
                                  Más
                             </a>
+                            <form asp-action="EliminarRelacion" asp-controller="Asistencia" method="post" 
+                                  onsubmit="return confirm('¿Estás seguro de que quieres eliminar este registro?');">
+                                <input type="hidden" name="idNino" value="@estudiante.IdNino" />
+                                <button type="submit" class="bg-danger-50 text-danger-600 py-2 px-14 rounded-pill hover-bg-danger-600 hover-text-white mx-2">
+                                    Eliminar
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 }

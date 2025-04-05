@@ -109,21 +109,19 @@
 
                     <div class="mb-4">
                         <label for="Lugar" class="form-label">Lugar</label>
-                        <input type="text" class="form-control" asp-for="Lugar"/>
+                        <input type="text" class="form-control" minlength="3" maxlength="30" asp-for="Lugar"/>
                         <span asp-validation-for="Lugar" class="text-danger"></span>
                     </div>
 
                     <div class="mb-4">
                         <label for="Descripcion" class="form-label">Descripción</label>
-                        <textarea class="form-control" asp-for="Descripcion"></textarea>
+                        <textarea class="form-control" maxlength="100" asp-for="Descripcion"></textarea>
                         <span asp-validation-for="Descripcion" class="text-danger"></span>
                     </div>
 
                     <!-- Botones de acción -->
                     <div class="d-flex justify-content-end gap-2">
                         <button type="submit" class="btn btn-main rounded-pill">Guardar Cambios</button>
-                        <a href="@Url.Action("ManageEvents", "Events")"
-                           class="btn btn-secondary rounded-pill">Cancelar</a>
                     </div>
                 </form>
             </div>
@@ -138,7 +136,6 @@
                 <form asp-action="DeleteEvent" asp-route-id="@Model.IdActividad" method="post">
                     <input type="hidden" asp-for="IdActividad"/>
                     <button type="submit" class="btn btn-danger rounded-pill">Eliminar</button>
-                    <a href="@Url.Action("ManageEvents", "Events")" class="btn btn-secondary rounded-pill">Cancelar</a>
                 </form>
             </div>
         </div>

@@ -74,7 +74,13 @@ public class AccessController : Controller
             ViewData["Mensaje"] = "Usuario no encontrado o inactivo";
             return View();
         }
-
+        
+        if (usuarioRecibido.SesionActiva)
+        {
+            ViewData["Mensaje"] = "El usuario ya tiene una sesión activa en otro dispositivo.";
+            return View();
+        }
+        
         // Verificar si el rol es nulo
         if (usuarioRecibido.IdRolNavigation == null)
         {
@@ -91,6 +97,11 @@ public class AccessController : Controller
             return View();
         }
 
+        // Marcar sesión como activa
+        usuarioRecibido.SesionActiva = true;
+        _context.Update(usuarioRecibido);
+        await _context.SaveChangesAsync();
+        
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, usuarioRecibido.IdUsuario.ToString()),
@@ -110,10 +121,22 @@ public class AccessController : Controller
 
     public async Task<IActionResult> LogOut()
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!string.IsNullOrEmpty(userId))
+        {
+            var usuario = await _context.Usuarios.FindAsync(int.Parse(userId));
+            if (usuario != null)
+            {
+                usuario.SesionActiva = false;
+                _context.Update(usuario);
+                await _context.SaveChangesAsync();
+            }
+        }
+
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Login", "Access");
     }
-
+    
     // GET: Recovery
     [HttpGet]
     public IActionResult Recovery()

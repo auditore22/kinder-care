@@ -94,14 +94,14 @@
                         <td>
                             @if (roleName == "Administrador")
                             {
-                                <a asp-action="Details_Admin" asp-route-id="@expediente.IdNino" asp-controller="Ninos"
+                                <a asp-action="Details" asp-route-id="@expediente.IdNino" asp-controller="Ninos"
                                    class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
                                     Ver Más
                                 </a>
                             }
                             else
                             {
-                                <a asp-action="Details_Docente" asp-controller="Ninos" asp-route-id="@expediente.IdNino"
+                                <a asp-action="Details" asp-controller="Ninos" asp-route-id="@expediente.IdNino"
                                    asp-route-idDocente="@ViewBag.DocenteId"
                                    class="bg-main-50 text-main-600 py-2 px-14 rounded-pill hover-bg-main-600 hover-text-white">
                                     Ver Más

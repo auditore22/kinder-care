@@ -104,10 +104,10 @@ public class TareaController : Controller
     private IActionResult RedirectToRoleBasedView(string? rolUsuarioLogueado, int IdNino, int IdProfesor)
     {
         if (rolUsuarioLogueado == "Administrador")
-            return RedirectToAction("Details_Admin", "Ninos", new { id = IdNino });
+            return RedirectToAction("Details", "Ninos", new { id = IdNino });
 
         if (rolUsuarioLogueado == "Docente")
-            return RedirectToAction("Details_Docente", "Ninos", new { id = IdNino, idDocente = IdProfesor });
+            return RedirectToAction("Details", "Ninos", new { id = IdNino, idDocente = IdProfesor });
 
         return RedirectToAction("ListaNinos", "Asistencia");
     }
@@ -241,12 +241,12 @@ public class TareaController : Controller
             {
                 TempData["ErrorMessageEditTarea"] = "El archivo supera el tamaño máximo permitido de 5 MB.";
                 if (rolUsuarioLogueado == "Administrador")
-                    return RedirectToAction("Details_Admin", "Ninos", new
+                    return RedirectToAction("Details", "Ninos", new
                     {
                         id = IdNino
                     });
                 if (rolUsuarioLogueado == "Docente")
-                    return RedirectToAction("Details_Docente", "Ninos", new
+                    return RedirectToAction("Details", "Ninos", new
                     {
                         id = IdNino
                     });
@@ -296,12 +296,12 @@ public class TareaController : Controller
         TempData["SuccessMessageEditTarea"] = "Tarea actualizada exitosamente.";
         // Redirigir según el rol del usuario
         if (rolUsuarioLogueado == "Administrador")
-            return RedirectToAction("Details_Admin", "Ninos", new
+            return RedirectToAction("Details", "Ninos", new
             {
                 id = IdNino
             });
         if (rolUsuarioLogueado == "Docente")
-            return RedirectToAction("Details_Docente", "Ninos", new
+            return RedirectToAction("Details", "Ninos", new
             {
                 id = IdNino
             });

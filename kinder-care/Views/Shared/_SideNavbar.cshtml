@@ -48,16 +48,6 @@
                             </a>
                         </li>
 
-                        @*<li class="sidebar-menu__item">
-                            <a asp-action="ListaNinos_Administracion" asp-controller="Asistencia"
-                               class="sidebar-menu__link">
-                                <span class="icon">
-                                    <i class="ph ph-users-three"></i>
-                                </span>
-                                <span class="text">Estudiantes</span>
-                           </a>
-                        </li>*@
-
                         <li class="sidebar-menu__item">
                             <a asp-action="ListaAsistencia_Admin" asp-controller="Asistencia"
                                class="sidebar-menu__link">
@@ -106,23 +96,23 @@
                                 <span class="icon">
                                     <i class="ph ph-users-three"></i>
                                 </span>
-                                <span class="text">Registrar Ninos</span>
+                                <span class="text">Registrar Niños</span>
                             </a>
                         </li>
                     }
 
                     if (ViewBag.RoleName == "Administrador")
-                        {
-                            <li class="sidebar-menu__item">
-                                <a asp-action="ManagePayments" asp-controller="Payments" class="sidebar-menu__link">
-                                    <span class="icon">
-                                        <i class="ph ph-coins"></i>
-                                    </span>
-                                    <span class="text">Pagos</span>
-                                </a>
-                            </li>
-                        }
-                    
+                    {
+                        <li class="sidebar-menu__item">
+                            <a asp-action="ManagePayments" asp-controller="Payments" class="sidebar-menu__link">
+                                <span class="icon">
+                                    <i class="ph ph-coins"></i>
+                                </span>
+                                <span class="text">Pagos</span>
+                            </a>
+                        </li>
+                    }
+
 
                     if (ViewBag.RoleName == "Padre")
                     {

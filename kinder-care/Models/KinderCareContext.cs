@@ -191,10 +191,6 @@ public partial class KinderCareContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("fecha_creacion");
             entity.Property(e => e.FechaNacimiento).HasColumnName("fecha_nacimiento");
-            entity.Property(e => e.GrupoAsignado)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("grupo_asignado");
             entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
             entity.Property(e => e.UltimaActualizacion)
                 .HasDefaultValueSql("(getdate())")
@@ -774,6 +770,9 @@ public partial class KinderCareContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("ultima_actualizacion");
+            entity.Property(e => e.SesionActiva)
+                .HasDefaultValue(false)
+                .HasColumnName("SesionActiva");
 
             entity.HasOne(d => d.IdRolNavigation).WithMany(p => p.Usuarios)
                 .HasForeignKey(d => d.IdRol)
